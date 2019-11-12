@@ -4,7 +4,11 @@
 from .constants import *
 from requests import Request, Session, get
 from datetime import datetime
+import numpy as np
 
+
+datatypes_dict = {'text': object, 'calendar_date': np.datetime64, 'number': np.float64, 'point': object}
+# there are also np.float32, np.int32 and np.int64,
 
 class dataset_meta(object): # initialize with four_by_four
     def __init__(self, four_by_four):
