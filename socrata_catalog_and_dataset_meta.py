@@ -7,7 +7,6 @@ import numpy as np
 from datetime import datetime
 
 
-
 def main():
     output_file_path = '/home/alxfed/archive/all_chicago_datasets.csv'
     catalog = pd.DataFrame()

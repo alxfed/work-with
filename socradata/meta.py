@@ -3,6 +3,16 @@
 """
 from .constants import *
 from requests import Request, Session, get
+from datetime import datetime
+
+
+class dataset(object):
+    id = ''
+    name = ''
+    updated = ''
+    columns_names = []
+    column_fields_names = []
+    columns_data_types = []
 
 
 def all_chicago_datasets():
@@ -18,7 +28,16 @@ def all_chicago_datasets():
 def metadata_for_dataset(four_by_four):
     params = {'ids': four_by_four}
     response = get(url=DISCOVERY_API_URL, params=params)
-    return response.json()['results']
+    resource = response.json()['results'][0]['resource']
+    metadata = dataset()
+    metadata.id = resource['id']
+    metadata.name = resource["name"]
+    update = resource['data_updated_at']
+    metadata.updated = datetime.strptime(update, '%Y-%m-%dT%H:%M:%S.000Z')
+    metadata.columns_names = resource["columns_name"]
+    metadata.column_fields_names = resource["columns_field_name"]
+    metadata.columns_data_types = resource['columns_datatype']
+    return metadata
 
 
 def main():
