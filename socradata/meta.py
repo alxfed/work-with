@@ -20,6 +20,7 @@ def metadata_for_dataset(four_by_four):
     response = get(url=DISCOVERY_API_URL, params=params)
     return response.json()['results']
 
+
 def main():
     print('The meta.py has been launched as main')
     return
