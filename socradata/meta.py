@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""...
+""" Reading a catalog for a URI and metadata for particular dataset
 """
 from .constants import *
 from requests import Request, Session, get
