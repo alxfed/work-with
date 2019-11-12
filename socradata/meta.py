@@ -22,6 +22,7 @@ class dataset_meta(object): # initialize with four_by_four
         self.columns_names = resource["columns_name"]
         self.column_fields_names = resource["columns_field_name"]
         self.columns_data_types = resource['columns_datatype']
+        # this
 
 
 def all_chicago_datasets():
