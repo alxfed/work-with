@@ -34,7 +34,7 @@ def metadata_for_dataset(four_by_four):
     params = {'ids': four_by_four}
     response = get(url=DISCOVERY_API_URL, params=params)
     resource = response.json()['results'][0]['resource']
-    metadata = dataset_meta(four_by_four)
+    metadata = {}
     metadata.id = resource['id']
     metadata.name = resource["name"]
     update = resource['data_updated_at']
