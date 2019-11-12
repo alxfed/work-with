@@ -11,7 +11,6 @@ from datetime import datetime
 def main():
     output_file_path = '/home/alxfed/archive/all_chicago_datasets.csv'
     catalog = pd.DataFrame()
-    '''
     sections = ['resource', 'classification', 'metadata', 'permalink', 'link', 'preview_image_url', 'owner']
     row = {}
     all_datasets = meta.all_chicago_datasets()
@@ -19,8 +18,7 @@ def main():
         row = dataset['resource']
         catalog = catalog.append(row, ignore_index=True)
         print('ok')
-    # 
-    '''
+    catalog.to_csv(output_file_path, index=False)
     metadata = meta.metadata_for_dataset('ydr8-5enu')
     datatypes_dict = {'text': object, 'calendar_date': np.datetime64, 'number': np.float64, 'point': object}
     # there are also np.float32, np.int32 and np.int64,
@@ -33,7 +31,7 @@ def main():
     columns_names = resource["columns_name"]
     column_fields_names = resource["columns_field_name"]
     columns_data_types = resource['columns_datatype']
-    catalog.to_csv(output_file_path, index=False)
+
     '''
     "resource" :
                 {"name" : "Building Permits",

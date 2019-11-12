@@ -7,6 +7,7 @@ from requests import Request, Session, get
 
 def all_chicago_datasets():
     session = Session()
+    # both, the domain and the context should be the same URI here
     params = {'domains': 'data.cityofchicago.org', 'search_context': 'data.cityofchicago.org'}
     request = Request(method='GET', url=DISCOVERY_API_URL, params=params)
     prepped = request.prepare()
