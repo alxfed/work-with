@@ -12,7 +12,7 @@ def main():
     token = token_file.read()
     token_file.close()
 
-    addre = 'AGUILERA RENOVATIONS & CONSTRUCTION, INC.' #''
+    addre = 'ACRIS, INC.' #''
 
     location = {'lat': 41.8781136, 'lng': -87.6297982}
 
@@ -25,14 +25,18 @@ def main():
                                     input_type="textquery",
                                     fields=['place_id'],
                                     location_bias=bias)
-    info    = result['candidates'][0]
-    # address = info['formatted_address']
-    # name = info['name']
-    place_id = info['place_id']
+    if result['status'] == 'ZERO_RESULTS':
+        print('None')
+    candidates    = result['candidates']
+    candidates_list = []
+    for candidate in candidates:
+        place_id = candidate['place_id']
+        contact = maps_client.place(place_id=place_id,
+                                    fields=['name', 'formatted_address', 'formatted_phone_number', 'website'])
+        res = contact['result']
+        candidates_list.append(res)
+        print('ok')
 
-    contact     = maps_client.place(place_id=place_id,
-                                    fields=['name', 'formatted_address','formatted_phone_number', 'website'])
-    res = contact['result']
     print(result)
     return
 
