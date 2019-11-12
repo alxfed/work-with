@@ -16,9 +16,10 @@ def main():
     all_datasets = meta.all_chicago_datasets()
     for dataset in all_datasets:
         row = dataset['resource']
-        catalog = catalog.append(row, ignore_index=True)
-        print('ok')
-    catalog.to_csv(output_file_path, index=False)
+        catalog = catalog.append(row, sort=False, ignore_index=True)
+    output = catalog.reindex(columns=['name', 'id', 'data_updated_at', 'description' ])
+    output.to_csv(output_file_path, index=False)
+    print('Downloaded all Chicago datasets')
     metadata = meta.metadata_for_dataset('ydr8-5enu')
     datatypes_dict = {'text': object, 'calendar_date': np.datetime64, 'number': np.float64, 'point': object}
     # there are also np.float32, np.int32 and np.int64,
