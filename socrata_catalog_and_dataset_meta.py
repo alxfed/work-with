@@ -8,6 +8,7 @@ from datetime import datetime
 
 
 def main():
+    '''
     output_file_path = '/home/alxfed/archive/all_chicago_datasets.csv'
     catalog = pd.DataFrame()
     sections = ['resource', 'classification', 'metadata', 'permalink', 'link', 'preview_image_url', 'owner']
@@ -19,18 +20,11 @@ def main():
     output = catalog.reindex(columns=['name', 'id', 'data_updated_at', 'description' ])
     output.to_csv(output_file_path, index=False)
     print('Downloaded all Chicago datasets')
-    metadata = meta.metadata_for_dataset('ydr8-5enu')
+    '''
+    metadata = meta.dataset_meta('ydr8-5enu')
     datatypes_dict = {'text': object, 'calendar_date': np.datetime64, 'number': np.float64, 'point': object}
     # there are also np.float32, np.int32 and np.int64,
     # inp = pd.read_json(metadata, typ='series')
-    resource = metadata[0]['resource']
-    name    = resource["name"]
-    id      = resource["id"]
-    update  = resource['data_updated_at']
-    data_updated = datetime.strptime(update, '%Y-%m-%dT%H:%M:%S.000Z')
-    columns_names = resource["columns_name"]
-    column_fields_names = resource["columns_field_name"]
-    columns_data_types = resource['columns_datatype']
 
     '''
     "resource" :
