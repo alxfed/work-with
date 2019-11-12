@@ -21,7 +21,7 @@ def metadata_for_dataset(four_by_four):
     return response.json()['results']
 
 def main():
-    print('ok')
+    print('The meta.py has been launched as main')
     return
 
 
