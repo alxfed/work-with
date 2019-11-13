@@ -11,8 +11,8 @@ def find_in_chicago(name_of_the_place):
                                         input_type="textquery",
                                         fields=['place_id', 'types'],
                                         location_bias=chicago_bias)
-    if result['status'] == 'ZERO_RESULTS':
-        # print('None')
+    if result['status'] in STATUS_CODES:
+        print('Status code: ', result['status'])
         return
     elif result['status'] == 'OK':
         # print('Some')
@@ -34,8 +34,8 @@ def of_type_in_chicago(name_of_the_place, type_string):
                                     location=chicago_location,
                                     radius=50000,
                                     type=type_string)
-    if result['status'] == 'ZERO_RESULTS':
-        # print('None')
+    if result['status'] in STATUS_CODES:
+        print('Status code: ', result['status'])
         return
     elif result['status'] == 'OK':
         # print('Some')
