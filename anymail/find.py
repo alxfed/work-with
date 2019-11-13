@@ -12,6 +12,7 @@ import requests
 
 
 # constants
+'''
 file_path = '/media/alxfed/toca/aa-crm/other-lists/archs_with_websites.csv'
 output_file_path = '/media/alxfed/toca/aa-crm/other-lists/output_archs_with_emails_more.csv'
 final_file_path = '/media/alxfed/toca/aa-crm/other-lists/08122019_archs_with_emails_more.csv'
@@ -101,3 +102,6 @@ with open(final_file_path,'w') as f:
     f_csv.writerows(rows)
 
 print('OK')
+'''
+def main():
+    pass

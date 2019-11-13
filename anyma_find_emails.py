@@ -2,51 +2,51 @@
 take a website name, split it and make an async request, searching
 for all the emails in the domain.
 """
-import csv
-from os import environ
-from sys import exit
-import time
-from tldextract import extract
-from collections import OrderedDict
+
 import requests
+import anymail
 
 
-# constants
-file_path = '/media/alxfed/toca/aa-crm/other-lists/archs_with_websites.csv'
-output_file_path = '/media/alxfed/toca/aa-crm/other-lists/output_archs_with_emails_more.csv'
-final_file_path = '/media/alxfed/toca/aa-crm/other-lists/08122019_archs_with_emails_more.csv'
-credits_check_url = 'https://api.anymailfinder.com/v4.1/account/hits_left.json'
-api_url = 'https://api.anymailfinder.com/v4.1/search/company.json'
-api_key = environ['API_KEY']
-# use this header with all the API calls
-headers = {'X-Api-Key': api_key}
+def main():
+    # constants
+    file_path = '/media/alxfed/toca/aa-crm/other-lists/archs_with_websites.csv'
+    output_file_path = '/media/alxfed/toca/aa-crm/other-lists/output_archs_with_emails_more.csv'
+    final_file_path = '/media/alxfed/toca/aa-crm/other-lists/08122019_archs_with_emails_more.csv'
 
-# check the number of credits left
-r = requests.get(credits_check_url, headers=headers)
-if r.status_code==200:
-    resp = r.json()
-    number = resp['credits_left']
-    if number <=100:
-        print("Less than 100 credits! I'm not working, sorry!")
-        exit()
+    # check the number of credits left
+    r = requests.get(anymail.constants.credits_check_url, headers=anymail.headers)
+    if r.status_code == 200:
+        resp = r.json()
+        number = resp['credits_left']
+        if number <= 100:
+            print("Less than 100 credits! I'm not working, sorry!")
+            exit()
+        else:
+            print(number, 'credits left')
     else:
-        print(number, 'credits left')
-else:
-    print('The API key is not working.', r.status_code)
-    exit()
+        print('The API key is not working.', r.status_code)
+        exit()
 
-# should be excluded
-# wordpress.com, houzz.com, yelp.com, facebook.com
+    # should be excluded
+    # wordpress.com, houzz.com, yelp.com, facebook.com
 
-# initiate the big objects
-rows = []
-fieldnames = ['Name', 'Phone Mobile', 'Phone Voip', 'Phone Toll',
-              'Phone Landline', 'Phone Unknown', 'Contact Person',
-              'Address', 'City', 'Zipcode', 'State', 'Category',
-              'Website', 'Facebook', 'Twitter', 'Google',
-              'Linkedin', 'emails', 'email_class']
+    # initiate the big objects
+    rows = []
+    fieldnames = ['Name', 'Phone Mobile', 'Phone Voip', 'Phone Toll',
+                  'Phone Landline', 'Phone Unknown', 'Contact Person',
+                  'Address', 'City', 'Zipcode', 'State', 'Category',
+                  'Website', 'Facebook', 'Twitter', 'Google',
+                  'Linkedin', 'emails', 'email_class']
+
+    return
 
 
+if __name__ == '__main__':
+    main()
+    print('main - done')
+
+
+'''
 with open(file_path) as f:
     f_csv = csv.DictReader(f, restkey='Rest', restval='')
     with open(output_file_path, 'w') as wr:
@@ -101,12 +101,4 @@ with open(final_file_path,'w') as f:
     f_csv.writerows(rows)
 
 print('OK')
-
-
-def main():
-    return
-
-
-if __name__ == '__main__':
-    main()
-    print('main - done')
+'''

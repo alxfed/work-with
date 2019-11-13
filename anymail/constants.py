@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """...
 """
-import requests
 
 
 credits_check_url = 'https://api.anymailfinder.com/v4.1/account/hits_left.json'
