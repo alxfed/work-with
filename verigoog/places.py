@@ -2,7 +2,7 @@
 """...
 """
 import verigoog
-from .constants import *
+from .constants import STATUS_CODES, chicago_bias, chicago_location
 
 
 def find_in_chicago(name_of_the_place):
