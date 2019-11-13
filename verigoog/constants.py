@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""...
+"""https://googlemaps.github.io/google-maps-services-python/docs/index.html#googlemaps.Client.find_place
 """
 import requests
 

@@ -31,40 +31,10 @@ def main():
                   'Linkedin', 'emails', 'email_class']
 
     companies = pd.read_csv(companies_file_path, dtype=object)
+    name = companies['name']
     tsd, td, tsu = extract(companies['website'])  # tldextract
     domain = td + '.' + tsu
-    list = anymail.find(domain)
-    if r.status_code > 202:
-        """errors
-        """
-        whats_up = r.json()
-        print('Wow! Errors happen!', r.status_code, whats_up['error'])
-        pass
-    elif r.status_code < 203:
-        timeout = False;
-        attempts = 0
-        while r.status_code != 200:
-            time.sleep(3)
-            r = requests.request('POST', api_url,
-                                 headers=headers, json=payload)
-            if r.status_code == 200:
-                break
-            else:
-                attempts += 1
-                print(attempts)
-                if attempts > 10:
-                    timeout = True
-                    break
-        if not timeout:
-            resp = r.json()
-            row.update({'emails': " ".join(resp['emails'])})
-            row.update({'email_class': resp['email_class']})
-            print(row['Name'], row['emails'], row['email_class'])
-        else:
-            print(row['Name'], 'Timeout')
-    else:
-        print('I dunno what this is...', r.status_code)
-        pass
+    list = anymail.find.emails(name, domain)
     return
 
 

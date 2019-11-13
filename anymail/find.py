@@ -2,15 +2,13 @@
 take a website name, split it and make an async request, searching
 for all the emails in the domain.
 """
-import csv
-from os import environ
-from sys import exit
+from .constants import *
 import time
 from collections import OrderedDict
 import requests
 
 
-def emails(domain):
+def emails(name, domain):
     # should be excluded
     # wordpress.com, houzz.com, yelp.com, facebook.com
 
@@ -22,27 +20,40 @@ def emails(domain):
                   'Website', 'Facebook', 'Twitter', 'Google',
                   'Linkedin', 'emails', 'email_class']
 
+    payload = {'domain': domain, 'company_name': name}
+    response = requests.post(api_url, headers=headers, json=payload, timeout=60)
 
-    with open(file_path) as f:
-        f_csv = csv.DictReader(f, restkey='Rest', restval='')
-        with open(output_file_path, 'w') as wr:
-            wr_csv = csv.DictWriter(wr, fieldnames=fieldnames)
-            wr_csv.writeheader()
-            for row in f_csv:
-                website = row['Website']
-                if not website:  # check whether there is a website
-                    pass
-                else:
-
-                wr_csv.writerow(row)
-                rows.append(row)
-
-    with open(final_file_path,'w') as f:
-        f_csv = csv.DictWriter(f, fieldnames=fieldnames)
-        f_csv.writeheader()
-        f_csv.writerows(rows)
-
-    print('OK')
+    if response.status_code > 202:
+        """errors
+        """
+        whats_up = response.json()
+        print('Wow! Errors happen!', response.status_code, whats_up['error'])
+        pass
+    elif response.status_code < 203:
+        timeout = False
+        attempts = 0
+        while response.status_code != 200:
+            time.sleep(3)
+            r = requests.request('POST', api_url,
+                                 headers=headers, json=payload)
+            if response.status_code == 200:
+                break
+            else:
+                attempts += 1
+                print(attempts)
+                if attempts > 10:
+                    timeout = True
+                    break
+        if not timeout:
+            resp = response.json()
+            row.update({'emails': " ".join(resp['emails'])})
+            row.update({'email_class': resp['email_class']})
+            print(row['Name'], row['emails'], row['email_class'])
+        else:
+            print(row['Name'], 'Timeout')
+    else:
+        print('I dunno what this is...', response.status_code)
+        pass
     return
 
 
