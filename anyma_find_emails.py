@@ -13,22 +13,12 @@ def main():
     output_file_path = '/media/alxfed/toca/aa-crm/other-lists/output_archs_with_emails_more.csv'
     final_file_path = '/media/alxfed/toca/aa-crm/other-lists/08122019_archs_with_emails_more.csv'
 
-    # check the number of credits left
-    r = requests.get(anymail.constants.credits_check_url, headers=anymail.headers)
-    if r.status_code == 200:
-        resp = r.json()
-        number = resp['credits_left']
-        if number <= 100:
-            print("Less than 100 credits! I'm not working, sorry!")
-            exit()
-        else:
-            print(number, 'credits left')
-    else:
-        print('The API key is not working.', r.status_code)
-        exit()
-
     # should be excluded
     # wordpress.com, houzz.com, yelp.com, facebook.com
+
+    number = anymail.verify.credits()
+    if number < 100:
+        print('Low on credits in anymail')
 
     # initiate the big objects
     rows = []
