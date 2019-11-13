@@ -40,7 +40,7 @@ def of_type_in_chicago(name_of_the_place, type_string):
     elif result['status'] == 'OK':
         # print('Some')
         pass
-    candidates = result['candidates']
+    candidates = result['results']
     for candidate in candidates:
         place_id = candidate['place_id']
         contact = verigoog.Client.place(place_id=place_id,
