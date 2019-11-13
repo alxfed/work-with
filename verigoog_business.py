@@ -12,7 +12,7 @@ def main():
     token = token_file.read()
     token_file.close()
 
-    addre = 'ACRIS, INC.' #''
+    addre = 'D CONSTRUCTION, INC' #''
 
     location = {'lat': 41.8781136, 'lng': -87.6297982}
 
@@ -23,12 +23,28 @@ def main():
                                     retry_over_query_limit=True)
     result = maps_client.find_place(input=addre,
                                     input_type="textquery",
-                                    fields=['place_id'],
+                                    fields=['place_id', 'types'],
                                     location_bias=bias)
     if result['status'] == 'ZERO_RESULTS':
         print('None')
-    candidates    = result['candidates']
+    elif result['status'] == 'OK':
+        print('Some')
+        candidates    = result['candidates']
+    another_result = maps_client.places(query=addre,
+                                        location=location,
+                                        radius=50000,
+                                        type='general_contractor')
+    if another_result['status'] == 'OK':
+        print('Some')
+        place_id = another_result['results'][0]['place_id']
     candidates_list = []
+    '''
+    'place_id': 'ChIJixEoCtUpDIgRke3x5nWfa54', 
+    'plus_code': {'compound_code': '7P88+JW Coal City, Illinois', 'global_code': '86HH7P88+JW'}, 
+    'rating': 3.5, 
+    'reference': 'ChIJixEoCtUpDIgRke3x5nWfa54', 
+    'types': ['general_contractor', 'point_of_interest', 'establishment']
+    '''
     for candidate in candidates:
         place_id = candidate['place_id']
         contact = maps_client.place(place_id=place_id,

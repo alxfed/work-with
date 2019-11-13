@@ -72,6 +72,4 @@ sales_stages = {'Clients (come in )': '904851',
                 'Closed / Delivered': 'closedlost',
                 'Lost / Never Ordered': '825b606f-cda4-4a4c-a201-9bcf331a8aa3'}
 
-ENGAGEMENTS_URL     = 'https://api.hubapi.com/engagements/v1/engagements'
-
 OAUTH_TOKEN_URL     = 'https://api.hubapi.com/oauth/v1/token'
