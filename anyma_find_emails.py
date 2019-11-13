@@ -2,7 +2,6 @@
 take a website name, split it and make an async request, searching
 for all the emails in the domain.
 """
-
 import requests
 import anymail
 
@@ -27,7 +26,6 @@ def main():
                   'Address', 'City', 'Zipcode', 'State', 'Category',
                   'Website', 'Facebook', 'Twitter', 'Google',
                   'Linkedin', 'emails', 'email_class']
-
     return
 
 
