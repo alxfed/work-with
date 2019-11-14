@@ -35,7 +35,8 @@ def get_all_lists_oauth():
         if response.status_code == 200:
             res = response.json()
             has_more    = res['has-more']
-            offset      = res['offset']
+            if has_more:
+                offset  = res['offset']
             lists       = res['lists']
             all_lists.extend(lists)
             print('Now at offset: ', offset)
@@ -65,7 +66,8 @@ def get_all_contacts_in(listId):
         if response.status_code == 200:
             res = response.json()
             has_more = res['has-more']
-            offset = res['offset']
+            if has_more:
+                offset = res['offset']
             contacts = res['contacts']
             all_list.extend(contacts)
             print('Now at offset: ', offset)
