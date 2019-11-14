@@ -6,7 +6,7 @@ import pandas as pd
 
 
 def main():
-    cont_list = hubspot.lists.get_all_contacts_in('284')
+    cont_list = hubspot.lists.get_all_contacts_in('260')
     return
 
 
