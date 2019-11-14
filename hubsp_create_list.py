@@ -5,9 +5,9 @@ import hubspot
 
 
 def main():
-    name = 'Test list created through the API'
+    name = 'Win the customers back list'
     listId = hubspot.lists.create_static_list(name)
-    print('ok')
+    print('ok', listId)
     return
 
 
