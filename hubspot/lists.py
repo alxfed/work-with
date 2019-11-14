@@ -67,7 +67,7 @@ def get_all_contacts_in(listId):
             res = response.json()
             has_more = res['has-more']
             if has_more:
-                offset = res['offset']
+                offset = res['vid-offset']
             contacts = res['contacts']
             all_list.extend(contacts)
             print('Now at offset: ', offset)
