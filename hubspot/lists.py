@@ -35,8 +35,7 @@ def get_all_lists_oauth():
         if response.status_code == 200:
             res = response.json()
             has_more    = res['has-more']
-            if has_more:
-                offset  = res['offset']
+            offset      = res['offset']
             lists       = res['lists']
             all_lists.extend(lists)
             print('Now at offset: ', offset)
@@ -53,21 +52,16 @@ def get_all_contacts_in(listId):
     has_more = True
     offset = 0
     count = 250  # max 250
-    # what is being returned
-    output_columns = ["dynamic", "metaData",
-                      "name", "filters", "createdAt", "listId", "updatedAt",
-                      "listType", "internalListId", "deleteable"]
     # Now the main cycle
     req_url = constants.LISTS_ALL_URL + '/'+ listId + '/contacts/all'
     while has_more:
         response = requests.get(url=req_url,
                                 headers=constants.authorization_header,
-                                params={'count': count, 'offset': offset})
+                                params={'count': count, 'vidOffset': offset})
         if response.status_code == 200:
             res = response.json()
             has_more = res['has-more']
-            if has_more:
-                offset = res['vid-offset']  # different here
+            offset   = res['vid-offset']  # different here
             contacts = res['contacts']
             all_list.extend(contacts)
             print('Now at offset: ', offset)
