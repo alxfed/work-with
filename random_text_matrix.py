@@ -19,7 +19,7 @@ def work_on_rows(row, ref, sta):
 
 def main():
     lett = list(string.ascii_lowercase)
-    df = pd.DataFrame(np.random.choice(lett, size=(3, 3)), columns=[0, 1, 2])
+    df = pd.DataFrame(np.random.choice(lett, size=(3, 3)), index=['a', 'b', 'c'], columns=[0, 1, 2])
     reference = pd.DataFrame(np.random.choice(lett, size=(4, 3)), columns=['name', 'address', 'phone'])
     state = pd.DataFrame(np.random.choice(lett, size=(5, 3)), columns=['name', 'address', 'phone'])
 
