@@ -2,16 +2,18 @@
 """...
 """
 import pyodbc
+from . import constants
 
-DB_PATH = '/home/alxfed/dbase/firstbase.sqlite'
-DRIVER = 'SQLite3'
 
-connection = pyodbc.connect('DRIVER={' + DRIVER + '};DATABASE=' + DB_PATH)
-cursor = connection.cursor()
-
-cursor.execute("SELECT ")
-for row in cursor.fetchall():
-    print(row)
+def create_connection_and_cursor():
+    connection = pyodbc.connect('DRIVER={' + constants.DRIVER + '};DATABASE=' + constants.DRIVER)
+    cursor = connection.cursor()
+    return cursor
+'''
+    cursor.execute("SELECT ")
+    for row in cursor.fetchall():
+        print(row)
+'''
 
 
 def main():

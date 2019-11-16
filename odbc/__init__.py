@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
-"""...
-"""
-import
+__all__ = ['constants', 'dbase']
+from . import constants, dbase
 
 
 def main():
+    print('You have launched the init of odbc package as main')
     return
 
 
