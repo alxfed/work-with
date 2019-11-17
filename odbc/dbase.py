@@ -5,13 +5,13 @@ import pyodbc
 from . import constants
 
 
-def create_connection(datasourcename):
+def connection_with(datasourcename):
     '''journal_mode=WAL if you need a concurrent reading
     by another process
     '''
-    connection = pyodbc.connect('DSN='+datasourcename, autocommit=True)
-    cursor = connection.cursor()
-    return cursor
+    connection_string = f'DSN={datasourcename}'
+    connection = pyodbc.connect(connection_string, autocommit=True)
+    return connection
 '''
     cursor.execute("SELECT ")
     for row in cursor.fetchall():
