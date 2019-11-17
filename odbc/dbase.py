@@ -5,8 +5,11 @@ import pyodbc
 from . import constants
 
 
-def create_connection_and_cursor():
-    connection = pyodbc.connect('DRIVER={' + constants.DRIVER + '};DATABASE=' + constants.DRIVER)
+def create_connection(datasourcename):
+    '''journal_mode=WAL if you need a concurrent reading
+    by another process
+    '''
+    connection = pyodbc.connect('DSN='+datasourcename, autocommit=True)
     cursor = connection.cursor()
     return cursor
 '''
