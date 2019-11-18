@@ -65,7 +65,7 @@ def search_for_company_by_domain(domain, paramlist):
         return
 
 
-def get_all_companies(request_parameters):
+def get_all_companies_key(request_parameters):
     """Downloads the complete list of companies from the portal
     :param request_parameters: list of Contact parameters
     :return all_companies: list of dictionaries / CDR
@@ -110,6 +110,58 @@ def get_all_companies(request_parameters):
                     if co_property not in output_columns:
                         output_columns.append(co_property)
                         print('Adding a property to colunms list: ', co_property)
+                    row.update({co_property: co_properties[co_property]['value']})
+                all_companies.append(row)
+            print('Now at offset: ', offset)
+        else:
+            print(response.status_code)
+    return all_companies, output_columns
+
+
+def get_all_companies_oauth(request_parameters):
+    """Downloads the complete list of companies from the portal
+    :param request_parameters: list of Contact parameters
+    :return all_companies: list of dictionaries / CDR
+    :return output_columns: list of output column names
+    """
+    def make_parameters_string(parameters_substring, offset, limit):
+        # authentication = 'hapikey=' + constants.api_key
+        parameters_string = f'{parameters_substring}&offset={offset}&limit={limit}'
+        return parameters_string
+    # prepare for the (inevitable) output
+    all_companies    = []
+    output_columns  = ['companyId', 'isDeleted']
+    output_columns.extend(request_parameters)
+
+    # package the parameters into a substring
+    param_substring = ''
+    for item in request_parameters:
+        param_substring = '{}&properties={}'.format(param_substring, item)
+
+    # prepare for the pagination
+    has_more = True
+    offset = 0
+    limit = 250  # max 250
+
+    # Now the main cycle
+    while has_more:
+        api_url = '{}?{}'.format(constants.COMPANIES_ALL_URL,
+                                 make_parameters_string(param_substring, offset, limit))
+        response = requests.request("GET", url=api_url, headers=constants.authorization_header)
+        if response.status_code == 200:
+            res = response.json()
+            has_more    = res['has-more']
+            offset      = res['offset']
+            companies   = res['companies']
+            for company in companies:
+                row = {}
+                row.update({"companyId": company["companyId"],
+                            "isDeleted": company["isDeleted"]})
+                co_properties = company['properties']
+                for co_property in co_properties:
+                    if co_property not in output_columns:
+                        output_columns.append(co_property)
+                        print('Adding a property to columns list: ', co_property)
                     row.update({co_property: co_properties[co_property]['value']})
                 all_companies.append(row)
             print('Now at offset: ', offset)
