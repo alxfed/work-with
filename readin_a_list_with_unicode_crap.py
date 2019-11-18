@@ -32,17 +32,20 @@ def main():
                                                'secondary_insurance_expr'],
                                   date_parser=dateparse,
                                   dtype=object)
+    #gen_contractors.fillna('')
     all_rows = []
     for index, contractor in gen_contractors.iterrows():
         row = {}
         row['company_name'] = contractor['company_name']
         phone = contractor['phone'].replace('x', '')
         row['phone'] = phone
-        address = contractor['address'].replace('\xa0\xa0', '\xa0')
         street_address = ''; city = ''; state = ''; zip = ''
-        street_address, sep, city_state_zip = address.partition('\xa0')
-        city, sep, state_zip = city_state_zip.partition('\xa0')
-        state, sep, zip = state_zip.partition('\xa0')
+        addr = str(contractor['address'])
+        if not (addr == ''):
+            address = addr.replace('\xa0\xa0', '\xa0')
+            street_address, sep, city_state_zip = address.partition('\xa0')
+            city, sep, state_zip = city_state_zip.partition('\xa0')
+            state, sep, zip = state_zip.partition('\xa0')
         row['street_address'] = street_address
         row['city'] = city
         row['state'] = state
@@ -56,7 +59,7 @@ def main():
     licensed_general_contractors = pd.DataFrame(all_rows)
     conn = sqlalc.create_engine('sqlite:////home/alxfed/dbase/home.sqlite')
     licensed_general_contractors.to_sql(name='licensed_general_contractors',
-                                        con=conn, if_exists='replace')
+                                        con=conn, if_exists='replace', index=False)
 
     processed_gen_cont = '/home/alxfed/archive/licensed_general_contractors_database.csv'
     with open(processed_gen_cont, 'w') as f:
