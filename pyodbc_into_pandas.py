@@ -21,8 +21,8 @@ def main():
     data = pd.read_sql_query(SQL, connection)
     connection.close()
 
-    other_conn = sqlalc.create_engine('sqlite:///home/alxfed/dbase/home.sqlite')
-    other = pd.read_sql(SQL, con=other_conn)
+    other_conn = sqlalc.create_engine('sqlite:////home/alxfed/dbase/center.sqlite')
+    other = pd.read_sql_table(table_name='rand', con=other_conn)
     lett = list(string.ascii_lowercase)
     df = pd.DataFrame(np.random.choice(lett, size=(3, 3)), index=['a', 'b', 'c'], columns=[0, 1, 2])
     res = df.to_sql(name='rand', con=connection, if_exists='replace')
