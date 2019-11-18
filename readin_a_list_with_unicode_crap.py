@@ -17,6 +17,8 @@ def dateparse(x):
 def main():
     # active General Contractors are on https://webapps1.chicago.gov/activegcWeb/
     gen_cont_file_path = '/home/alxfed/archive/licensed_general_contractors.csv'
+    processed_gen_cont = '/home/alxfed/archive/licensed_general_contractors_database.csv'
+
     input_columns = ['license_type', 'company_name', 'address', 'phone',
                      'license_expr', 'primary_insurance_expr',
                      'secondary_insurance_expr']
@@ -25,6 +27,7 @@ def main():
                      'license_type',
                       'license_expr', 'primary_insurance_expr',
                      'secondary_insurance_expr']
+
     gen_contractors = pd.read_csv(gen_cont_file_path,
                                   usecols=input_columns,
                                   parse_dates=['license_expr',
@@ -32,7 +35,6 @@ def main():
                                                'secondary_insurance_expr'],
                                   date_parser=dateparse,
                                   dtype=object)
-    #gen_contractors.fillna('')
     all_rows = []
     for index, contractor in gen_contractors.iterrows():
         row = {}
@@ -61,7 +63,6 @@ def main():
     licensed_general_contractors.to_sql(name='licensed_general_contractors',
                                         con=conn, if_exists='replace', index=False)
 
-    processed_gen_cont = '/home/alxfed/archive/licensed_general_contractors_database.csv'
     with open(processed_gen_cont, 'w') as f:
         f_csv = csv.DictWriter(f, output_columns)
         f_csv.writeheader()
