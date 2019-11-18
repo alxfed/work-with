@@ -9,7 +9,7 @@ import sqlalchemy as sqlalc
 
 
 def main():
-    name_of_dsn = 'center'
+    name_of_dsn = 'home'
     '''
     connection_string = f'DSN={name_of_dsn}'
     connection = pyodbc.connect(connection_string, autocommit=True)
@@ -17,7 +17,7 @@ def main():
     data = pd.read_sql(SQL, connection)
     '''
     connection = odbc.dbase.connection_with(name_of_dsn)
-    SQL = 'select * from rand'
+    SQL = 'select * from licensed_general_contractors'
     data = pd.read_sql_query(SQL, connection)
     connection.close()
 
