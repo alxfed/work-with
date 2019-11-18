@@ -23,16 +23,31 @@ def main():
                       'phone_toll','phone_landline','phone_unidentified',
                       'address','city','zip','state', 'category','website']
 
+    normal_columns = ['companyId', 'isDeleted', 'name', 'phone', 'phone_mobile',
+                      'phone_voip', 'phone_toll', 'phone_landline',
+                      'phone_unidentified', 'address', 'city', 'zip', 'state',
+                      'category', 'website']
+
     all_companies_cdr, all_columns = hubspot.companies.get_all_companies_oauth(request_params)
-    all_companies = pd.DataFrame.from_records(all_companies_cdr, columns=all_columns)
-    output_columns = ['company_name', 'phone',
-                      'street_address', 'city', 'state', 'zip',
-                     'license_type',
-                      'license_expr', 'primary_insurance_expr',
-                     'secondary_insurance_expr']
+    all_companies = pd.DataFrame(all_companies_cdr, columns=normal_columns)
+    all_companies.fillna(value='', inplace=True)
+    all_companies['companyId'] = all_companies['companyId'].astype(dtype=int)
+    all_companies['isDeleted'] = all_companies['isDeleted'].astype(dtype=bool)
+    all_companies['name'] = all_companies['name'].astype(dtype=object)
+    all_companies['phone'] = all_companies['phone'].astype(dtype=object)
+    all_companies['address'] = all_companies['address'].astype(dtype=object)
+    all_companies['city'] = all_companies['city'].astype(dtype=object)
+    all_companies['zip'] = all_companies['zip'].astype(dtype=object)
+    all_companies['state'] = all_companies['state'].astype(dtype=object)
+    all_companies['category'] = all_companies['category'].astype(dtype=object)
+    all_companies['website'] = all_companies['website'].astype(dtype=object)
+
+    conn = sqlalc.create_engine('sqlite:////home/alxfed/dbase/home.sqlite')
+    all_companies.to_sql(name='companies', con=conn, if_exists='replace',
+                         index=False)
 
     with open(downuploaded_companies, 'w') as f:
-        f_csv = csv.DictWriter(f, all_columns)
+        f_csv = csv.DictWriter(f, normal_columns)
         f_csv.writeheader()
         f_csv.writerows(all_companies_cdr)
     return
