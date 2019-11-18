@@ -4,15 +4,7 @@
 import pandas as pd
 import hubspot
 import csv
-from numpy import nan
 import sqlalchemy as sqlalc
-
-
-def dateparse(x):
-    if x is nan:
-        return # datetime(2018, 12, 8, 0, 0)
-    else:
-        return pd.datetime.strptime(x, '%m/%d/%y') #  %H:%M:%S.%f if there are hours, minutes, seconts and milliseconds
 
 
 def main():
@@ -23,9 +15,8 @@ def main():
                       'phone_toll','phone_landline','phone_unidentified',
                       'address','city','zip','state', 'category','website']
 
-    normal_columns = ['companyId', 'isDeleted', 'name', 'phone', 'phone_mobile',
-                      'phone_voip', 'phone_toll', 'phone_landline',
-                      'phone_unidentified', 'address', 'city', 'zip', 'state',
+    normal_columns = ['companyId', 'isDeleted', 'name', 'phone',
+                      'address', 'city', 'zip', 'state',
                       'category', 'website']
 
     all_companies_cdr, all_columns = hubspot.companies.get_all_companies_oauth(request_params)
@@ -47,7 +38,7 @@ def main():
                          index=False)
 
     with open(downuploaded_companies, 'w') as f:
-        f_csv = csv.DictWriter(f, normal_columns)
+        f_csv = csv.DictWriter(f, all_columns)
         f_csv.writeheader()
         f_csv.writerows(all_companies_cdr)
     return
