@@ -17,7 +17,7 @@ def main():
     data = pd.read_sql(SQL, connection)
     '''
     connection = odbc.dbase.connection_with(name_of_dsn)
-    SQL = 'select * from licensed_general_contractors'
+    SQL = 'select * from companies'
     data = pd.read_sql_query(SQL, connection)
     connection.close()
 
