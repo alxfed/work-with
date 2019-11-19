@@ -40,8 +40,6 @@ def main():
     all_companies['category'] = all_companies['category'].astype(dtype=object)
     all_companies['website'] = all_companies['website'].astype(dtype=object)
 
-    meta = getPandasSchema(all_companies)
-
     conn = sqlalc.create_engine('sqlite:////home/alxfed/dbase/home.sqlite')
     all_companies.to_sql(name='companies', con=conn, if_exists='replace',
                          index=False)

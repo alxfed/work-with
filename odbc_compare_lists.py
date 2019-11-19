@@ -12,9 +12,6 @@ def main():
     meta = MetaData(connection)
     meta.reflect(only=[table_name], views=True)
     companies = pd.read_sql_table(table_name=table_name, con=connection)
-    papampanies = companies['companyId'][0]
-    dededetes = companies['isDeleted'][0]
-    companies['companyId'] = companies['companyId'].astype(int)
     licensed_gen_contractors = pd.read_sql_table(table_name='licensed_general_contractors', con=connection)
     licensed_gen_contractors = licensed_gen_contractors.fillna('')
     print('ok')
