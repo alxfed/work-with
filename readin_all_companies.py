@@ -7,6 +7,13 @@ import csv
 import sqlalchemy as sqlalc
 
 
+def getPandasSchema(df):
+    ''' takes a pandas dataframe and returns the dtype dictionary
+    useful for applying types when reloading that dataframe from csv etc
+    '''
+    return dict(zip(df.columns.tolist(),df.dtypes.tolist()))
+
+
 def main():
     # all companies from HubSpot
     downuploaded_companies = '/home/alxfed/archive/companies_database.csv'
@@ -32,6 +39,8 @@ def main():
     all_companies['state'] = all_companies['state'].astype(dtype=object)
     all_companies['category'] = all_companies['category'].astype(dtype=object)
     all_companies['website'] = all_companies['website'].astype(dtype=object)
+
+    meta = getPandasSchema(all_companies)
 
     conn = sqlalc.create_engine('sqlite:////home/alxfed/dbase/home.sqlite')
     all_companies.to_sql(name='companies', con=conn, if_exists='replace',
