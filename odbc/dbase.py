@@ -13,9 +13,16 @@ def connection_with(datasourcename):
     connection = pyodbc.connect(connection_string, autocommit=True)
     return connection
 '''
+    connection_string = f'DSN={name_of_dsn}'
+    connection = pyodbc.connect(connection_string, autocommit=True)
+    SQL = 'select * from houzz'
+    data = pd.read_sql(SQL, connection)
+'''
+'''
     cursor.execute("SELECT ")
     for row in cursor.fetchall():
         print(row)
+        
 '''
 
 
