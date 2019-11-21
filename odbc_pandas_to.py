@@ -17,8 +17,10 @@ def main():
     deleted = data['isDeleted'][0]
     name = data['name'][0]
     phone = data['phone'][0]
-
+    # the next chunk is not finished yet
     another_conn = odbc.dbase.connection_with('center')
+    curs = another_conn.cursor()
+    curs.execute('SELECT * FROM another_test_new_construction')
     data.to_sql('companies', con=another_conn, if_exists='replace')
     return
 
