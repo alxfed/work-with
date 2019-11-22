@@ -7,13 +7,6 @@ import csv
 import sqlalchemy as sqlalc
 
 
-def getPandasSchema(df):
-    ''' takes a pandas dataframe and returns the dtype dictionary
-    useful for applying types when reloading that dataframe from csv etc
-    '''
-    return dict(zip(df.columns.tolist(),df.dtypes.tolist()))
-
-
 def main():
     # all companies from HubSpot
     downuploaded_companies = '/home/alxfed/archive/companies_database.csv'
@@ -54,3 +47,12 @@ def main():
 if __name__ == '__main__':
     main()
     print('main - done')
+
+'''
+
+def getPandasSchema(df):
+    takes a pandas dataframe and returns the dtype dictionary
+    useful for applying types when reloading that dataframe from csv etc
+    
+    return dict(zip(df.columns.tolist(),df.dtypes.tolist()))
+'''
