@@ -25,7 +25,7 @@ def main():
 
     include_associations = True
 
-    all_deals_cdr, all_columns = hubspot.deals.get_all_deals_oauth(request_params, include_associations)
+    all_deals_cdr, all_columns = hubspot.deals.get_first_page_of_deals_oauth(request_params, include_associations)
     all_deals = pd.DataFrame(all_deals_cdr, columns=normal_columns)
     all_deals.fillna(value='', inplace=True)
     all_deals['dealId'] = all_deals['dealId'].astype(dtype=int)
