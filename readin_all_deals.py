@@ -11,13 +11,13 @@ import numpy as np
 def main():
     # all companies from HubSpot
     downuploaded_deals = '/home/alxfed/archive/deals_database.csv'
-    request_params = ['hs_object_id', 'dealname', 'description', 'design_date',
+    request_params = ['dealname', 'description', 'design_date',
                       'closedate', 'amount', 'pipeline', 'dealstage',
                       'permit_issue_date', 'permit_', 'permit', 'permit_type',
                       'work_descrption',
                       'last_inspection', 'last_inspection_date', 'insp_n', 'insp_note']
     normal_columns = ['dealId', 'isDeleted',
-                      'hs_object_id', 'dealname', 'description', 'design_date',
+                      'dealname', 'description', 'design_date',
                       'closedate', 'amount', 'pipeline', 'dealstage',
                       'permit_issue_date', 'permit_', 'permit', 'permit_type',
                       'work_descrption',
