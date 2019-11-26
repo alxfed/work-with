@@ -29,7 +29,6 @@ def main():
     all_deals.fillna(value='', inplace=True)
     all_deals['dealId'] = all_deals['dealId'].astype(dtype=int)
     all_deals['isDeleted'] = all_deals['isDeleted'].astype(dtype=bool)
-    all_deals['hs_object_id'] = all_deals['hs_object_id'].astype(dtype=int)
     all_deals['dealname'] = all_deals['dealname'].astype(dtype=object)
     all_deals['description'] = all_deals['description']
     all_deals['design_date'] = pd.to_datetime(all_deals['design_date'], unit='ms')

@@ -5,7 +5,7 @@ import hubspot
 
 
 def main():
-    name = 'Win the customers back list'
+    name = 'Customers with wrong numbers'
     listId = hubspot.lists.create_static_list(name)
     print('ok', listId)
     return
