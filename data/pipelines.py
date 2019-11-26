@@ -8,17 +8,17 @@ import odbc
 
 class DataPipeline(object):
 
-    table_name = 'scraped_data'
-
     def __init__(self, odbc_dsn):
         # while the instance of this pipeline is being created
         self.odbc_dsn = odbc_dsn
+        self.odbc_table = odbc_table
 
     @classmethod
     def from_crawler(cls, crawler):
         # before the instance of this pipeline is created.
         return cls(
-            odbc_dsn = crawler.settings.get('ODBC_DSN')
+            odbc_dsn = crawler.settings.get('ODBC_DSN'),
+            odbc_table = crawler.settings.get('ODBC_TABLE')
         )
 
     def open_spider(self, spider):

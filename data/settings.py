@@ -69,6 +69,7 @@ ITEM_PIPELINES = {
 }
 
 ODBC_DSN = 'data'
+ODBC_TABLE = 'scrapy_result'
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
