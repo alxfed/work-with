@@ -68,6 +68,8 @@ ITEM_PIPELINES = {
    'data.pipelines.DataPipeline': 300,
 }
 
+ODBC_DSN = 'data'
+
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
 #AUTOTHROTTLE_ENABLED = True
