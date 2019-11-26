@@ -43,15 +43,15 @@ def main():
                primary_key=True))
 
     metadata.create_all()
-    # metadata.bind.echo = True
-
+    metadata.bind.echo = True
+    # insert statement executed multiple times
     stmt = user_table.insert()
 
     stmt.execute(user_name='rick', password='secret',
                  display_name='Rick Copeland')
     stmt.execute(user_name='rick1', password='secret',
                  display_name='Rick Copeland Clone')
-
+    # select statement executed multiple times
     stmt = user_table.select()
     result = stmt.execute()
     for row in result:
