@@ -5,7 +5,7 @@ from scrapy.spiders import CrawlSpider, Rule
 
 
 class CrawlSpiderSpider(CrawlSpider):
-    name = 'crawl_spider'
+    name = 'gen_cons'
     allowed_domains = ['chicago.gov']
     start_urls = ['https://webapps1.chicago.gov/activegcWeb/']
 

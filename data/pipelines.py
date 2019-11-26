@@ -8,7 +8,7 @@ import odbc
 
 class DataPipeline(object):
 
-    def __init__(self, odbc_dsn):
+    def __init__(self, odbc_dsn, odbc_table):
         # while the instance of this pipeline is being created
         self.odbc_dsn = odbc_dsn
         self.odbc_table = odbc_table
@@ -24,11 +24,11 @@ class DataPipeline(object):
     def open_spider(self, spider):
         self.cnxn = odbc.dbase.connection_with(self.odbc_dsn)
         self.curs = self.cnxn.cursor()
-        self.curs.execute('drop table if exists ?', self.table_name)
+        self.curs.execute('drop table if exists ?', self.odbc_table)
         self.curs.execute('''create table ?(
                             one text,
                             two text,
-                            three text''', self.table_name)
+                            three text''', self.odbc_table)
 
     def close_spider(self, spider):
         self.cnxn.close()
