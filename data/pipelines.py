@@ -24,20 +24,23 @@ class DataPipeline(object):
     def open_spider(self, spider):
         self.cnxn = odbc.dbase.connection_with(self.odbc_dsn)
         self.curs = self.cnxn.cursor()
-        self.curs.execute('drop table if exists ?', self.odbc_table)
-        self.curs.execute('''create table ?(
-                            one text,
-                            two text,
-                            three text''', self.odbc_table)
+        # self.curs.execute('drop table if exists ?', self.odbc_table)
+        # self.curs.execute('''create table ?(
+        #                     one text,
+        #                     two text,
+        #                     three text''', self.odbc_table)
+        pass
 
     def close_spider(self, spider):
         self.cnxn.close()
+        pass
 
     def store(self, item):
-        self.curs.execute("""insert into scraped_data values(?, ?, ?)""",
-                              item['one'],
-                              item['two'],
-                              item['three'])
+        # self.curs.execute("""insert into scraped_data values(?, ?, ?)""",
+        #                       item['one'],
+        #                       item['two'],
+        #                       item['three'])
+        pass
 
     def process_item(self, item, spider):
         self.store(item)

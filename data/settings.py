@@ -53,7 +53,7 @@ CONCURRENT_REQUESTS = 1
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
-   'data.middlewares.DataDownloaderMiddleware': 543,
+   'data.middlewares.DataDownloaderMiddleware': 300,
 }
 
 # Enable or disable extensions
@@ -67,7 +67,7 @@ DOWNLOADER_MIDDLEWARES = {
 # ITEM_PIPELINES = {
 #    'data.pipelines.DataPipeline': 300,
 # }
-#
+# #
 # ODBC_DSN = 'data'
 # ODBC_TABLE = 'scrapy_result'
 

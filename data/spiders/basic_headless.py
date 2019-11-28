@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from data.items import LicenseTableLine
+from datetime import datetime
 
 
 class HeadlessReaderRobot(scrapy.Spider):
@@ -14,7 +15,6 @@ class HeadlessReaderRobot(scrapy.Spider):
             yield scrapy.Request(url=url, dont_filter=True, callback=self.parse, cb_kwargs=cb_kwargs )
 
     def parse(self, response, **cb_kwargs):
-        # td/label/text()
         page_num = cb_kwargs['page_num']
         table_rows_xpath = '//table[contains(@class,"gridStyle-table")]/tbody/tr[contains(@class,"gridStyle-tr-alt-data")]'
         table_selector = response.xpath(table_rows_xpath)
@@ -22,8 +22,11 @@ class HeadlessReaderRobot(scrapy.Spider):
             line = LicenseTableLine()
             line['lic_type']    = table_line.xpath('td[1]/label/text()').get()
             line['comp_name']   = table_line.xpath('td[2]/label/text()').get()
-            line['address']     = table_line.xpath('td[3]/label/text()').get()
-            line['phone']       = table_line.xpath('td[4]/label/text()').get()
+            line['address']     = table_line.xpath('td[3]/label[1]/text()').get().strip()
+            line['city']        = table_line.xpath('td[3]/label[2]/text()').get().strip()
+            line['state']       = table_line.xpath('td[3]/label[3]/text()').get().strip()
+            line['zip']         = table_line.xpath('td[3]/label[4]/text()').get()
+            line['phone']       = table_line.xpath('td[4]/label/text()').get().strip().replace(' x', '')
             line['lic_expr']    = table_line.xpath('td[5]/label/text()').get()
             line['pins_expr']   = table_line.xpath('td[6]/label/text()').get()
             line['sins_expr']   = table_line.xpath('td[7]/label/text()').get()
