@@ -12,3 +12,13 @@ class DataItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
     pass
+
+
+class LicenseTableLine(scrapy.Item):
+    lic_type = scrapy.Field()
+    comp_name = scrapy.Field()
+    address = scrapy.Field()
+    phone = scrapy.Field()
+    lic_expr = scrapy.Field()
+    pins_expr = scrapy.Field()
+    sins_expr = scrapy.Field()

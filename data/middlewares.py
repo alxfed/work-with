@@ -16,14 +16,13 @@ import re
 from os import environ
 
 options = webdriver.ChromeOptions()
-# options.add_argument('headless')
+options.add_argument('headless')
 options.add_argument('window-size=1920x1080')
 options.binary_location = '/usr/bin/google-chrome'
 browser = webdriver.Chrome(executable_path='/opt/google/chrome/chromedriver', chrome_options=options)
 loggedin = False
 where_i_am_now = ''
 searched_same = False
-
 
 class DataSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
@@ -85,24 +84,32 @@ class DataDownloaderMiddleware(object):
         crawler.signals.connect(s.spider_opened, signal=signals.spider_opened)
         return s
 
-    def jump_to_page_num(self, browser, page_num):
+    def jump_to_page_num(self, page_num):
         try:
             page_link = browser.find_element_by_link_text(str(page_num))
-            page_link.click()
-            page = page_num
         except NoSuchElementException:
-            print('no page link')
+            return 0
+        page_link.click()
+        return page_num
 
-    def move_to_the_page(self, browser, page_num):
-        page = 0
-        if page_num <= 10:
-            page =
+    def leapfrog_to_page_num(self, page_num):
+        page_link = browser.find_element_by_link_text('10')
+        page_link.click()
         try:
             page_link = browser.find_element_by_link_text(str(page_num))
-            page_link.click()
-            page = page_num
         except NoSuchElementException:
-            print('no page link')
+            return 0
+        page_link.click()
+        return page_num
+
+    def move_to_the_page(self, page_num):
+        page = 0
+        if page_num == 1:
+            return page_num
+        if page_num <= 10:
+            page = self.jump_to_page_num(page_num)
+        else:
+            page = self.leapfrog_to_page_num(page_num)
         return page
 
     def process_request(self, request, spider):
@@ -112,15 +119,15 @@ class DataDownloaderMiddleware(object):
         if request.url.startswith(home_url):
             page_num = request.cb_kwargs['page_num']
             browser.get('https://webapps1.chicago.gov/activegcWeb/')
-            page = self.move_to_the_page(browser, page_num)
-            sleep(1)
-            body = browser.page_source
-        # Must either:
-        # - return None: continue processing this request
-        # - or return a Response object
-        # - or return a Request object
-        # - or raise IgnoreRequest: process_exception() methods of
-        #   installed downloader middleware will be called
+            page = self.move_to_the_page(page_num)
+            if not page == 0:
+                body = browser.page_source
+                # minify html
+                body = body.replace('\t', '')
+                body = body.replace('\n', '')
+                body = re.sub('>\s*<', '><', body, 0, re.M)
+                # minify html
+                return HtmlResponse(home_url, body=body, encoding='utf-8', request=request) #
         return None
 
     def process_response(self, request, response, spider):
