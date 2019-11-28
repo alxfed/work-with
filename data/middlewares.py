@@ -6,6 +6,23 @@
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 from scrapy import signals
+from scrapy.http import HtmlResponse
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import Select
+from selenium.common.exceptions import NoSuchElementException
+from time import sleep
+import re
+from os import environ
+
+options = webdriver.ChromeOptions()
+# options.add_argument('headless')
+options.add_argument('window-size=1920x1080')
+options.binary_location = '/usr/bin/google-chrome'
+browser = webdriver.Chrome(executable_path='/opt/google/chrome/chromedriver', chrome_options=options)
+loggedin = False
+where_i_am_now = ''
+searched_same = False
 
 
 class DataSpiderMiddleware(object):
@@ -68,10 +85,36 @@ class DataDownloaderMiddleware(object):
         crawler.signals.connect(s.spider_opened, signal=signals.spider_opened)
         return s
 
+    def jump_to_page_num(self, browser, page_num):
+        try:
+            page_link = browser.find_element_by_link_text(str(page_num))
+            page_link.click()
+            page = page_num
+        except NoSuchElementException:
+            print('no page link')
+
+    def move_to_the_page(self, browser, page_num):
+        page = 0
+        if page_num <= 10:
+            page =
+        try:
+            page_link = browser.find_element_by_link_text(str(page_num))
+            page_link.click()
+            page = page_num
+        except NoSuchElementException:
+            print('no page link')
+        return page
+
     def process_request(self, request, spider):
         # Called for each request that goes through the downloader
         # middleware.
-
+        home_url = 'https://webapps1.chicago.gov/activegcWeb/'
+        if request.url.startswith(home_url):
+            page_num = request.cb_kwargs['page_num']
+            browser.get('https://webapps1.chicago.gov/activegcWeb/')
+            page = self.move_to_the_page(browser, page_num)
+            sleep(1)
+            body = browser.page_source
         # Must either:
         # - return None: continue processing this request
         # - or return a Response object

@@ -8,10 +8,10 @@ class CrawlSpiderSpider(CrawlSpider):
     name = 'gen_cons'
     allowed_domains = ['chicago.gov']
     start_urls = ['https://webapps1.chicago.gov/activegcWeb/']
-
-    rules = (
-        Rule(LinkExtractor(allow=r'Items/'), callback='parse_item', follow=True),
-    )
+    #
+    # rules = (
+    #     Rule(LinkExtractor(allow=r'Items/'), callback='parse_item', follow=True),
+    # )
 
     def parse_item(self, response):
         item = {}

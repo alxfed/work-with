@@ -52,9 +52,9 @@ CONCURRENT_REQUESTS = 1
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    'data.middlewares.DataDownloaderMiddleware': 543,
-#}
+DOWNLOADER_MIDDLEWARES = {
+   'data.middlewares.DataDownloaderMiddleware': 543,
+}
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
@@ -64,12 +64,12 @@ CONCURRENT_REQUESTS = 1
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-ITEM_PIPELINES = {
-   'data.pipelines.DataPipeline': 300,
-}
-
-ODBC_DSN = 'data'
-ODBC_TABLE = 'scrapy_result'
+# ITEM_PIPELINES = {
+#    'data.pipelines.DataPipeline': 300,
+# }
+#
+# ODBC_DSN = 'data'
+# ODBC_TABLE = 'scrapy_result'
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
