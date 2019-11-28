@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from data.items import LicenseTableLine
-from datetime import datetime
 
 
 class HeadlessReaderRobot(scrapy.Spider):
