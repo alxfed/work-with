@@ -4,27 +4,33 @@
 import pandas as pd
 import numpy as np
 import string
-import odbc
+import pyodbc
 import sqlalchemy as sqlalc
 
 
 def main():
-    name_of_dsn = 'home'
-    connection = odbc.dbase.connection_with(name_of_dsn)
-    SQL = 'select * from companies'
-    data = pd.read_sql_query(SQL, connection)
-    id = data['companyId'][0]
-    deleted = data['isDeleted'][0]
-    name = data['name'][0]
-    phone = data['phone'][0]
-    # the next chunk is not finished yet
-    another_conn = odbc.dbase.connection_with('center')
-    curs = another_conn.cursor()
-    curs.execute('SELECT * FROM another_test_new_construction')
-    data.to_sql('companies', con=another_conn, if_exists='replace')
+    datasourcename = 'data'
+    conn_string = f'DSN={datasourcename}'
+    # conn_string = '"Driver=SQLite3;Database=/home/alxfed/dbase/sqlite.db"'
+    conn = pyodbc.connect(conn_string, autocommit=True, timeout=2000)
+    curs = conn.cursor()
+    curs.execute('drop table if exists ?', 'test_table')
+    sql = 'create table test_table (one text, two text, three text)'
+    curs.execute(sql)
+    sql = 'insert into test_table(one, two, three) values ("one", "two", "three")'
+    curs.execute(sql)
+    curs.commit()
+    conn.close()
     return
 
 
 if __name__ == '__main__':
     main()
     print('main - done')
+
+
+# self.curs.execute('drop table if exists ?', self.odbc_table)
+        # self.curs.execute('''create table ?(
+        #                     one text,
+        #                     two text,
+        #                     three text''', self.odbc_table)
