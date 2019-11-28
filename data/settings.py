@@ -53,7 +53,7 @@ CONCURRENT_REQUESTS = 1
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
-   'data.middlewares.DataDownloaderMiddleware': 300,
+   'data.middlewares.DataDownloaderMiddleware': 543,
 }
 
 # Enable or disable extensions
