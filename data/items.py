@@ -15,13 +15,13 @@ class DataItem(scrapy.Item):
 
 
 class LicenseTableLine(scrapy.Item):
-    lic_type = scrapy.Field()
-    comp_name = scrapy.Field()
-    address = scrapy.Field()
+    license_type = scrapy.Field()
+    company_name = scrapy.Field()
+    street_address = scrapy.Field()
     city = scrapy.Field()
     state = scrapy.Field()
     zip = scrapy.Field()
     phone = scrapy.Field()
-    lic_expr = scrapy.Field()
-    pins_expr = scrapy.Field()
-    sins_expr = scrapy.Field()
+    license_expr = scrapy.Field()
+    primary_insurance_expr = scrapy.Field()
+    secondary_insurance_expr = scrapy.Field()

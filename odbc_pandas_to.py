@@ -14,7 +14,8 @@ def main():
     # conn_string = '"Driver=SQLite3;Database=/home/alxfed/dbase/sqlite.db"'
     conn = pyodbc.connect(conn_string, autocommit=True, timeout=2000)
     curs = conn.cursor()
-    curs.execute('drop table if exists ?', 'test_table')
+    table = 'test_table'
+    curs.execute(f"""drop table if exists {table}""")
     sql = 'create table test_table (one text, two text, three text)'
     curs.execute(sql)
     sql = 'insert into test_table(one, two, three) values ("one", "two", "three")'

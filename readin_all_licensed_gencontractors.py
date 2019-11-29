@@ -11,13 +11,13 @@ def main():
     # all licensed general contractors from the site https://webapps1.chicago.gov/activegcWeb/
     gen_cont_file_path = '/home/alxfed/archive/gen_cons_results.csv'
 
-    normal_columns = ['comp_name', 'address', 'phone', 'city', 'state', 'zip', 'lic_type', 'lic_expr',
-                      'pins_expr', 'sins_expr']
+    normal_columns = ['company_name', 'street_address', 'phone', 'city', 'state', 'zip', 'license_type', 'license_expr',
+                      'primary_insurance_expr', 'secondary_insurance_expr']
 
     all_licensed_gencontractors = pd.read_csv(gen_cont_file_path, usecols= normal_columns,
-                                              parse_dates=['lic_expr',
-                                                           'pins_expr',
-                                                           'sins_expr'],
+                                              parse_dates=['license_expr',
+                                                           'primary_insurance_expr',
+                                                           'secondary_insurance_expr'],
                                               dtype=object)
 
     # all_licensed_gencontractors.fillna(value='', inplace=True)
