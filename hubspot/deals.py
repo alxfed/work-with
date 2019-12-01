@@ -25,6 +25,18 @@ def create_a_deal(parameters, associations):
     return res
 
 
+def get_all_deal_properties():
+    request_url = 'https://api.hubapi.com/properties/v1/deals/properties'
+    response = requests.request('GET', url=request_url,
+                                headers=constants.authorization_header)
+    if response.status_code == 200:
+        resp = response.json()
+        return resp
+    else:
+        print(response.status_code)
+        return
+
+
 def create_a_deal_oauth(parameters, associations):
     data = {"associations": {},"properties": []}
     data['associations'] = associations
