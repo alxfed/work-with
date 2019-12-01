@@ -9,7 +9,7 @@ import numpy as np
 
 def main():
     # all licensed general contractors from the site https://webapps1.chicago.gov/activegcWeb/
-    gen_cont_file_path = '/home/alxfed/archive/gen_cons_results.csv'
+    gen_cont_file_path = '/home/alxfed/archive/general_contractors_results.csv'
 
     normal_columns = ['company_name', 'street_address', 'phone', 'city', 'state', 'zip', 'license_type', 'license_expr',
                       'primary_insurance_expr', 'secondary_insurance_expr']
