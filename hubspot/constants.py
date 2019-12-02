@@ -2,9 +2,6 @@
 """...
 """
 from os import environ
-from os.path import getmtime
-from datetime import datetime
-import datetime
 
 # credentials files
 AUTHORIZATION_TOKEN_FILE    = '/home/alxfed/credo/authorization_token.txt'

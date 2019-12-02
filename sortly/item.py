@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
 """...
 """
-import
+import requests
+from .constants import *
 
+def create_item():
+    resp = requests.Request(method='POST', headers=authorization_header)
+    headers = resp.headers
+    return
 
 def main():
     return

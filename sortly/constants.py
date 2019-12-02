@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """...
 """
-from os import environ
+import sortly
 
-AUTH_TOKEN_FILE             = '/home/alxfed/credo/sortly_auth_token.txt'
-REFRESH_TOKEN_FILE          = '/home/alxfed/credo/sortly_secret.txt'
+AUTH_TOKEN_FILE             = '/home/alxfed/credo/sortly_secret.txt'
+REFRESH_TOKEN_FILE          = '/home/alxfed/credo/sortly_public.txt'
 
 token_file = open(AUTH_TOKEN_FILE, 'r')
 authorization_token = token_file.read()
@@ -14,6 +14,13 @@ bearer_string = f'Bearer {authorization_token}'
 authorization_header = {'Authorization': bearer_string,
                         'Content-Type': 'application/json',
                         'Accept': 'application/json'}
+
+ITEMS_URL               = 'https://api.sortly.co/api/v1/items'
+LIST_CUSTOM_FIELDS_URL  = 'https://api.sortly.co/api/v1/custom_fields'
+
+# Sortly-Rate-Limit-Max:1000
+# Sortly-Rate-Limit-Remaining:10
+# Sortly-Rate-Limit-Reset:2000
 
 def main():
     print('sortly constants run as __main__')
