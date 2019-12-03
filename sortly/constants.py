@@ -19,8 +19,11 @@ ITEMS_URL               = 'https://api.sortly.co/api/v1/items'
 LIST_CUSTOM_FIELDS_URL  = 'https://api.sortly.co/api/v1/custom_fields'
 
 # Sortly-Rate-Limit-Max:1000
+sortly_rate_limit_max = 1000
 # Sortly-Rate-Limit-Remaining:10
+sortly_rate_limit_remaining = 1000
 # Sortly-Rate-Limit-Reset:2000
+sortly_rate_limit_reset = 2000
 
 def main():
     print('sortly constants run as __main__')
