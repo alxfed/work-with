@@ -12,9 +12,11 @@ def main():
     # toughy 7140688
     # south mount 7140690
     # test folder 8945363
-    item_id = '8945363'
-    to_include = 'custom_attributes'
-    response, rem = sortly.item.fetch(item_id, to_include)
+    properties = {'name': 'API test folder',
+                  'parent_id': None,
+                  'type': 'folder'}
+
+    response, rem = sortly.item.create(properties)
     data = response['data']
     # item_list = pd.DataFrame(data, dtype=object)
     print('ok')

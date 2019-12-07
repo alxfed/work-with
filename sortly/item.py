@@ -5,10 +5,12 @@ import requests
 from .constants import *
 
 
-def create_item():
-    resp = requests.request(method='POST', headers=authorization_header)
-    headers = resp.headers
-    return
+def create(item_properties):
+    body = item_properties
+    resp = requests.post(url=ITEMS_URL, json=body, headers=authorization_header)
+    rem = resp.headers['Sortly-Rate-Limit-Remaining']
+    created = resp.json()
+    return created, rem
 
 
 def fetch(item_id, *include):
