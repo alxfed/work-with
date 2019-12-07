@@ -10,8 +10,6 @@ import numpy as np
 
 def main():
     # all deals from HubSpot
-    # Production = 7f8ad520-75d7-4f9f-b655-4fab5439aed5
-    # Quotes = dd6958f7-3696-4de5-a95e-77d3a68aed44
     # Sales = default
     # New Construction/Renovation/Alteration = 815585
     downuploaded_deals = '/home/alxfed/archive/deals_database_everything.csv'
