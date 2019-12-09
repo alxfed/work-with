@@ -5,6 +5,7 @@ import socradata
 import pandas as pd
 import datetime as dt
 import sqlalchemy as sqlalc
+import sorting
 
 
 def main():
@@ -25,7 +26,7 @@ def main():
     result['latitude'] = pd.to_numeric(result['latitude'])
     result['longitude'] = pd.to_numeric(result['longitude'])
 
-    conn = sqlalc.create_engine('sqlite:////home/alxfed/dbase/home.sqlite')
+    conn = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
     result.to_sql(name='new_permits', con=conn, if_exists='replace', index=False)
     return
 

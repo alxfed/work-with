@@ -5,6 +5,7 @@ import pandas as pd
 import hubspot
 import csv
 import sqlalchemy as sqlalc
+import sorting
 
 
 def main():
@@ -33,7 +34,7 @@ def main():
     all_companies['category'] = all_companies['category'].astype(dtype=object)
     all_companies['website'] = all_companies['website'].astype(dtype=object)
 
-    conn = sqlalc.create_engine('sqlite:////home/alxfed/dbase/home.sqlite')
+    conn = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
     all_companies.to_sql(name='companies', con=conn, if_exists='replace',
                          index=False)
 

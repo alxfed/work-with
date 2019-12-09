@@ -5,7 +5,7 @@ import pandas as pd
 import hubspot
 import csv
 import sqlalchemy as sqlalc
-import numpy as np
+import sorting
 
 
 def main():
@@ -48,7 +48,7 @@ def main():
     all_deals['permit_issue_date'] = pd.to_datetime(all_deals['permit_issue_date'])
     all_deals['last_inspection_date'] = pd.to_datetime(all_deals['last_inspection_date'], unit='ms')
 
-    conn = sqlalc.create_engine('sqlite:////home/alxfed/dbase/home.sqlite')
+    conn = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
     all_deals.to_sql(name='deals_everything', con=conn, if_exists='replace', index=False)
 
     with open(downuploaded_deals, 'w') as f:

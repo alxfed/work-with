@@ -4,7 +4,7 @@
 import pandas as pd
 import csv
 import sqlalchemy as sqlalc
-import numpy as np
+import sorting
 
 
 def main():
@@ -22,7 +22,7 @@ def main():
 
     # all_licensed_gencontractors.fillna(value='', inplace=True)
 
-    conn = sqlalc.create_engine('sqlite:////home/alxfed/dbase/home.sqlite')
+    conn = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
     all_licensed_gencontractors.to_sql(name='all_licensed_general_contractors', con=conn, if_exists='replace', index=False)
     return
 
