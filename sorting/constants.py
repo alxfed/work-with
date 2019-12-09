@@ -6,6 +6,8 @@ SOURCE_DATABASE_URI = 'sqlite:////home/alxfed/dbase/home.sqlite'
 TARGET_DATABASE_URI = 'sqlite:////home/alxfed/dbase/firstbase.sqlite'
 
 LICENSED_GENERAL_CONTRACTORS_TABLE = 'all_licensed_general_contractors'
+COMPANIES_TABLE = 'companies'
+NEW_PERMITS_TABLE = 'new_permits'
 
 
 def main():
