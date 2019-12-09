@@ -10,6 +10,7 @@ LICENSED_GENERAL_CONTRACTORS_TABLE = 'all_licensed_general_contractors'
 COMPANIES_TABLE = 'companies'
 NEW_PERMITS_TABLE = 'new_permits'
 
+GENERAL_CONTRACTORS_FROM_NEW_PERMITS_TABLE = 'gen_contractors_from_new_permits'
 OLD_COMPANIES_TABLE = 'old_companies'
 NEW_COMPANIES_TABLE = 'new_companies'
 
