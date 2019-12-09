@@ -12,9 +12,11 @@ def main():
     data = pd.read_sql_table(table_name=sorting.NEW_PERMITS_TABLE, con=conn_source)
     gen_contractors = pd.read_sql_table(table_name=sorting.LICENSED_GENERAL_CONTRACTORS_TABLE, con=conn_source)
     companies = pd.read_sql_table(table_name=sorting.COMPANIES_TABLE, con=conn_source)
+    companies_list = companies['name'].values
     # upload to the next stage database
+    result = pd.DataFrame()
     conn_target = sqlalc.create_engine(sorting.TARGET_DATABASE_URI)
-    result.to_sql(name='new_permits', con=conn_target, if_exists='replace', index=False)
+    result.to_sql(name=sorting.NEW_COMPANIES_TABLE, con=conn_target, if_exists='replace', index=False)
     return
 
 
