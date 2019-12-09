@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """...
 """
-HOME_DATABASE_URI = 'sqlite:////home/alxfed/dbase/home.sqlite'
+HOME_DATABASE_URI   = 'sqlite:////home/alxfed/dbase/home.sqlite'
 SOURCE_DATABASE_URI = 'sqlite:////home/alxfed/dbase/home.sqlite'
 TARGET_DATABASE_URI = 'sqlite:////home/alxfed/dbase/firstbase.sqlite'
 

@@ -11,6 +11,11 @@ def filter_out_known_companies(df):
     return new, old
 
 
+def extract_companies_out_of_permits(df):
+    general_contractors = pd.DataFrame()
+    return general_contractors
+
+
 def main():
     print('You have launched companies.py as __main__')
     return
