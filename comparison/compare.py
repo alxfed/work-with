@@ -6,6 +6,7 @@ def first_word(name):
     name = name.strip(' .')
     length = len(name)
     no_spaces = length - len(name.replace(' ', ''))
+    repl = name.replace('. ', '', 1)
     no_periods = length - len(name.replace('.', ''))
     no_commas = length - len(name.replace(',', ''))
     no_dashes = length - len(name.replace('-', ''))
