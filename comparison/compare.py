@@ -3,6 +3,7 @@ import re
 
 
 def first_word(name):
+    name = name.strip(' .')
     length = len(name)
     no_spaces = length - len(name.replace(' ', ''))
     no_periods = length - len(name.replace('.', ''))
@@ -17,7 +18,7 @@ def first_word(name):
 
 def main():
     name1 = 'L & S Lighting Corp'
-    name2 = 'S. & P. Tax Solutions'
+    name2 = 'S. & P. Tax Solutions '
     name3 = 'I.B. Quality Cabinets'
     name4 = 'C&H Kitchen Cabinet Gallery'
     name5 = 'D.O.M.'
