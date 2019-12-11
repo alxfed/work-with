@@ -3,6 +3,8 @@ import re
 
 
 def first_word(name):
+    combinations = ['. ', ' ', '.']
+    sepp = ['&', '-', '/', '+', "'"]
     name = name.strip(' .')
     length = len(name)
     no_spaces = length - len(name.replace(' ', ''))
