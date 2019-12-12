@@ -54,7 +54,6 @@ def compare_with_companies_and_reference(row, present, reference):
     # present - companies in the system
     # row - permit
     permit_to_add = pd.DataFrame()
-    permit_not_to_add = pd.DataFrame()
     company_to_add = pd.DataFrame()
     not_found = pd.DataFrame()
 
@@ -66,15 +65,12 @@ def compare_with_companies_and_reference(row, present, reference):
         if not found_in_reference.empty:
             company_to_add = company_to_add.append(found_in_reference)
         else:
-            print('Did not find ', row['name'], ' in the list of licensed general contractors')
-            print('Adding it to the not_found table \n')
-            pass
+            not_found = not_found.append(row)
     else:
         permit_to_add = permit_to_add.append(row)
         permit_to_add['companyId'] = found['companyId'].values[0]
-        pass
 
-    return permit_to_add, company_to_add, permit_not_to_add, not_found
+    return permit_to_add, company_to_add, not_found
 
 
 def main():
