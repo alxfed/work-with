@@ -49,6 +49,34 @@ def general_contractors_and_permits(data):
     return general_contractors
 
 
+def compare_with_companies_and_reference(row, present, reference):
+    # reference - licensed general contractors in the official list
+    # present - companies in the system
+    # row - permit
+    permit_to_add = pd.DataFrame()
+    permit_not_to_add = pd.DataFrame()
+    company_to_add = pd.DataFrame()
+    not_found = pd.DataFrame()
+
+    co_name, sep, dba  = row['name'].partition(' Dba ')  # split if there is a dba, then sep and dba are nonzero
+    # va = present['name'].values
+    found = present[present['name'].str.find(sub=co_name) != -1]
+    if found.empty:
+        found_in_reference = reference[reference['company_name'].str.find(sub=co_name) != -1]
+        if not found_in_reference.empty:
+            company_to_add = company_to_add.append(found_in_reference)
+        else:
+            print('Did not find ', row['name'], ' in the list of licensed general contractors')
+            print('Adding it to the not_found table \n')
+            pass
+    else:
+        permit_to_add = permit_to_add.append(row)
+        permit_to_add['companyId'] = found['companyId'].values[0]
+        pass
+
+    return permit_to_add, company_to_add, permit_not_to_add, not_found
+
+
 def main():
     print('You have launched companies.py as __main__')
     return
