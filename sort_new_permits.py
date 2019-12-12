@@ -10,17 +10,20 @@ def compare_with_companies_and_reference(row, present, reference):
     # reference - licensed general contractors in the official list
     # present - companies in the system
     # row - permit
-    to_add = {}
-    not_to_add = {}
-    found = reference[reference['name'].str.find(sub=row['general_contractor']) != -1]
+    to_add = pd.DataFrame()
+    not_to_add = pd.DataFrame()
+
+    co_name, sep, dba  = row['name'].partition(' Dba ')  # split if there is a dba, then sep and dba are nonzero
+    # va = present['name'].values
+    found = present[present['name'].str.find(sub=co_name) != -1]
     if found.empty:
-        not_to_add = row
+        not_to_add = not_to_add.append(row)
         print('Did not find ', row['general_contractor'], ' in the list of companies')
         print('Adding it to the not create file \n')
         pass
     else:
-        to_add['companyId'] = found['companyId'].values[0]
         to_add = to_add.append(row)
+        to_add['companyId'] = found['companyId'].values[0]
         pass
 
     return to_add, not_to_add
@@ -57,7 +60,7 @@ def main():
     new_companies_permits = pd.DataFrame()
     old_companies_permits = pd.DataFrame()
 
-    for index, this_permit in data_big.iterrows():
+    for index, this_permit in gen_cons_with_permits.iterrows():
         to_add, not_to_add = compare_with_companies_and_reference(
             this_permit, companies, licensed_gen_contractors)
         if to_add.empty:
