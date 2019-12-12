@@ -7,32 +7,29 @@ import sqlalchemy as sqlalc
 
 
 def compare_with_companies_and_reference(row, present, reference):
-    # reference - existing companies
-    # present - existing deals
+    # reference - licensed general contractors in the official list
+    # present - companies in the system
     # row - permit
-    to_add = pd.Series()
-    not_to_add = pd.Series()
-    this_permit_number = row['permit_']
-    numbers_in_existing_deals = present['permit_'].values
-    if this_permit_number not in numbers_in_existing_deals:
-        found = reference[reference['name'].str.find(sub=row['general_contractor']) != -1]
-        if found.empty:
-            not_to_add = row
-            print('Did not find ', row['general_contractor'], ' in the list of companies')
-            print('Adding it to the not create file \n')
-            pass
-        else:
-            to_add['companyId'] = found['companyId'].values[0]
-            to_add = to_add.append(row)
-            pass
+    to_add = {}
+    not_to_add = {}
+    found = reference[reference['name'].str.find(sub=row['general_contractor']) != -1]
+    if found.empty:
+        not_to_add = row
+        print('Did not find ', row['general_contractor'], ' in the list of companies')
+        print('Adding it to the not create file \n')
+        pass
     else:
-        print('Permit ', this_permit_number, ' is in existing deals')
+        to_add['companyId'] = found['companyId'].values[0]
+        to_add = to_add.append(row)
+        pass
+
     return to_add, not_to_add
 
 
 def main():
     # read the downuploaded table of new_permits
     conn_source = sqlalc.create_engine(sorting.SOURCE_DATABASE_URI)
+
     data = pd.read_sql_table(
         table_name=sorting.NEW_PERMITS_TABLE, con=conn_source)
     licensed_gen_contractors = pd.read_sql_table(
