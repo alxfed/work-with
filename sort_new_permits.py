@@ -6,7 +6,7 @@ import sorting
 import sqlalchemy as sqlalc
 
 
-def compare_with_companies_and_state(row, present, reference):
+def compare_with_companies_and_reference(row, present, reference):
     # reference - existing companies
     # present - existing deals
     # row - permit
@@ -49,19 +49,19 @@ def main():
         (data['permit_type'] == 'PERMIT - RENOVATION/ALTERATION'))]
 
     # general contractors for these permits
-    gen_contractors = sorting.companies.general_contractors_and_permits(data_big)
-    gen_contractors['name'] = gen_contractors['name'].str.title()
-    gen_contractors['city'] = gen_contractors['city'].str.title()
-    gen_contractors['street_name'] = gen_contractors['street_name'].str.title()
-    gen_contractors['suffix'] = gen_contractors['suffix'].str.title()
+    gen_cons_with_permits = sorting.companies.general_contractors_and_permits(data_big)
+    gen_cons_with_permits['name'] = gen_cons_with_permits['name'].str.title()
+    gen_cons_with_permits['city'] = gen_cons_with_permits['city'].str.title()
+    gen_cons_with_permits['street_name'] = gen_cons_with_permits['street_name'].str.title()
+    gen_cons_with_permits['suffix'] = gen_cons_with_permits['suffix'].str.title()
     unique_gen_contractors = pd.DataFrame(
-        gen_contractors['name'].unique(), columns=['name'])
+        gen_cons_with_permits['name'].unique(), columns=['name'])
 
     new_to_create = pd.DataFrame()
     not_to_create = pd.DataFrame()
 
     for index, this_permit in data_big.iterrows():
-        to_add, not_to_add = compare_with_companies_and_state(this_permit, companies,
+        to_add, not_to_add = compare_with_companies_and_reference(this_permit, companies,
                                                               licensed_gen_contractors)
         if to_add.empty:
             not_to_create = not_to_create.append(not_to_add, ignore_index = True)
@@ -82,7 +82,7 @@ def main():
 
     # upload them to the firstbase database
     conn_target = sqlalc.create_engine(sorting.TARGET_DATABASE_URI)
-    gen_contractors.to_sql(
+    gen_cons_with_permits.to_sql(
         name=sorting.GENERAL_CONTRACTORS_FROM_NEW_PERMITS_TABLE,
         con=conn_target, if_exists='replace', index=False)
     unique_gen_contractors.to_sql(
