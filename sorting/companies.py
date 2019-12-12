@@ -17,7 +17,7 @@ def filter_out_big_ra_and_nce(data):
     return big_nc, big_ra
 
 
-def extract_general_contractors_out_of_new_permits(data):
+def general_contractors_and_permits(data):
     output_list = []
     for row_n, row in data.iterrows():
         for n in range(14):
@@ -26,11 +26,19 @@ def extract_general_contractors_out_of_new_permits(data):
             if con_type_key in row.keys():
                 contact_type = row[con_type_key]
                 if contact_type == 'CONTRACTOR-GENERAL CONTRACTOR':
-                    line = {'name':     row[f'contact_{contact_number}_name'],
-                            'city':     row[f'contact_{contact_number}_city'],
-                            'state':    row[f'contact_{contact_number}_state'],
-                            'zip':      row[f'contact_{contact_number}_zipcode'],
-                            'permit_':  row['permit_']
+                    line = {'name':             row[f'contact_{contact_number}_name'],
+                            'city':             row[f'contact_{contact_number}_city'],
+                            'state':            row[f'contact_{contact_number}_state'],
+                            'zip':              row[f'contact_{contact_number}_zipcode'],
+                            'permit_':          row['permit_'],
+                            'permit_type':      row['permit_type'],
+                            'issue_date':       row['issue_date'],
+                            'work_description': row['work_description'],
+                            'street_number':    row['street_number'],
+                            'street_direction': row['street_direction'],
+                            'street_name':      row['street_name'],
+                            'suffix':           row['suffix'],
+                            'reported_cost':    row['reported_cost']
                             }
                     output_list.append(line)
                     # print(line)
