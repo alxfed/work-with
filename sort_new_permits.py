@@ -10,23 +10,29 @@ def compare_with_companies_and_reference(row, present, reference):
     # reference - licensed general contractors in the official list
     # present - companies in the system
     # row - permit
-    to_add = pd.DataFrame()
-    not_to_add = pd.DataFrame()
+    permit_to_add = pd.DataFrame()
+    permit_not_to_add = pd.DataFrame()
+    company_to_add = pd.DataFrame()
+    not_found = pd.DataFrame()
 
     co_name, sep, dba  = row['name'].partition(' Dba ')  # split if there is a dba, then sep and dba are nonzero
     # va = present['name'].values
     found = present[present['name'].str.find(sub=co_name) != -1]
     if found.empty:
-        not_to_add = not_to_add.append(row)
-        print('Did not find ', row['general_contractor'], ' in the list of companies')
-        print('Adding it to the not create file \n')
-        pass
+        reference['company_name'] = reference['company_name'].str.title()
+        found_in_reference = reference[reference['company_name'].str.find(sub=co_name) != -1]
+        if not found_in_reference.empty:
+            company_to_add = company_to_add.append(found_in_reference)
+        else:
+            print('Did not find ', row['name'], ' in the list of licensed general contractors')
+            print('Adding it to the not_found table \n')
+            pass
     else:
-        to_add = to_add.append(row)
-        to_add['companyId'] = found['companyId'].values[0]
+        permit_to_add = permit_to_add.append(row)
+        permit_to_add['companyId'] = found['companyId'].values[0]
         pass
 
-    return to_add, not_to_add
+    return permit_to_add, company_to_add, permit_not_to_add, not_found
 
 
 def main():
@@ -57,16 +63,22 @@ def main():
     unique_gen_contractors = pd.DataFrame(
         gen_cons_with_permits['name'].unique(), columns=['name'])
 
-    new_companies_permits = pd.DataFrame()
     old_companies_permits = pd.DataFrame()
+    new_companies = pd.DataFrame()
+    new_companies_permits = pd.DataFrame()
+    not_found_companies = pd.DataFrame()
 
     for index, this_permit in gen_cons_with_permits.iterrows():
-        to_add, not_to_add = compare_with_companies_and_reference(
+        permit_to_add, company_to_add, not_to_add, not_found = compare_with_companies_and_reference(
             this_permit, companies, licensed_gen_contractors)
-        if to_add.empty:
-            old_companies_permits = old_companies_permits.append(not_to_add, ignore_index = True)
-        elif not_to_add.empty:
-            new_companies_permits = new_companies_permits.append(to_add, ignore_index=True)
+        if not permit_to_add.empty:
+            old_companies_permits = old_companies_permits.append(permit_to_add, ignore_index = True)
+        if not company_to_add.empty:
+            new_companies = new_companies.append(company_to_add, ignore_index=True)
+        if not not_to_add.empty:
+            new_companies_permits = new_companies_permits.append(not_to_add, ignore_index=True)
+        if not not_found.empty:
+            not_found_companies = not_found_companies.append(not_found, ignore_index=True)
 
     # upload them to the firstbase database
     conn_target = sqlalc.create_engine(sorting.TARGET_DATABASE_URI)
