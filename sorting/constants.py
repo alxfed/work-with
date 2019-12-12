@@ -12,8 +12,11 @@ NEW_PERMITS_TABLE = 'new_permits'
 
 GENERAL_CONTRACTORS_FROM_NEW_PERMITS_TABLE = 'gen_contractors_from_new_permits'
 UNIQUE_GENERAL_CONTRACTORS_FROM_NEW_PERMITS_TABLE = 'unique_gen_contractors_from_new_permits'
+
 OLD_COMPANIES_TABLE = 'old_companies'
+OLD_COMPANIES_PERMITS_TABLE = 'old_companies_permits'
 NEW_COMPANIES_TABLE = 'new_companies'
+NEW_COMPANIES_PERMITS_TABLE = 'new_companies_permits'
 
 
 def main():

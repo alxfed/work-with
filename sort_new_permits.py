@@ -54,28 +54,16 @@ def main():
     unique_gen_contractors = pd.DataFrame(
         gen_cons_with_permits['name'].unique(), columns=['name'])
 
-    new_to_create = pd.DataFrame()
-    not_to_create = pd.DataFrame()
+    new_companies_permits = pd.DataFrame()
+    old_companies_permits = pd.DataFrame()
 
     for index, this_permit in data_big.iterrows():
-        to_add, not_to_add = compare_with_companies_and_reference(this_permit, companies,
-                                                              licensed_gen_contractors)
+        to_add, not_to_add = compare_with_companies_and_reference(
+            this_permit, companies, licensed_gen_contractors)
         if to_add.empty:
-            not_to_create = not_to_create.append(not_to_add, ignore_index = True)
+            old_companies_permits = old_companies_permits.append(not_to_add, ignore_index = True)
         elif not_to_add.empty:
-            new_to_create = new_to_create.append(to_add, ignore_index=True)
-
-    referenced = licensed_gen_contractors[licensed_gen_contractors['name']]
-    # found = reference[reference['name'].str.find(sub=row['general_contractor']) != -1]
-    #         if found.empty:
-    #             not_to_add = row
-    #             print('Did not find ', row['general_contractor'], ' in the list of companies')
-    #             print('Adding it to the not create file \n')
-    #             pass
-    #         else:
-    #             to_add['companyId'] = found['companyId'].values[0]
-    #             to_add = to_add.append(row)
-    #             pass
+            new_companies_permits = new_companies_permits.append(to_add, ignore_index=True)
 
     # upload them to the firstbase database
     conn_target = sqlalc.create_engine(sorting.TARGET_DATABASE_URI)
@@ -85,11 +73,17 @@ def main():
     unique_gen_contractors.to_sql(
         name=sorting.UNIQUE_GENERAL_CONTRACTORS_FROM_NEW_PERMITS_TABLE,
         con=conn_target, if_exists='replace', index=False)
+    old_companies_permits.to_sql(
+        name=sorting.OLD_COMPANIES_PERMITS_TABLE,
+        con=conn_target, if_exists='replace', index=False)
+    new_companies_permits.to_sql(
+        name=sorting.NEW_COMPANIES_PERMITS_TABLE,
+        con=conn_target, if_exists='replace', index=False)
 
     # upload to the next stage database
-    result = pd.DataFrame()
-    conn_target = sqlalc.create_engine(sorting.TARGET_DATABASE_URI)
-    result.to_sql(name=sorting.NEW_COMPANIES_TABLE, con=conn_target, if_exists='replace', index=False)
+    # result = pd.DataFrame()
+    # conn_target = sqlalc.create_engine(sorting.TARGET_DATABASE_URI)
+    # result.to_sql(name=sorting.NEW_COMPANIES_TABLE, con=conn_target, if_exists='replace', index=False)
     return
 
 
