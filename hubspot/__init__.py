@@ -6,11 +6,6 @@ import datetime
 from os.path import getmtime
 
 
-def main():
-    print('main in hubspot.__init__.py: ok')
-    return
-
-
 parameters = {}
 
 try:
@@ -32,7 +27,3 @@ except:
 token_file = open(AUTHORIZATION_TOKEN_FILE, 'r')
 authorization_token = token_file.read()
 token_file.close()
-
-
-if __name__ == '__main__':
-    main()

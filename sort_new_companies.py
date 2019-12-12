@@ -42,7 +42,7 @@ def main():
     not_found_companies = pd.DataFrame()
 
     for index, this_permit in gen_cons_with_permits.iterrows():
-        company_to_add, not_to_add, not_found = sorting.companies.compare_with_companies_and_reference(
+        not_to_add, company_to_add, not_found = sorting.companies.compare_with_companies_and_reference(
             this_permit, companies, licensed_gen_contractors)
         if not company_to_add.empty:
             new_companies = new_companies.append(company_to_add, ignore_index=True)
@@ -63,7 +63,7 @@ def main():
         name=sorting.OLD_COMPANIES_PERMITS_TABLE,
         con=conn_target, if_exists='replace', index=False)
     new_companies.to_sql(
-        name=sorting.NEW_COMPANIES_PERMITS_TABLE,
+        name=sorting.NEW_COMPANIES_TABLE,
         con=conn_target, if_exists='replace', index=False)
 
     # upload to the next stage database

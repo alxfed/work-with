@@ -18,6 +18,8 @@ OLD_COMPANIES_PERMITS_TABLE = 'old_companies_permits'
 NEW_COMPANIES_TABLE = 'new_companies'
 NEW_COMPANIES_PERMITS_TABLE = 'new_companies_permits'
 
+CREATED_COMPANIES_TABLE = 'created_companies'
+
 
 def main():
     print('You have launched constants as main')
