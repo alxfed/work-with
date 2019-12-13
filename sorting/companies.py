@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """...
 """
-import sqlalchemy
 import pandas as pd
+import re
 
 
 def filter_out_known_companies(data):
@@ -71,26 +71,29 @@ def compare_with_companies_and_reference(row, present, reference):
     co_name, sep, dba  = row['name'].partition(' Dba ')  # split if there is a dba, then sep and dba are nonzero
     # va = present['name'].values
     co_name = co_name.strip()
+    co_name = re.sub('[,.]', '', co_name)
+    present['name'] = present['name'].str.replace(r'[,.]', '')
     found = present[present['name'].str.find(sub=co_name) != -1]
+    if found.empty:
+        ref = reference.copy()
+        ref['company_name'] = reference['company_name'].str.replace(r'[,.]', '')
+        found_in_reference = ref[ref['company_name'].str.find(sub=co_name) != -1]
+        if not found_in_reference.empty:
+            row_n = found_in_reference.index[0]
+            company_to_add = company_to_add.append(reference.iloc[[row_n]])
+        else:
+            not_found = not_found.append(row)
+    else:
+        permit_to_add = permit_to_add.append(row)
+        permit_to_add['companyId'] = found['companyId'].values[0]
+    return permit_to_add, company_to_add, not_found
+
     # Debug for particular company
     # debug_company_name = 'Mk Construction'
     # debug_company = co_name
     # if debug_company_name in debug_company:
     #     print('ok')
     # Debug for particular company
-    if found.empty:
-        found_in_reference = reference[reference['company_name'].str.find(sub=co_name) != -1]
-        if not found_in_reference.empty:
-            company_to_add = company_to_add.append(found_in_reference)
-            # company_to_add['company_name'] = company_to_add['company_name'].str.strip()
-            pass
-        else:
-            not_found = not_found.append(row)
-    else:
-        permit_to_add = permit_to_add.append(row)
-        permit_to_add['companyId'] = found['companyId'].values[0]
-
-    return permit_to_add, company_to_add, not_found
 
 
 def main():

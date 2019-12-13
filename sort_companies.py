@@ -24,6 +24,8 @@ def main():
     old_companies_permits = pd.DataFrame()
     new_companies = pd.DataFrame()
     not_found_companies = pd.DataFrame()
+    seen_new_companies = set()
+    seen_not_found = set()
 
     for index, this_permit in data.iterrows():
         # Debug for particular company
@@ -35,11 +37,16 @@ def main():
         permit_to_add, company_to_add, not_found = sorting.companies.compare_with_companies_and_reference(
             this_permit, companies, licensed_gen_contractors)
         if not company_to_add.empty:
-            new_companies = new_companies.append(company_to_add, ignore_index=True)
+            if not company_to_add['company_name'].values[0] in seen_new_companies:
+                new_companies = new_companies.append(company_to_add, ignore_index=True)
+                seen_new_companies.add(company_to_add['company_name'].values[0])
         if not permit_to_add.empty:
             old_companies_permits = old_companies_permits.append(permit_to_add, ignore_index=True)
         if not not_found.empty:
-            not_found_companies = not_found_companies.append(not_found, ignore_index=True)
+            if not not_found['name'].values[0] in seen_not_found:
+                not_found_companies = not_found_companies.append(not_found, ignore_index=True)
+                seen_not_found.add(not_found['name'].values[0])
+
 
     # upload them to the firstbase database
     conn_target = sqlalc.create_engine(sorting.PREP_DATABASE_URI)
@@ -48,15 +55,11 @@ def main():
         con=conn_target, if_exists='replace', index=False)
 
     # unique
-    not_found_companies = pd.DataFrame(
-        not_found_companies['name'].unique(), columns=['name'])
     not_found_companies.to_sql(
         name=sorting.NOT_FOUND_GENERAL_CONTRACTORS_TABLE,
         con=conn_target, if_exists='replace', index=False)
 
     conn_interm = sqlalc.create_engine(sorting.INTERM_DATABASE_URI)
-    new_companies = pd.DataFrame(
-        not_found_companies['company_name'].unique(), columns=['name'])
     new_companies.to_sql(
         name=sorting.NEW_COMPANIES_TABLE,
         con=conn_interm, if_exists='replace', index=False)
