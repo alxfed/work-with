@@ -4,6 +4,7 @@
 from os import environ
 import datetime
 from os.path import getmtime
+from . import oauth
 
 # credentials files
 AUTHORIZATION_TOKEN_FILE    = '/home/alxfed/credo/authorization_token.txt'
@@ -16,21 +17,21 @@ if 'API_KEY' in environ.keys():
     api_key = environ['API_KEY']
     parameters = {'hapikey': api_key}
 
-try:
-    last = getmtime(AUTHORIZATION_TOKEN_FILE)
-    now = datetime.datetime.now().timestamp()
-    if (now - last) >= 18000:
-        print('The token has expired. I am about to refresh it')
-        refre = 'y' # input('y/n? ')
-        if refre.startswith('y'):
-            res = oauth.refresh_oauth_token()
-            if res:
-                print('Token refreshed')
-            else:
-                print('Token not refreshed, something has gone wrong')
-except:
-    print('No token file')
-    pass
+# try:
+#     last = getmtime(AUTHORIZATION_TOKEN_FILE)
+#     now = datetime.datetime.now().timestamp()
+#     if (now - last) >= 18000:
+#         print('The token has expired. I am about to refresh it')
+#         refre = 'y' # input('y/n? ')
+#         if refre.startswith('y'):
+#             res = oauth.refresh_oauth_token()
+#             if res:
+#                 print('Token refreshed')
+#             else:
+#                 print('Token not refreshed, something has gone wrong')
+# except:
+#     print('No token file')
+#     pass
 
 token_file = open(AUTHORIZATION_TOKEN_FILE, 'r')
 authorization_token = token_file.read()

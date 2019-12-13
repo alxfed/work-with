@@ -8,10 +8,11 @@ import sqlalchemy as sqlalc
 
 def main():
     # read the downuploaded table of new_permits
-    conn_source = sqlalc.create_engine(sorting.SOURCE_DATABASE_URI)
+    conn_source = sqlalc.create_engine(sorting.TARGET_DATABASE_URI)
+    conn_reference = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
 
     data = pd.read_sql_table(
-        table_name=sorting.NEW_PERMITS_TABLE, con=conn_source)
+        table_name=sorting.NEW_PERMITS_WITH_GENERAL_CONTRACTORS_TABLE, con=conn_source)
     licensed_gen_contractors = pd.read_sql_table(
         table_name=sorting.LICENSED_GENERAL_CONTRACTORS_TABLE, con=conn_source)
     companies = pd.read_sql_table(
@@ -27,7 +28,7 @@ def main():
 
     # general contractors for these permits
     gen_cons_with_permits = sorting.companies.general_contractors_and_permits(data_big)
-    gen_cons_with_permits['name'] = gen_cons_with_permits['name'].str.title()
+    gen_cons_with_permits['name'] = gen_cons_with_permits['name'].str.title().strip()
     gen_cons_with_permits['city'] = gen_cons_with_permits['city'].str.title()
     gen_cons_with_permits['street_name'] = gen_cons_with_permits['street_name'].str.title()
     gen_cons_with_permits['suffix'] = gen_cons_with_permits['suffix'].str.title()

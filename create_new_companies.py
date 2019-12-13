@@ -30,11 +30,13 @@ def main():
     for indx, company in companies.iterrows():
         created_co = pd.DataFrame()
         parameters = params.copy()
-        parameters['name'] = company['company_name'].title()
+        co_name = company['company_name'].title()
+        parameters['name'] = co_name.strip()
         parameters['city'] = company['city'].title()
         parameters['phone'] = company['phone']
         parameters['address'] = company['street_address'].title()
         parameters['state'] = company['state']
+        parameters['zip'] = company['zip']
         done = hubspot.companies.create_company(parameters)
         if done:
             created_companies = created_companies.append(company)

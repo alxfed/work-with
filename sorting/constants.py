@@ -8,7 +8,9 @@ PREP_DATABASE_URI   = 'sqlite:////home/alxfed/dbase/thirdbase.sqlite'
 
 LICENSED_GENERAL_CONTRACTORS_TABLE = 'all_licensed_general_contractors'
 COMPANIES_TABLE = 'companies'
+
 NEW_PERMITS_TABLE = 'new_permits'
+NEW_PERMITS_WITH_GENERAL_CONTRACTORS_TABLE = 'new_permits_with_gen_contractors'
 
 GENERAL_CONTRACTORS_FROM_NEW_PERMITS_TABLE = 'gen_contractors_from_new_permits'
 UNIQUE_GENERAL_CONTRACTORS_FROM_NEW_PERMITS_TABLE = 'unique_gen_contractors_from_new_permits'

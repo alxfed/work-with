@@ -26,8 +26,19 @@ def general_contractors_and_permits(data):
             if con_type_key in row.keys():
                 contact_type = row[con_type_key]
                 if contact_type == 'CONTRACTOR-GENERAL CONTRACTOR':
-                    line = {'name':             row[f'contact_{contact_number}_name'],
-                            'city':             row[f'contact_{contact_number}_city'],
+                    # Debug for particular company
+                    # debug_company_name = 'Mk Construction'
+                    # debug_company = row[f'contact_{contact_number}_name'].title()
+                    # if debug_company_name in debug_company:
+                    #     print('ok')
+                    #     # question = input(debug_company +' y/n? ')
+                    #     # if question.startswith('y'):
+                    #     #     print('You saw it')
+                    #     # else:
+                    #     #     print('You saw it anyway...')
+                    # Debug for particular company
+                    line = {'name':             row[f'contact_{contact_number}_name'].title(),
+                            'city':             row[f'contact_{contact_number}_city'].title(),
                             'state':            row[f'contact_{contact_number}_state'],
                             'zip':              row[f'contact_{contact_number}_zipcode'],
                             'permit_':          row['permit_'],
@@ -36,7 +47,7 @@ def general_contractors_and_permits(data):
                             'work_description': row['work_description'],
                             'street_number':    row['street_number'],
                             'street_direction': row['street_direction'],
-                            'street_name':      row['street_name'],
+                            'street_name':      row['street_name'].title(),
                             'suffix':           row['suffix'],
                             'reported_cost':    row['reported_cost']
                             }
