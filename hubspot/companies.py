@@ -8,8 +8,9 @@ from . import constants
 def create_company(parameters):
     """
     :param parameters:  dictionary of company properties
-    :return:
+    :return: json
     """
+    res = {}
     data = {"properties": []}
     list_of_properties = []
     for parameter in parameters:
@@ -20,11 +21,10 @@ def create_company(parameters):
     response = requests.request("POST", url=constants.COMPANY_CREATE_URL, json=data,
                                 headers=constants.authorization_header, params=constants.parameters)
     if response.status_code == 200:
-        pass
+        res = response.json()
     else:
         print('not ok! ', response.status_code)
-        return False
-    return True
+    return res
 
 
 def update_company(companyId, parameters):

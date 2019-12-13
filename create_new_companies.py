@@ -19,7 +19,7 @@ def main():
                     'category':'General Contractor'
                   }
 
-    conn_source = sqlalc.create_engine(sorting.TARGET_DATABASE_URI)
+    conn_source = sqlalc.create_engine(sorting.INTERM_DATABASE_URI)
     conn_result = sqlalc.create_engine(sorting.PREP_DATABASE_URI)
 
     companies = pd.read_sql_table(
