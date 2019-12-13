@@ -47,15 +47,20 @@ def main():
         name=sorting.OLD_COMPANIES_PERMITS_TABLE,
         con=conn_target, if_exists='replace', index=False)
 
-    conn_interm = sqlalc.create_engine(sorting.INTERM_DATABASE_URI)
-    new_companies.to_sql(
-        name=sorting.NEW_COMPANIES_TABLE,
+    # unique
+    not_found_companies = pd.DataFrame(
+        not_found_companies['name'].unique(), columns=['name'])
+    not_found_companies.to_sql(
+        name=sorting.NOT_FOUND_GENERAL_CONTRACTORS_TABLE,
         con=conn_target, if_exists='replace', index=False)
 
-    # upload to the next stage database
-    # result = pd.DataFrame()
-    # conn_target = sqlalc.create_engine(sorting.TARGET_DATABASE_URI)
-    # result.to_sql(name=sorting.NEW_COMPANIES_TABLE, con=conn_target, if_exists='replace', index=False)
+    conn_interm = sqlalc.create_engine(sorting.INTERM_DATABASE_URI)
+    new_companies = pd.DataFrame(
+        not_found_companies['company_name'].unique(), columns=['name'])
+    new_companies.to_sql(
+        name=sorting.NEW_COMPANIES_TABLE,
+        con=conn_interm, if_exists='replace', index=False)
+
     return
 
 

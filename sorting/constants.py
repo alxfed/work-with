@@ -3,11 +3,15 @@
 """
 HOME_DATABASE_URI   = 'sqlite:////home/alxfed/dbase/home.sqlite'
 SOURCE_DATABASE_URI = 'sqlite:////home/alxfed/dbase/home.sqlite'
+
 TARGET_DATABASE_URI = 'sqlite:////home/alxfed/dbase/firstbase.sqlite'
 INTERM_DATABASE_URI = 'sqlite:////home/alxfed/dbase/secondbase.sqlite'
 PREP_DATABASE_URI   = 'sqlite:////home/alxfed/dbase/thirdbase.sqlite'
 
+PITCH_DATABASE_URI  = 'sqlite:////home/alxfed/dbase/center.sqlite'
+
 LICENSED_GENERAL_CONTRACTORS_TABLE = 'all_licensed_general_contractors'
+NOT_FOUND_GENERAL_CONTRACTORS_TABLE = 'not_found_general_contractors'
 COMPANIES_TABLE = 'companies'
 
 NEW_PERMITS_TABLE = 'new_permits'
