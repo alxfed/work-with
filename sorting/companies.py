@@ -70,17 +70,20 @@ def compare_with_companies_and_reference(row, present, reference):
 
     co_name, sep, dba  = row['name'].partition(' Dba ')  # split if there is a dba, then sep and dba are nonzero
     # va = present['name'].values
+    co_name = co_name.strip()
     found = present[present['name'].str.find(sub=co_name) != -1]
     # Debug for particular company
-    debug_company_name = 'Mk Construction'
-    debug_company = co_name
-    if debug_company_name in debug_company:
-        print('ok')
+    # debug_company_name = 'Mk Construction'
+    # debug_company = co_name
+    # if debug_company_name in debug_company:
+    #     print('ok')
     # Debug for particular company
     if found.empty:
         found_in_reference = reference[reference['company_name'].str.find(sub=co_name) != -1]
         if not found_in_reference.empty:
             company_to_add = company_to_add.append(found_in_reference)
+            # company_to_add['company_name'] = company_to_add['company_name'].str.strip()
+            pass
         else:
             not_found = not_found.append(row)
     else:

@@ -16,12 +16,10 @@ def main():
 
     licensed_gen_contractors = pd.read_sql_table(
         table_name=sorting.LICENSED_GENERAL_CONTRACTORS_TABLE, con=conn_reference)
-    licensed_gen_contractors['company_name'] = licensed_gen_contractors['company_name'].str.title()
 
     companies = pd.read_sql_table(
         table_name=sorting.COMPANIES_TABLE, con=conn_reference)
-
-
+    companies['name'] = companies['name'].str.title()
 
     old_companies_permits = pd.DataFrame()
     new_companies = pd.DataFrame()
@@ -29,31 +27,27 @@ def main():
 
     for index, this_permit in data.iterrows():
         # Debug for particular company
-        debug_company_name = 'Mk Construction'
-        debug_company = this_permit['name']
-        if debug_company_name in debug_company:
-            print('ok')
+        # debug_company_name = 'Mk Construction'
+        # debug_company = this_permit['name']
+        # if debug_company_name in debug_company:
+        #     print('ok')
         # Debug for particular company
-        not_to_add, company_to_add, not_found = sorting.companies.compare_with_companies_and_reference(
+        permit_to_add, company_to_add, not_found = sorting.companies.compare_with_companies_and_reference(
             this_permit, companies, licensed_gen_contractors)
         if not company_to_add.empty:
             new_companies = new_companies.append(company_to_add, ignore_index=True)
-        if not not_to_add.empty:
-            old_companies_permits = old_companies_permits.append(not_to_add, ignore_index=True)
+        if not permit_to_add.empty:
+            old_companies_permits = old_companies_permits.append(permit_to_add, ignore_index=True)
         if not not_found.empty:
             not_found_companies = not_found_companies.append(not_found, ignore_index=True)
 
     # upload them to the firstbase database
     conn_target = sqlalc.create_engine(sorting.PREP_DATABASE_URI)
-    gen_cons_with_permits.to_sql(
-        name=sorting.GENERAL_CONTRACTORS_FROM_NEW_PERMITS_TABLE,
-        con=conn_target, if_exists='replace', index=False)
-    unique_gen_contractors.to_sql(
-        name=sorting.UNIQUE_GENERAL_CONTRACTORS_FROM_NEW_PERMITS_TABLE,
-        con=conn_target, if_exists='replace', index=False)
     old_companies_permits.to_sql(
         name=sorting.OLD_COMPANIES_PERMITS_TABLE,
         con=conn_target, if_exists='replace', index=False)
+
+    conn_interm = sqlalc.create_engine(sorting.INTERM_DATABASE_URI)
     new_companies.to_sql(
         name=sorting.NEW_COMPANIES_TABLE,
         con=conn_target, if_exists='replace', index=False)

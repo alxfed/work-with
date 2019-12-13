@@ -19,11 +19,15 @@ def main():
                                                            'primary_insurance_expr',
                                                            'secondary_insurance_expr'],
                                               dtype=object)
-
-    # all_licensed_gencontractors.fillna(value='', inplace=True)
+    # FORMATTING!
+    all_licensed_gencontractors['company_name'] = all_licensed_gencontractors['company_name'].str.strip()
+    all_licensed_gencontractors['company_name'] = all_licensed_gencontractors['company_name'].str.title()
+    all_licensed_gencontractors['city'] = all_licensed_gencontractors['city'].str.title()
+    all_licensed_gencontractors['street_address'] = all_licensed_gencontractors['street_address'].str.title()
 
     conn = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
-    all_licensed_gencontractors.to_sql(name='all_licensed_general_contractors', con=conn, if_exists='replace', index=False)
+    all_licensed_gencontractors.to_sql(name=sorting.LICENSED_GENERAL_CONTRACTORS_TABLE,
+                                       con=conn, if_exists='replace', index=False)
     return
 
 

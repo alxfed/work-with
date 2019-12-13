@@ -21,9 +21,6 @@ def main():
 
     # general contractors for these permits
     gen_cons_with_permits = sorting.companies.general_contractors_and_permits(data_big)
-    # gen_cons_with_permits['name'] = gen_cons_with_permits['name'].str.title()
-    # gen_cons_with_permits['city'] = gen_cons_with_permits['city'].str.title()
-    # gen_cons_with_permits['street_name'] = gen_cons_with_permits['street_name'].str.title()
     gen_cons_with_permits['suffix'] = gen_cons_with_permits['suffix'].str.title() # because in companies it stops on Nones
     unique_gen_contractors = pd.DataFrame(
         gen_cons_with_permits['name'].unique(), columns=['name'])
