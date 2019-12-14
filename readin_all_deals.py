@@ -5,7 +5,7 @@ import pandas as pd
 import hubspot
 import csv
 import sqlalchemy as sqlalc
-import numpy as np
+import sorting
 
 
 def main():
@@ -50,8 +50,8 @@ def main():
     all_deals['insp_n'] = all_deals['insp_n'].astype(dtype=object)
     all_deals['insp_note'] = all_deals['insp_note'].astype(dtype=object)
 
-    conn = sqlalc.create_engine('sqlite:////home/alxfed/dbase/home.sqlite')
-    all_deals.to_sql(name='deals', con=conn, if_exists='replace', index=False)
+    conn = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
+    all_deals.to_sql(name=sorting.DEALS_TABLE, con=conn, if_exists='replace', index=False)
 
     with open(downuploaded_deals, 'w') as f:
         f_csv = csv.DictWriter(f, all_columns)

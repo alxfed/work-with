@@ -5,19 +5,20 @@ import jsonlines
 import pandas as pd
 import hubspot
 import datetime as dt
-from tabulate import tabulate
+import sorting
+import sqlalchemy as sqlalc
 
 
 def main():
-    INP_FILE = '/home/alxfed/archive/last_deals_inspections.jl'
-    OUT_FILE = '/home/alxfed/archive/inspections_notes_created.jl'
-    reference_file_path = '/home/alxfed/archive/deals_downloaded.csv'
-    previously_created = '/home/alxfed/archive/inspections_notes_created.jl'
+    conn_reference = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
+    existing_notes = pd.read_sql_table(
+        table_name=sorting.CREATED_INSPECTION_NOTES, con=conn_reference)
+    all_deals = pd.read_sql_table(
+        table_name=sorting.CREATED_INSPECTION_NOTES, con=conn_reference)
 
-    all_deals = pd.read_csv(reference_file_path, dtype=object)
-    created_notes = pd.read_json(previously_created, lines=True, dtype=object)
+    SOURCE_FILE = '/home/alxfed/archive/last_deals_inspections.jl'
+
     # permit, dealId, (note) id
-
     ownerId = 40202623  # Data Robot
 
     # permit_inspections = ['PERMIT INSPECTION', 'BLDG_PERM IRON PERMIT INSP', 'VENT/HEAT PERMIT INSPECTION',
@@ -27,12 +28,12 @@ def main():
     #                       'DOB REFRIGERATION INSPECTION', 'DOB GARAGE INSPECTION',
     #                       'EQUIPMENT INSPECTION']
 
-    with jsonlines.open(INP_FILE, mode='r') as reader:
+    with jsonlines.open(SOURCE_FILE, mode='r') as reader:
         with jsonlines.open(OUT_FILE, mode='a') as writer:
             for line in reader:
                 has_data = True
                 permit = line['permit']
-                created_notes_for_permits = created_notes['permit'].to_list()
+                created_notes_for_permits = existing_notes['permit'].to_list()
                 if permit in created_notes_for_permits:
                     has_data = False
                     print('Already created a note for permit #  ', permit)
