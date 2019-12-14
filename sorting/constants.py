@@ -10,9 +10,12 @@ PREP_DATABASE_URI   = 'sqlite:////home/alxfed/dbase/thirdbase.sqlite'
 
 PITCH_DATABASE_URI  = 'sqlite:////home/alxfed/dbase/center.sqlite'
 
+LOG_DATABASE_URI = 'sqlite:////home/alxfed/dbase/logbase.sqlite'
+
 LICENSED_GENERAL_CONTRACTORS_TABLE = 'all_licensed_general_contractors'
 NOT_FOUND_GENERAL_CONTRACTORS_TABLE = 'not_found_general_contractors'
 COMPANIES_TABLE = 'companies'
+DEALS_WITH_ALL_PARAMS_TABLE = 'deals_everything'
 
 NEW_PERMITS_TABLE = 'new_permits'
 NEW_PERMITS_WITH_GENERAL_CONTRACTORS_TABLE = 'new_permits_with_gen_contractors'

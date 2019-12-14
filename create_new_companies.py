@@ -20,7 +20,7 @@ def main():
                   }
 
     conn_source = sqlalc.create_engine(sorting.INTERM_DATABASE_URI)
-    conn_result = sqlalc.create_engine(sorting.PREP_DATABASE_URI)
+    conn_result = sqlalc.create_engine(sorting.LOG_DATABASE_URI)
 
     companies = pd.read_sql_table(
         table_name=sorting.NEW_COMPANIES_TABLE, con=conn_source)
@@ -28,18 +28,21 @@ def main():
     created_companies = pd.DataFrame()
 
     for indx, company in companies.iterrows():
-        created_co = pd.DataFrame()
+        # created_co = pd.DataFrame()
+        # company['companyId'].append({'companyId': 246})
         parameters = params.copy()
-        co_name = company['company_name'].title()
-        parameters['name'] = co_name.strip()
-        parameters['city'] = company['city'].title()
+        co_name = company['company_name']
+        parameters['name'] = co_name
+        parameters['city'] = company['city']
         parameters['phone'] = company['phone']
-        parameters['address'] = company['street_address'].title()
+        parameters['address'] = company['street_address']
         parameters['state'] = company['state']
         parameters['zip'] = company['zip']
         done = hubspot.companies.create_company(parameters)
         if done:
-            created_companies = created_companies.append(company)
+            company = company.append(pd.Series({'companyId': done['companyId']}))
+            created_companies = created_companies.append(company, ignore_index=True)
+            print('Created:  ', parameters['name'])
         else:
             print('Did not create ', parameters['name'])
 
