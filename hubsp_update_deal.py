@@ -11,7 +11,8 @@ from tabulate import tabulate
 def main():
     # permit, dealId, (note) id
     ownerId = 40202623  # Data Robot
-    dealId =
+    dealId = 245
+    created_notes = []
 
     # deals_with_permits = all_deals[all_deals['permit_'].notnull()]
     for index, note in created_notes.iterrows():
