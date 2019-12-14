@@ -1,7 +1,7 @@
-__all__ = ['constants', 'companies']
+__all__ = ['constants', 'companies', 'inspections']
 
 from .constants import *
-from . import companies
+from . import companies, inspections
 
 
 def main():
