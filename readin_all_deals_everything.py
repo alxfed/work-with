@@ -49,7 +49,7 @@ def main():
     all_deals['last_inspection_date'] = pd.to_datetime(all_deals['last_inspection_date'], unit='ms')
 
     conn = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
-    all_deals.to_sql(name=DEALS_WITH_ALL_PARAMS_TABLE, con=conn, if_exists='replace', index=False)
+    all_deals.to_sql(name=sorting.DEALS_WITH_ALL_PARAMS_TABLE, con=conn, if_exists='replace', index=False)
 
     with open(downuploaded_deals, 'w') as f:
         f_csv = csv.DictWriter(f, all_columns)
