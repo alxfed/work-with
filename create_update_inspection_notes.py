@@ -40,6 +40,9 @@ def main():
     # permit, dealId, (note) id
     ownerId = 40202623  # Data Robot
 
+    conn_result = sqlalc.create_engine(sorting.LOG_DATABASE_URI)
+
+
     # permit_inspections = ['PERMIT INSPECTION', 'BLDG_PERM IRON PERMIT INSP', 'VENT/HEAT PERMIT INSPECTION',
     #                       'WATER DEPT PERMIT INSPECTION', 'ELECTRICAL PERMIT INSPECTION', 'CONSTRUCTION EQUIPMENT PERMIT',
     #                       'PORCH/DECK PERMIT INSPECTION', 'BLDG_PERM IRON PERMIT INSP', 'BOILER PERMIT INSPECTION',
@@ -64,39 +67,35 @@ def main():
                 if not post_permit_inspections_table.empty:
                     last_inspection_date = last_inspection_table['insp_date']
                     last_inspection_type = last_inspection_table['type_desc']
+                    last_inspection_number = last_inspection_table['insp_n']
                     hubspot_timestamp = int(last_inspection_date.timestamp() * 1000)
-                # update the deal parameters last_inspection and last_inspection_date here
+                    # update the deal parameters last_inspection and last_inspection_date here
                     result = hubspot.deals.update_a_deal_oauth(dealId, {'last_inspection': last_inspection_type.title(),
                                                                         'last_inspection_date': hubspot_timestamp})
                     if result:
                         print('Updated a deal: ', dealId)
-                    else:
-                        print('Did not update the deal: ', dealId)
-                #             post_permit['insp_date'] = post_permit['insp_date'].dt.strftime('%Y-%m-%d')
-                #             note_text = post_permit.to_html(header=False, index=False)
-                #             params = {'ownerId': ownerId, 'timestamp': hubspot_timestamp, 'dealId': dealId,
-                #                       'note': note_text}
-                #             created_note = hubspot.engagements.create_engagement_note(params)
-                #             engagement = created_note['engagement']
-                #             engagement.update({'permit': permit, 'dealId': dealId,
-                #                                'insp_n': last_inspection_number, 'insp_date': hubspot_timestamp,
-                #                                'insp_type': last_inspection_type})
-                #             # transform
-                #             # TODO line writer was here writer.write(engagement)
+                    post_permit_inspections_table['insp_date'] = post_permit_inspections_table['insp_date'].dt.strftime('%Y-%m-%d')
+                    note_text = post_permit_inspections_table.to_html(header=False, index=False)
+                # branching for existent and non-existent - here
+                    params = {'ownerId': ownerId, 'timestamp': hubspot_timestamp, 'dealId': dealId, 'note': note_text}
+                    created_note = hubspot.engagements.create_engagement_note(params)
+                    creupdated_note = created_note['engagement']
+                    creupdated_note.update({'permit': permit, 'dealId': dealId,
+                                       'insp_n': last_inspection_number, 'insp_date': hubspot_timestamp,
+                                       'insp_type': last_inspection_type})
+                    # log the line
+                    note = pd.DataFrame()
+                    note.to_sql(
+                        name=sorting.INSPECTION_NOTES,
+                        con=conn_result, if_exists='append', index=False)
+                else:
+                    print('No inspections after permit for deal: ', dealId)
             else: # no deal for the scraped permit, nothing to post to
+                print('No deal for scraped permit #', permit)
                 pass
     reader.close()
     return
 
-'''
-perm_table = pd.DataFrame.from_records(line['perm_table'])
-perm_table['perm_date'] = pd.to_datetime(perm_table['perm_date'], infer_datetime_format=True)
-permeat = perm_table.loc[perm_table['permit_n'] == permit]
-if permeat.empty:
-    print('No such permit on page ', permit)
-    break
-date = permeat['perm_date'].values[0] 
-'''
 
 if __name__ == '__main__':
     main()
