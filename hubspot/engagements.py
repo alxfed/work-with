@@ -97,26 +97,8 @@ def get_an_engagement(engagementId):
 def update_an_engagement(engagementId, parameters):
     # /engagements/v1/engagements/engagementId
     updated_note = {}
-    data = {"engagement": {
-                    # "active": 'true',
-                    # "ownerId": parameters['ownerId'],
-                    # "type": "NOTE",
-                    "timestamp": parameters['timestamp']
-                },
-                # "associations": {
-                #     "contactIds": [],
-                #     "companyIds": [],
-                #     "dealIds": [parameters['dealId']],
-                #     "ownerIds": [parameters['ownerId']]
-                # },
-                # "attachments": [
-                #     {
-                #         "id": ''
-                #     }
-                # ],
-                "metadata": {
-                    "body": parameters['note']
-                }
+    data = {"engagement": {"timestamp": parameters['timestamp']},
+            "metadata": {"body": parameters['note']}
             }
 
     URL = constants.ENGAGEMENTS_URL + f'/{engagementId}'
@@ -124,7 +106,7 @@ def update_an_engagement(engagementId, parameters):
                                 headers=constants.authorization_header)
     if response.status_code == 200:
         updated_note = response.json()
-        print('Created a note to deal ', parameters['dealId'])
+        print('Updated a note to deal ')
     else:
         print('not ok! The note has not been updated', response.status_code)
     return updated_note
