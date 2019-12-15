@@ -72,7 +72,7 @@ def main():
                             params = {'timestamp': hubspot_timestamp, 'note': note_text}
                             res = hubspot.engagements.update_an_engagement(inspection_note, params)
                             if res:
-                                print('updated the note ', id)
+                                print('updated the note ', inspection_note)
                                 # update the deal parameters last_inspection and last_inspection_date here
                                 result = hubspot.deals.update_a_deal_oauth(dealId, {
                                     'last_inspection': last_inspection_type.title(),
@@ -86,19 +86,16 @@ def main():
                             cre = hubspot.engagements.create_engagement_note(params)
                             if cre:
                                 created_note = cre['engagement']
-                                created_note.update({'permit': permit, 'dealId': dealId,
-                                                   'insp_n': last_inspection_number, 'insp_date': hubspot_timestamp,
-                                                   'insp_type': last_inspection_type})
-                                # update the parameters of the deal now.
-                                # update the deal parameters last_inspection and last_inspection_date here
-                                result = hubspot.deals.update_a_deal_oauth(dealId,
-                                                                           {'last_inspection': last_inspection_type.title(),
-                                                                            'last_inspection_date': hubspot_timestamp})
+                                inspection_note = created_note['id']
+                                result = hubspot.deals.update_a_deal_oauth(dealId, {'insp_note': inspection_note,
+                                                                                    'insp_n': last_inspection_number,
+                                                                                    'last_inspection': last_inspection_type.title(),
+                                                                                    'last_inspection_date': hubspot_timestamp})
                                 if result:
                                     print('Updated deal: ', dealId)
                         note = pd.DataFrame()
-                        note.to_sql(name=sorting.INSPECTION_NOTES,
-                                    con=conn_result, if_exists='append', index=False)
+                        # note.to_sql(name=sorting.INSPECTION_NOTES,
+                        #             con=conn_result, if_exists='append', index=False)
                     else:
                         print('The last inspection number is the same. No new inspections. Nothing to update.')
                 else:

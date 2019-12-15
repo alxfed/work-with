@@ -53,15 +53,15 @@ def create_engagement_note(parameters):
     created_note = {}
     data = {"engagement": {
                     "active": 'true',
-                    "ownerId": parameters['ownerId'],
+                    "ownerId": str(parameters['ownerId']),
                     "type": "NOTE",
-                    "timestamp": parameters['timestamp']
+                    "timestamp": str(parameters['timestamp'])
                 },
                 "associations": {
                     "contactIds": [],
                     "companyIds": [],
-                    "dealIds": [parameters['dealId']],
-                    "ownerIds": [parameters['ownerId']]
+                    "dealIds": [str(parameters['dealId'])],
+                    "ownerIds": [str(parameters['ownerId'])]
                 },
                 "attachments": [
                     {
@@ -73,8 +73,8 @@ def create_engagement_note(parameters):
                 }
             }
 
-    response = requests.request("POST", url=constants.ENGAGEMENTS_URL, json=data,
-                                headers=constants.authorization_header)
+    response = requests.request(method="POST", url=constants.ENGAGEMENTS_URL,
+                                json=data, headers=constants.authorization_header)
     if response.status_code == 200:
         created_note = response.json()
         print('Created a note to deal ', parameters['dealId'])
