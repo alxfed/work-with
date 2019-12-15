@@ -24,10 +24,10 @@ def main():
     inspection_notes['insp_type'] = created_notes['insp_type']
 
     # upload the result to the home database
-    conn_target = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
+    conn_target = sqlalc.create_engine(sorting.HOME_DATABASE_URI) # 'sqlite:////home/alxfed/dbase/home.sqlite'
     inspection_notes.to_sql(
         name=sorting.CREATED_INSPECTION_NOTES,
-        con=conn_target, if_exists='replace', index=False)
+        con=conn_target, if_exists='replace', index=False) # 'created_insp_notes'
 
     return
 
