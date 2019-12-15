@@ -70,17 +70,26 @@ def main():
                     post_permit_inspections_table['insp_date'] = post_permit_inspections_table['insp_date'].dt.strftime('%Y-%m-%d')
                     note_text = post_permit_inspections_table.to_html(header=False, index=False)
                 # branching for existent and non-existent - here
-                    params = {'ownerId': ownerId, 'timestamp': hubspot_timestamp, 'dealId': dealId, 'note': note_text}
-                    created_note = hubspot.engagements.create_engagement_note(params)
-                    creupdated_note = created_note['engagement']
-                    creupdated_note.update({'permit': permit, 'dealId': dealId,
-                                       'insp_n': last_inspection_number, 'insp_date': hubspot_timestamp,
-                                       'insp_type': last_inspection_type})
+                    exi = existing_notes[existing_notes['permit_'] == str(permit)]
+                    if not exi.empty:
+                        params = {'timestamp': hubspot_timestamp, 'note': note_text}
+                        id = exi['id']
+                        res = hubspot.engagements.update_an_engagement(id, params)
+                        if res:
+                            print('updated the note ', id)
+                        else:
+                            print('did not update the note', id)
+                    else:
+                        params = {'ownerId': ownerId, 'timestamp': hubspot_timestamp, 'dealId': dealId, 'note': note_text}
+                        created_note = hubspot.engagements.create_engagement_note(params)
+                        creupdated_note = created_note['engagement']
+                        creupdated_note.update({'permit': permit, 'dealId': dealId,
+                                           'insp_n': last_inspection_number, 'insp_date': hubspot_timestamp,
+                                           'insp_type': last_inspection_type})
                     # log the line
                     note = pd.DataFrame()
-                    note.to_sql(
-                        name=sorting.INSPECTION_NOTES,
-                        con=conn_result, if_exists='append', index=False)
+                    note.to_sql(name=sorting.INSPECTION_NOTES,
+                                con=conn_result, if_exists='append', index=False)
                 else:
                     print('No inspections after permit for deal: ', dealId)
             else: # no deal for the scraped permit, nothing to post to
