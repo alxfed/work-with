@@ -42,13 +42,6 @@ def main():
 
     conn_result = sqlalc.create_engine(sorting.LOG_DATABASE_URI)
 
-
-    # permit_inspections = ['PERMIT INSPECTION', 'BLDG_PERM IRON PERMIT INSP', 'VENT/HEAT PERMIT INSPECTION',
-    #                       'WATER DEPT PERMIT INSPECTION', 'ELECTRICAL PERMIT INSPECTION', 'CONSTRUCTION EQUIPMENT PERMIT',
-    #                       'PORCH/DECK PERMIT INSPECTION', 'BLDG_PERM IRON PERMIT INSP', 'BOILER PERMIT INSPECTION',
-    #                       'DOB NEW CONSTRUCTION INSP', 'DOB PLUMBING INSPECTION', 'DOB VENT/FURNACE INSPECTION',
-    #                       'DOB REFRIGERATION INSPECTION', 'DOB GARAGE INSPECTION',
-    #                       'EQUIPMENT INSPECTION']
     created_notes_for_permits = existing_notes['permit_'].to_list()
 
     with jsonlines.open(SOURCE_FILE, mode='r') as reader:
