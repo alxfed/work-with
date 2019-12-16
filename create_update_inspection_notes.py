@@ -42,11 +42,8 @@ def main():
 
     conn_result = sqlalc.create_engine(sorting.LOG_DATABASE_URI)
 
-    created_notes_for_permits = existing_notes['permit_'].to_list()
-
     with jsonlines.open(SOURCE_FILE, mode='r') as reader:
         for line in reader:
-            has_data = True
             permit = line['permit']
             deal = all_deals[all_deals['permit_'] == permit]
             if not deal.empty:
@@ -76,7 +73,8 @@ def main():
                                 # update the deal parameters last_inspection and last_inspection_date here
                                 result = hubspot.deals.update_a_deal_oauth(dealId, {
                                     'last_inspection': last_inspection_type.title(),
-                                    'last_inspection_date': hubspot_timestamp})
+                                    'last_inspection_date': hubspot_timestamp,
+                                    'insp_n': last_inspection_number})
                                 if result:
                                     print('Updated deal: ', dealId)
                             else:
