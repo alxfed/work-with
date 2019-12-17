@@ -56,6 +56,7 @@ CONTACT_SEARCH_QUERY_URL = 'https://api.hubapi.com/contacts/v1/search/query?q='
 ASSOCIATIONS_URL    = 'https://api.hubapi.com/crm-associations/v1/associations'
 
 ENGAGEMENTS_URL     = 'https://api.hubapi.com/engagements/v1/engagements'
+ASSOCIATED_COMPANY_ENGAGEMENGS_URL = 'https://api.hubapi.com/engagements/v1/engagements/associated/COMPANY/'
 ALL_ENGAGEMENTS_URL = 'https://api.hubapi.com/engagements/v1/engagements/paged'
 
 DEALS_ALL_URL       = 'https://api.hubapi.com/deals/v1/deal/paged'

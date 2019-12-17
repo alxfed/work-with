@@ -182,6 +182,63 @@ def get_all_engagements_oauth():
     return all_engagements, all_columns
 
 
+def get_engagements_of_object(companyId:str) -> list:
+    list_of_engagements = []
+    URL = constants.ASSOCIATED_COMPANY_ENGAGEMENGS_URL + f'{companyId}' + '/paged'
+    parameters = {'offset': '', 'limit': ''}
+    offset = 0
+    limit = 100  # max 100
+    has_more = True
+
+    # Now the main cycle
+    while has_more:
+        parameters['offset'] = offset
+        parameters['limit'] = limit
+        response = requests.request("GET", url=URL,
+                                    headers=constants.authorization_header,
+                                    params=parameters)
+        if response.status_code == 200:
+            res = response.json()
+            has_more    = res['hasMore']
+            offset      = res['offset']
+            results     = res['results']
+            for result in results:
+                engagement      = result['engagement']
+                associations    = result['associations']
+                attachments     = result['attachments']
+                metadata        = result['metadata']
+                row = {}
+                row.update({"id"            : engagement["id"],
+                            "portalId"      : engagement["portalId"],
+                            "active"        : engagement["active"],
+                            "createdAt"     : engagement["createdAt"],
+                            "lastUpdated"   : engagement["lastUpdated"],
+                            "type"          : engagement["type"],
+                            "timestamp"     : engagement["timestamp"]
+                            })
+                # associations
+                row.update({'contactIds'    : ' '.join(map(str, associations['contactIds'])),
+                            'companyIds'    : ' '.join(map(str, associations['companyIds'])),
+                            'dealIds'       : ' '.join(map(str, associations['dealIds'])),
+                            'ownerIds'      : ' '.join(map(str, associations['ownerIds'])),
+                            'workflowIds'   : ' '.join(map(str, associations['workflowIds'])),
+                            'ticketIds': ' '.join(map(str, associations['ticketIds'])),
+                            'contentIds': ' '.join(map(str, associations['contentIds'])),
+                            'quoteIds': ' '.join(map(str, associations['quoteIds']))
+                            })
+                # attachments
+                row.update({'attachments': ' '.join(map(str, attachments))})
+                # metadata
+                row.update({'metadata': metadata})
+                list_of_engagements.append(row)
+            # has_more = False
+            print('Now at offset: ', offset)
+        else:
+            print(response.status_code)
+
+    return list_of_engagements
+
+
 def main():
     return
 
