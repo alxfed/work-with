@@ -32,6 +32,37 @@ def get_associations_of_object(object_id, association_type):
     return list_of_associated_objects
 
 
+def get_associations_oauth(object_id, association_type):
+    """Get a list of associated objects for an object
+    for a given type of association
+    :param object_id:
+    :param association_type:
+    :return: list of ids of associated objects
+    """
+    list_of_associated_objects = []
+    parameters = {'offset': '', 'limit': ''}
+    offset = 0
+    limit = 100
+    has_more = True
+
+    while has_more:
+        api_url = f'{constants.ASSOCIATIONS_URL}/{object_id}/HUBSPOT_DEFINED/' \
+                  f'{str(association_type)}'
+        parameters['offset'] = offset
+        parameters['limit'] = limit
+        response = requests.request("GET", url=api_url, headers=constants.authorization_header,
+                                    params=parameters)
+        if response.status_code == 200:
+            res = response.json()
+            has_more = res['hasMore']
+            offset = res['offset']
+            list_of_associated_objects.extend(res['results'])
+        else:
+            print('Error: ', response.status_code)
+    return list_of_associated_objects
+
+
+
 def create_association_of_objects(from_object_id, to_object_id, association_type):
     """Create an association from one object to another
     :param from_object_id:

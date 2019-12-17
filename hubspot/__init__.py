@@ -1,7 +1,7 @@
-__all__ = ['constants', 'oauth', 'companies', 'contacts', 'associations', 'deals', 'engagements', 'owners']
+__all__ = ['constants', 'oauth', 'companies', 'contacts', 'associations', 'deals', 'engagements', 'owners', 'crm_objects']
 
 from .constants import *
-from . import oauth, companies, contacts, associations, deals, engagements, owners
+from . import oauth, companies, contacts, associations, deals, engagements, owners, crm_objects
 
 
 def main():
