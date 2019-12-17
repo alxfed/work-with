@@ -222,9 +222,9 @@ def get_engagements_of_object(companyId:str) -> list:
                             'dealIds'       : ' '.join(map(str, associations['dealIds'])),
                             'ownerIds'      : ' '.join(map(str, associations['ownerIds'])),
                             'workflowIds'   : ' '.join(map(str, associations['workflowIds'])),
-                            'ticketIds': ' '.join(map(str, associations['ticketIds'])),
-                            'contentIds': ' '.join(map(str, associations['contentIds'])),
-                            'quoteIds': ' '.join(map(str, associations['quoteIds']))
+                            'ticketIds'     : ' '.join(map(str, associations['ticketIds'])),
+                            'contentIds'    : ' '.join(map(str, associations['contentIds'])),
+                            'quoteIds'      : ' '.join(map(str, associations['quoteIds']))
                             })
                 # attachments
                 row.update({'attachments': ' '.join(map(str, attachments))})

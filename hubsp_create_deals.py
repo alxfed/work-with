@@ -71,6 +71,7 @@ def main():
             not_created = not_created.append(deal, ignore_index=True)
 
     conn_result = sqlalc.create_engine(sorting.LOG_DATABASE_URI)
+    # the ids are in FLOAT format if you don't do something right here
     created.to_sql(
         name=sorting.CREATED_DEALS_TABLE,
         con=conn_result, if_exists='replace', index=False)

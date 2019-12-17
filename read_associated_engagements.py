@@ -9,8 +9,10 @@ def main():
     companyId = '1105532001' # Skender
     assoc_type = '2' # Company to contact, contact to company is 1
     # eng_list = hubspot.engagements.get_engagements_of_object(companyId)
-    # engagements = pd.DataFrame.from_records(eng_list)
+    # engagements = pd.DataFrame(eng_list, dtype=object)
     associations_list = hubspot.associations.get_associations_oauth(companyId, assoc_type)
+    vice_versa = hubspot.associations.get_associations_oauth(companyId, '1')
+    # deal to contact is 3
     return
 
 
