@@ -85,6 +85,28 @@ def create_association_of_objects(from_object_id, to_object_id, association_type
     return
 
 
+def create_one_to_many_associations(associations_from: str,
+                                    association_to: list,
+                                    association_type: str) -> bool:
+    # prepare json
+    associations_to_create = []
+    for to in association_to:
+        assoc = {
+                    "fromObjectId": associations_from,
+                    "toObjectId": to,
+                    "category": "HUBSPOT_DEFINED",
+                    "definitionId": association_type
+                }
+        associations_to_create.append(assoc)
+    created = False
+    response = requests.request(
+        method="PUT", url=constants.BATCH_ASSOCIATIONS_URL,
+        json=associations_to_create, headers=constants.authorization_header)
+    if response.status_code == 204:
+        created = True
+    return created
+
+
 def main():
     print('You have launched the module as __main__')
     return

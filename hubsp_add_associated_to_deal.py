@@ -11,9 +11,9 @@ def main():
     # 0. Read the deals list;
     # 1. read the company from a deal;
     # 2. read associated contacts from this company;
-    # 3. read associated engagements from this company;
-    # 4. add contacts to the deal;
-    # 5. add filtered engagements to the deal.
+    # 3. add contacts to the deal;
+    # 4. read associated engagements from this company;
+    # 5. chech if it has been done already and if not - add filtered engagements to the _company_.
     conn_reference = sqlalc.create_engine(sorting.LOG_DATABASE_URI)
     deals = pd.read_sql_table(
         table_name=sorting.CREATED_DEALS_TABLE, con=conn_reference)
@@ -26,12 +26,15 @@ def main():
         contacts_list = hubspot.associations.get_associations_oauth(companyId, '2') # company to contact full
         vice_versa = hubspot.associations.get_associations_oauth(companyId, '1') # empty
 
-        deals_list = hubspot.associations.get_associations_oauth(companyId, '5') # deal to company - empty
-        vice_veversa = hubspot.associations.get_associations_oauth(companyId, '6') # company to deals - full
-
-        eng_list = hubspot.engagements.get_engagements_of_object(companyId)
-        engagements = pd.DataFrame(eng_list, dtype=object)
-        print('ok')
+        result = hubspot.associations.create_one_to_many_associations(dealId, contacts_list, '3')
+        #
+        # vice_veversa = hubspot.associations.get_associations_oauth(companyId, '5') # deal to company - empty
+        # deals_list = hubspot.associations.get_associations_oauth(companyId, '6') # company to deals - full
+        #
+        # eng_list = hubspot.engagements.get_engagements_of_object(companyId)
+        # engagements = pd.DataFrame(eng_list, dtype=object)
+        if result:
+            print(dealId, 'ok')
     return
 
 
