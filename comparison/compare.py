@@ -54,10 +54,14 @@ def jaccard_dist(a:set, b:set) -> float:
 def main():
     name1 = 'L & S Lighting Corp'
     name2 = 'SoPf. & P. Tax Solutions '
+    name7 = 'S . & P Tax Solutions'
     name3 = 'I.B. Quality. Cabinets'
     name4 = 'CH& CP Kitchen Cabinet Gallery'
     name5 = 'D.O.M.'
     nname = 'one two'
+    a = set(name2)
+    b = set(name7)
+    jd = jaccard_dist(a, b)
     pattern = re.compile(r'[&-/+\']')
     # body = re.sub('>\s*<', '><', body, 0, re.M)
     mate = re.match(r'(?:[.\w+])+', name2)
