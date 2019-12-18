@@ -1,5 +1,6 @@
 import re
 # from .constants import *
+import nltk
 
 
 def first_word(name):
@@ -44,6 +45,10 @@ def replace_match(match):
     else:
         string = ''
     return string
+
+def jaccard_dist(a:set, b:set) -> float:
+    jd = nltk.jaccard_distance(a, b)
+    return jd
 
 
 def main():
