@@ -22,16 +22,8 @@ def main():
         companyId = str(int(deal['companyId'])) # because it is FLOAT in the db
         issue_date = deal['issue_date'] # datetime format
 
-        contacts_list = hubspot.associations.get_associations_oauth(companyId, '2') # company to contact full
-        vice_versa = hubspot.associations.get_associations_oauth(companyId, '1') # empty
-
-        result = hubspot.associations.create_one_to_many_associations(dealId, contacts_list, '3')
-
         deals_list = hubspot.associations.get_associations_oauth(companyId, '6') # company to deals - full
-        # vice_veversa = hubspot.associations.get_associations_oauth(companyId, '5') # deal to company - empty
-        #
-        # eng_list = hubspot.engagements.get_engagements_of_object(companyId)
-        # engagements = pd.DataFrame(eng_list, dtype=object)
+
         if result:
             print(dealId, 'ok')
     return
