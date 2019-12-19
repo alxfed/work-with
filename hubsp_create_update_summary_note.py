@@ -5,6 +5,7 @@ import pandas as pd
 import sqlalchemy as sqlalc
 import sorting
 import hubspot
+import datetime as dt
 
 
 def main():
@@ -25,7 +26,7 @@ def main():
         deals_list = hubspot.associations.get_associations_oauth(companyId, '6') # company to deals - full
         for deal_n in deals_list:
             deal_data = hubspot.deals.get_a_deal(deal_n)
-            dealId = deal['dealId'].values[0]
+            # check the pipeline and stage
             dealDate = deal['permit_issue_date']
             if dealDate.empty:
                 date = dt.datetime(year=2019, month=7, day=12, hour=0, minute=0, second=0)
@@ -83,3 +84,30 @@ def main():
 if __name__ == '__main__':
     main()
     print('main - done')
+
+
+'''
+'hs_object_id': 
+    {'value': '436812705', 
+    'timestamp': 1545070632884, 
+    'source': 'CALCULATED', 
+    'sourceId': None, 
+    'versions': [{'name': 'hs_object_id', 'value': '436812705', 'timestamp': 1545070632884, 'source': 'CALCULATED', 'sourceVid': []}]
+    }, 
+'hs_analytics_source_data_2': 
+    {'value': 'CRM_UI', 
+    'timestamp': 1557852770795, 
+    'source': 'DEALS', 
+    'sourceId': 'deal sync triggered by company id=1114608131', 
+    'versions': [{'name': 'hs_analytics_source_data_2', 'value': 'CRM_UI', 'timestamp': 1557852770795, 'sourceId': 'deal sync triggered by company id=1114608131', 'source': 'DEALS', 'sourceVid': []}]
+    }, 
+'hs_analytics_source_data_1': 
+    {'value': 'CONTACTS', 
+    'timestamp': 1557852770795, 
+    'source': 'DEALS', 'sourceId': 
+    'deal sync triggered by company id=1114608131', 
+    'versions': [{'name': 'hs_analytics_source_data_1', 'value': 'CONTACTS', 'timestamp': 1557852770795, 'sourceId': 'deal sync triggered by company id=1114608131', 'source': 'DEALS', 'sourceVid': []}]}
+    },
+'imports': [], 
+'stateChanges': []
+'''
