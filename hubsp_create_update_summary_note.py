@@ -7,89 +7,64 @@ import sorting
 import hubspot
 import datetime as dt
 
-# constants
-CLIENTS_COME_IN                     = '904851'
-MAKE_QUOTE                          = '1112239'
-DESIGN_ESTIMATE_REVISIONS           = 'fc1eda4f-23c1-4031-96da-eaadca9ab73e'
-DESIGN_ESTIMATE_COMPLETED           = 'qualifiedtobuy'
-QOUTE_READY_TO_BE_SENT              = '77a731b6-782c-4a38-a8b4-0a7b0d319d23'
-QUOTE_SENT_OUT                      = '1175e2fb-5061-491e-81d6-65f0be6ce51e'
-FOLLOW_UP_ON_QUOTE                  = '2cd78f67-7bfe-4691-824f-24dd4d33aff2'
-SEND_OUT_TO_MEASURE                 = '7d4554f7-a7b9-4c69-a348-767f1aee7003'
-FINAL_APPROVAL_BY_LEAD_DESIGNER     = '30fab7f0-4585-4d31-be27-7704fea2726b'
-APPROVED_BY_LEAD_DESIGNER           = '92eede52-0557-4bfc-87cd-b8137889908c'
-READY_FOR_CONTRACT                  = '1112240'
-CLIENT_APPROVED                     = 'presentationscheduled'
-CONTRACT_SENT_OUT                   = '1112241'
-CONTRACT_SIGNED                     = 'decisionmakerboughtin'
-DEPOSIT_COLLECTED                   = '87d11aa5-37df-4db0-b15d-975a172b34c4'
-IN_PRODUCTION                       = 'contractsent'
-PRODUCTION_FINISHED                 = '98866f99-d958-436c-89c5-2ee8d7d6d62d'
-READY_FOR_DELIVERY                  = '1112276'
-BALANCE_COLLECTED                   = '32ae2700-1937-4216-9c2c-0119a715ef17'
-DELIVERY                            = 'closedwon'
-PICK_UP                             = 'a8b2ecbf-f109-4d00-a813-92962430a892'
-CLOSED_DELIVERED                    = 'closedlost'
-LOST_NEVER_ORDERED                  = '825b606f-cda4-4a4c-a201-9bcf331a8aa3'
-
-LIST_OF_STATES = ['904851', '1112239', 'fc1eda4f-23c1-4031-96da-eaadca9ab73e', 'qualifiedtobuy',
-                  '77a731b6-782c-4a38-a8b4-0a7b0d319d23', '1175e2fb-5061-491e-81d6-65f0be6ce51e',
-                  '2cd78f67-7bfe-4691-824f-24dd4d33aff2', '7d4554f7-a7b9-4c69-a348-767f1aee7003',
-                  '30fab7f0-4585-4d31-be27-7704fea2726b', '92eede52-0557-4bfc-87cd-b8137889908c',
-                  '1112240', 'presentationscheduled', '1112241', 'decisionmakerboughtin',
-                  '87d11aa5-37df-4db0-b15d-975a172b34c4', 'contractsent',
-                  '98866f99-d958-436c-89c5-2ee8d7d6d62d', '1112276', '32ae2700-1937-4216-9c2c-0119a715ef17',
-                  'closedwon', 'a8b2ecbf-f109-4d00-a813-92962430a892', 'closedlost',
-                  '825b606f-cda4-4a4c-a201-9bcf331a8aa3']
-
-NAMES_OF_STATES = {'904851': 'Clients (come in)',
-                   '1112239': 'Make quote',
-                   'fc1eda4f-23c1-4031-96da-eaadca9ab73e': 'Design / Estimate / Revisions',
-                   'qualifiedtobuy': 'Design / Estimates Completed',
-                   '77a731b6-782c-4a38-a8b4-0a7b0d319d23': 'Quote, Ready to be Sent',
-                   '1175e2fb-5061-491e-81d6-65f0be6ce51e': 'Quote sent out',
-                   '2cd78f67-7bfe-4691-824f-24dd4d33aff2': 'Follow up on quote',
-                   '7d4554f7-a7b9-4c69-a348-767f1aee7003': 'Send Out To Measure',
-                   '30fab7f0-4585-4d31-be27-7704fea2726b': 'To be Checked for Final Approval by Lead Designer',
-                   '92eede52-0557-4bfc-87cd-b8137889908c': 'Approved by Lead Designer',
-                   '1112240': 'Ready For Contract',
-                   'presentationscheduled': 'Client Approved',
-                   '1112241': 'Contract Sent Out',
-                   'decisionmakerboughtin': 'Contract Signed',
-                   '87d11aa5-37df-4db0-b15d-975a172b34c4': 'Deposit Collected',
-                   'contractsent': 'In Production',
-                   '98866f99-d958-436c-89c5-2ee8d7d6d62d': 'Production Finished',
-                   '1112276': 'Ready For Delivery',
-                   '32ae2700-1937-4216-9c2c-0119a715ef17': 'Balance Collected',
-                   'closedwon': 'Delivery',
-                   'a8b2ecbf-f109-4d00-a813-92962430a892': 'Pick Up',
-                   'closedlost': 'Closed / Delivered',
-                   '825b606f-cda4-4a4c-a201-9bcf331a8aa3': 'Lost / Never Ordered'}
+# constants are in constants
 
 
 class SummaryNote(object):
-    exist = False
-    ready = False
+    ownerId = '40202623' # Marfa Cabinets Data robot
 
     def __init__(self, **kwargs):
-        if 'engagementId' in kwargs.keys():
-            self.engagementId = kwargs['engagementId']
-        if 'companyId' in kwargs.keys():
-            self.companyId = kwargs['companyId']
-        if 'deal_list' in kwargs.keys():
-            self.deal_list = kwargs['deal_list']
-        SummaryNote.exist = True
+        if 'engagementId' in kwargs.keys(): self.engagementId = kwargs['engagementId']
+        else: self.engagementId = ''
+        if 'companyId' in kwargs.keys(): self.companyId = kwargs['companyId']
+        else: self.companyId = ''
+        if 'deal_list' in kwargs.keys(): self.deal_list = kwargs['deal_list']
+        else: self.deal_list = []
+        if 'content' in kwargs.keys(): self.content = kwargs['content']
+        else: self.content = ''
+        self.ready = False
 
     def __del__(self):
         SummaryNote.exist = False
 
-    def create(self):
-        pass
+    def read_in(self, engagement_id: str):
+        # readin engagement
+        result = ''
+        if result:
+            return True
+        else:
+            return False
 
-    def update(self):
-        if self.exist and self.ready:
-            params = {'timestamp': hubspot_timestamp, 'note': note_text}
-            res = hubspot.engagements.update_an_engagement(inspection_note, params)
+    def add_content(self, *kwargs):
+        self.content = ''
+        return True
+
+    def verify_content(self):
+        # verification
+        self.ready = True
+        return self.ready
+
+    def create(self, timestamp):
+        if self.ready:
+            params = {'ownerId': SummaryNote.ownerId, 'timestamp': timestamp, 'dealId': dealId, 'note': note_text}
+            cre = hubspot.engagements.create_engagement_note(params)
+            if cre:
+                created_note = cre['engagement']
+                inspection_note = created_note['id']
+                result = hubspot.deals.update_a_deal_oauth(dealId, {'insp_note': inspection_note,
+                                                                    'insp_n': last_inspection_number,
+                                                                    'last_inspection': last_inspection_type.title(),
+                                                                    'last_inspection_date': hubspot_timestamp})
+                if result:
+                    print('Updated deal: ', dealId)
+        else:
+            print('Is not ready')
+            return False
+
+    def update(self, timestamp):
+        if self.ready:
+            params = {'timestamp': timestamp, 'note': self.content}
+            res = hubspot.engagements.update_an_engagement(self.engagementId, params)
             if res:
                 print('updated the note ', inspection_note)
                 # update the deal parameters last_inspection and last_inspection_date here
@@ -99,10 +74,13 @@ class SummaryNote(object):
                     'insp_n': last_inspection_number})
                 if result:
                     print('Updated deal: ', dealId)
+                    return True
             else:
                 print('did not update the note', id)
-
-
+                return False
+        else:
+            print('Is not ready')
+            return False
 
 
 def main():
