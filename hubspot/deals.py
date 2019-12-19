@@ -60,7 +60,7 @@ def create_a_deal_oauth(parameters, associations):
 def get_a_deal(dealId):
     request_url = f'{constants.DEAL_URL}/{dealId}'
     response = requests.request('GET', url=request_url,
-                                headers=constants.header,
+                                headers=constants.authorization_header,
                                 params=constants.parameters)
     if response.status_code == 200:
         resp = response.json()
