@@ -21,17 +21,17 @@ def main():
     for index, deal in deals.iterrows():
         dealId = deal['dealId']  # text format
         companyId = str(int(deal['companyId'])) # because it is FLOAT in the db
-        issue_date = deal['issue_date'] # datetime format
 
         deals_list = hubspot.associations.get_associations_oauth(companyId, '6') # company to deals - full
         for deal_n in deals_list:
             deal_data = hubspot.deals.get_a_deal(deal_n)
-            # check the pipeline and stage
+            # check the pipeline , dealstage , closedate , closed_won_reason , closed_lost_reason
             dealDate = deal['permit_issue_date']
             if dealDate.empty:
                 date = dt.datetime(year=2019, month=7, day=12, hour=0, minute=0, second=0)
             else:
                 date = dealDate.values[0]
+            # summary_note , summary_note_date
             post_permit_inspections_table, last_inspection_table = post_permit_inspections(line, date, dealId)
             if not post_permit_inspections_table.empty:
                 last_inspection_number = last_inspection_table['insp_n']
