@@ -150,4 +150,13 @@ LIST_OF_STATES = ['904851', '1112239', 'fc1eda4f-23c1-4031-96da-eaadca9ab73e', '
                   'closedwon', 'a8b2ecbf-f109-4d00-a813-92962430a892', 'closedlost',
                   '825b606f-cda4-4a4c-a201-9bcf331a8aa3']
 
+IDS_OF_OWNERS = {'Alexander Doroshko': '31831742', 'Melissa Conroy': '31831770', 'Douglas Sumner': '33661209',
+                 'Bjorn Berkmortel': '34421936', 'Bulat Bakhtiyarov': '35511845', 'Iuliana Midari': '36261319',
+                 'Anastasiia Yashchenko': '37489009', 'Dorina Braescu': '38144553'}
+                # Daniel is no longer on the list but I know that he owns a contact 1066501, can look his old id there
+
+OWNERS_OF_IDS = {'31831742': 'Alexander Doroshko', '31831770': 'Melissa Conroy', '33661209': 'Douglas Sumner',
+                 '34421936': 'Bjorn Berkmortel', '35511845': 'Bulat Bakhtiyarov', '36261319': 'Iuliana Midari',
+                 '37489009': 'Anastasiia Yashchenko', '38144553': 'Dorina Braescu'}
+
 OAUTH_TOKEN_URL     = 'https://api.hubapi.com/oauth/v1/token'
