@@ -23,7 +23,7 @@ class SummaryNote(object):
         if 'content' in kwargs.keys(): self.content = kwargs['content']
         else: self.content = ''
         if 'hs_timestamp' in kwargs.keys(): self.hs_timestamp = kwargs['hs_timestamp']
-        else: self.hs_timestamp = int(1000 * dt.datetime.now().timestamp())
+        else: self.hs_timestamp = str(int(1000 * dt.datetime.now().timestamp()))
         self.ready = False
 
     def __del__(self): # just in case I will want to add the deletion of note here
@@ -156,9 +156,16 @@ def main():
             if co_info:
                 co_properties = co_info['properties']
                 if 'summary_note' in co_properties.keys():  # summary note exists
-                    summary_note = co_properties['summary_note']
-                    summary_note_timestamp = int(co_properties['summary_note_date'])
-                    # TODO: update the summary note if necessary
+                    summary_note = co_properties['summary_note']['value']
+                    summary_note_timestamp = co_properties['summary_note_date']['value']
+                    now = int(1000 * dt.datetime.now().timestamp())
+                    if (now - int(summary_note_timestamp)) > 10000:
+                        old_note = SummaryNote(companyId=companyId,
+                                               engagementId=summary_note,
+                                               hs_timestamp=summary_note_timestamp)
+                        old_note.prepare_note()
+                        if old_note.ready:
+                            res = old_note.update(timestamp=str(now))
                 else:  # summary note doesn't exist
                     note = SummaryNote(companyId=companyId)
                     note.prepare_note()
