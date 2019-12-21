@@ -1,36 +1,19 @@
-__all__ = ['constants', 'oauth', 'companies', 'contacts', 'associations', 'deals', 'engagements', 'owners', 'crm_objects']
+__all__ = ['constants', 'oauth', 'companies', 'contacts',
+           'associations', 'deals', 'engagements', 'owners', 'crm_objects']
 
-from .constants import *
-from . import oauth, companies, contacts, associations, deals, engagements, owners, crm_objects
-
-
-def main():
-    print('main in hubspot.__init__.py: ok')
-    return
-
-
-parameters = {}
+from . import oauth
+import datetime
+from os.path import getmtime
 
 try:
-    last = getmtime(AUTHORIZATION_TOKEN_FILE)
+    last = getmtime('/home/alxfed/credo/authorization_token.txt')
     now = datetime.datetime.now().timestamp()
     if (now - last) >= 18000:
         print('The token has expired. I am about to refresh it')
-        refre = 'y' # input('y/n? ')
-        if refre.startswith('y'):
-            res = oauth.refresh_oauth_token()
-            if res:
-                print('Token refreshed')
-            else:
-                print('Token not refreshed, something has gone wrong')
+        res = oauth.refresh_oauth_token()
+        if res:
+            print('Token refreshed')
+        else:
+            print('Token not refreshed, something has gone wrong')
 except:
-    print('No token file')
-    pass
-
-token_file = open(AUTHORIZATION_TOKEN_FILE, 'r')
-authorization_token = token_file.read()
-token_file.close()
-
-
-if __name__ == '__main__':
-    main()
+    print('Did not manage to refresh the token')
