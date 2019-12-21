@@ -41,9 +41,14 @@ def get_company(companyId):
 
 def update_company(companyId, parameters):
     request_url = f'{constants.COMPANY_UPDATE_URL}{companyId}'
+    property_list = []
+    for key, value in parameters.items():
+        item = {"name": key, "value":value}
+        property_list.append(item)
+    properties = {'properties': property_list}
     response = requests.request('PUT', url=request_url,
                                 headers=constants.authorization_header,
-                                json=parameters,
+                                json=properties,
                                 params=constants.parameters)
     if response.status_code == 200:
         resp = response.json()

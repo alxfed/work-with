@@ -80,7 +80,7 @@ def main():
                             else:
                                 print('did not update the note', id)
                         else:
-                            params = {'ownerId': ownerId, 'timestamp': hubspot_timestamp, 'dealId': dealId, 'note': note_text}
+                            params = {'ownerId': ownerId, 'timestamp': hubspot_timestamp, 'dealIds': [dealId], 'note': note_text}
                             cre = hubspot.engagements.create_engagement_note(params)
                             if cre:
                                 created_note = cre['engagement']

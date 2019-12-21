@@ -22,12 +22,14 @@ class SummaryNote(object):
         else: self.deal_list = []
         if 'content' in kwargs.keys(): self.content = kwargs['content']
         else: self.content = ''
+        if 'hs_timestamp' in kwargs.keys(): self.hs_timestamp = kwargs['hs_timestamp']
+        else: self.hs_timestamp = int(1000 * dt.datetime.now().timestamp())
         self.ready = False
 
-    def __del__(self):
-        SummaryNote.exist = False
+    def __del__(self): # just in case I will want to add the deletion of note here
+        pass
 
-    def read_in(self, engagement_id: str):
+    def read_in(self, engagementId: str):
         # readin engagement
         result = ''
         if result:
@@ -44,19 +46,21 @@ class SummaryNote(object):
         self.ready = True
         return self.ready
 
-    def create(self, timestamp):
+    def create(self):
         if self.ready:
-            # params = {'ownerId': SummaryNote.ownerId, 'timestamp': timestamp, 'dealId': dealId, 'note': note_text}
-            # cre = hubspot.engagements.create_engagement_note(params)
-            # # if cre:
-            #     created_note = cre['engagement']
-            #     inspection_note = created_note['id']
-            #     result = hubspot.deals.update_a_deal_oauth(dealId, {'insp_note': inspection_note,
-            #                                                         'insp_n': last_inspection_number,
-            #                                                         'last_inspection': last_inspection_type.title(),
-            #                                                         'last_inspection_date': hubspot_timestamp})
-            #     if result:
-            #         print('Updated deal: ', dealId)
+            params = {'ownerId': SummaryNote.ownerId,
+                      'timestamp': self.hs_timestamp,
+                      'companyId': self.companyId,
+                      'dealIds': self.deal_list,
+                      'note': self.content}
+            cre = hubspot.engagements.create_engagement_note(params)
+            if cre:
+                created_note = cre['engagement']
+                self.engagementId = created_note['id']
+                result = hubspot.companies.update_company(self.companyId, {'summary_note': self.engagementId,
+                                     'summary_note_date': self.hs_timestamp})
+                if result:
+                    print('Created Summary Note: ', self.engagementId)
             pass
         else:
             print('Is not ready')
@@ -83,13 +87,17 @@ class SummaryNote(object):
             print('Is not ready')
             return False
 
-    def prepare_note(self, companyId, **kwargs):
-        done = False
-        list_of_lines = []
-        deals_list = hubspot.associations.get_associations_oauth(companyId, '6')  # company to deals - full
-        # engagements_list = hubspot.associations.get_associations_oauth(companyId, '7') # company to engagements - full
-        # eng_list = hubspot.engagements.get_engagements_of_object(companyId)
-        for deal_n in deals_list:
+    def prepare_note(self, **kwargs):
+        self.ready      = False
+        list_of_lines   = []
+
+        if 'companyId' in kwargs.keys():
+            self.companyId = kwargs['companyId']
+        if self.companyId:
+            self.deal_list = hubspot.associations.get_associations_oauth(self.companyId, '6')  # company to deals - full
+        else:
+            print('No company Id for the note. Nothing to prepare')
+        for deal_n in self.deal_list:
             line = {}
             deal_data = hubspot.deals.get_a_deal(deal_n)['properties']  # deal_n: int
             # check the pipeline , dealstage , closedate , closed_won_reason , closed_lost_reason
@@ -123,8 +131,8 @@ class SummaryNote(object):
             to_sort['date'] = pd.to_datetime(to_sort['date'], unit='ms')
             to_publish = to_sort.sort_values(by=['date'], ascending=False)
             to_publish['date'] = to_publish['date'].dt.strftime('%Y-%m-%d')
-            note_content = to_publish.to_html() # the html parameters: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_html.html?highlight=to_html#pandas.DataFrame.to_html
-        return done
+            self.content = to_publish.to_html(index=False) # the html parameters: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_html.html?highlight=to_html#pandas.DataFrame.to_html
+            self.ready = True
 
 
 def main():
@@ -149,19 +157,23 @@ def main():
                 co_properties = co_info['properties']
                 if 'summary_note' in co_properties.keys():  # summary note exists
                     summary_note = co_properties['summary_note']
-                    summary_note_date = co_properties['summary_note_date']
+                    summary_note_timestamp = int(co_properties['summary_note_date'])
                     # TODO: update the summary note if necessary
                 else:  # summary note doesn't exist
-                    note = SummaryNote(companyId=companyId, deal_list=deals_list, content=note_content)
-                    hubsp_time_now = int(1000 * dt.datetime.now().timestamp())
-                    res = note.create(timestamp=hubsp_time_now)
+                    note = SummaryNote(companyId=companyId)
+                    note.prepare_note()
+                    if note.ready:
+                        res = note.create()
+                    else:
+                        print('Note is not ready!')
+                        exit(247)
             else:
                 # no company info. what kind of a company is that?
                 # Somethin's not working properly. Stop!
                 exit(246)
         else:
             # company has been processed.
-            pass
+            print('One more deal of:  ', companyId)
     return
 
 

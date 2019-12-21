@@ -51,6 +51,10 @@ def package_engagement_data(data):
 
 def create_engagement_note(parameters):
     created_note = {}
+    companyId = ''
+    dealIds = ''
+    if 'companyId' in parameters.keys(): companyId = parameters['companyId']
+    if 'dealIds' in parameters.keys(): dealIds = parameters['dealIds']
     data = {"engagement": {
                     "active": 'true',
                     "ownerId": str(parameters['ownerId']),
@@ -59,8 +63,8 @@ def create_engagement_note(parameters):
                 },
                 "associations": {
                     "contactIds": [],
-                    "companyIds": [],
-                    "dealIds": [str(parameters['dealId'])],
+                    "companyIds": [companyId],
+                    "dealIds": dealIds,
                     "ownerIds": [str(parameters['ownerId'])]
                 },
                 "attachments": [
@@ -77,7 +81,7 @@ def create_engagement_note(parameters):
                                 json=data, headers=constants.authorization_header)
     if response.status_code == 200:
         created_note = response.json()
-        print('Created a note to deal ', parameters['dealId'])
+        print('Created a note to company ', companyId)
     else:
         print('not ok! ', response.status_code)
     return created_note
