@@ -5,7 +5,6 @@ import pandas as pd
 import sqlalchemy as sqlalc
 import sorting
 import hubspot
-import time
 
 # constants are in constants
 
