@@ -154,9 +154,11 @@ def main():
             companies.add(companyId)
             co_info = hubspot.companies.get_company(companyId)
             if co_info:
+                summary_note = ''
                 co_properties = co_info['properties']
                 if 'summary_note' in co_properties.keys():  # summary note exists
                     summary_note = co_properties['summary_note']['value']
+                if summary_note:
                     summary_note_timestamp = co_properties['summary_note_date']['value']
                     now = int(1000 * dt.datetime.now().timestamp())
                     if (now - int(summary_note_timestamp)) > 10000:
@@ -172,12 +174,11 @@ def main():
                     if note.ready:
                         res = note.create()
                     else:
-                        print('Note is not ready!')
-                        exit(247)
+                        print('Note is empty')
             else:
                 # no company info. what kind of a company is that?
                 # Somethin's not working properly. Stop!
-                exit(246)
+                print('Company not found')
         else:
             # company has been processed.
             print('One more deal of:  ', companyId)
