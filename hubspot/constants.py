@@ -40,6 +40,7 @@ header = {'Content-Type': 'application/json'}
 oauth_header = {'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'}
 
 COMPANY_CREATE_URL  = 'https://api.hubapi.com/companies/v2/companies'
+COMPANY_GET_URL     = 'https://api.hubapi.com/companies/v2/companies/'
 COMPANY_DELETE_URL  = 'https://api.hubapi.com/companies/v2/companies/'
 COMPANY_UPDATE_URL  = 'https://api.hubapi.com/companies/v2/companies/'
 COMPANY_SEARCH_URL  = 'https://api.hubapi.com/companies/v2/domains/'

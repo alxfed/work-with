@@ -27,10 +27,22 @@ def create_company(parameters):
     return res
 
 
+def get_company(companyId):
+    request_url = f'{constants.COMPANY_GET_URL}{companyId}'
+    response = requests.request('GET', url=request_url,
+                                headers=constants.authorization_header)
+    if response.status_code == 200:
+        resp = response.json()
+        return resp
+    else:
+        print(response.status_code)
+        return
+
+
 def update_company(companyId, parameters):
     request_url = f'{constants.COMPANY_UPDATE_URL}{companyId}'
     response = requests.request('PUT', url=request_url,
-                                headers=constants.header,
+                                headers=constants.authorization_header,
                                 json=parameters,
                                 params=constants.parameters)
     if response.status_code == 200:

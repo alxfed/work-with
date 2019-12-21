@@ -5,6 +5,7 @@ import pandas as pd
 import sqlalchemy as sqlalc
 import sorting
 import hubspot
+import datetime as dt
 
 # constants are in constants
 
@@ -82,6 +83,49 @@ class SummaryNote(object):
             print('Is not ready')
             return False
 
+    def prepare_note(self, companyId, **kwargs):
+        done = False
+        list_of_lines = []
+        deals_list = hubspot.associations.get_associations_oauth(companyId, '6')  # company to deals - full
+        # engagements_list = hubspot.associations.get_associations_oauth(companyId, '7') # company to engagements - full
+        # eng_list = hubspot.engagements.get_engagements_of_object(companyId)
+        for deal_n in deals_list:
+            line = {}
+            deal_data = hubspot.deals.get_a_deal(deal_n)['properties']  # deal_n: int
+            # check the pipeline , dealstage , closedate , closed_won_reason , closed_lost_reason
+            pipeline = deal_data['pipeline']['value']
+            if pipeline == 'default':
+                dealname = deal_data['dealname']['value']
+                dealstage = deal_data['dealstage']['value']
+                dealstage_timestamp = deal_data['dealstage']['timestamp']
+                deal_owner = deal_data['hubspot_owner_id']['value']
+                # closed_won_reason = deal_data['closed_won_reason']['value']
+                # closed_lost_reason = deal_data['closed_lost_reason']['value']
+                if dealstage in hubspot.NAMES_OF_STATES.keys():
+                    stagename = hubspot.NAMES_OF_STATES[dealstage]
+                else:
+                    stagename = 'Deleted stage type'
+                if deal_owner in hubspot.OWNERS_OF_IDS.keys():
+                    ownername = hubspot.OWNERS_OF_IDS[deal_owner]
+                else:
+                    ownername = 'Deactivated user'
+
+                line.update(
+                    {'date': int(dealstage_timestamp), 'name': dealname, 'stage': stagename, 'owner': ownername})
+                list_of_lines.append(line)
+            else:
+                # pipeline is not 'default'
+                pass
+        # the list making cycle is over, time to format it
+        if list_of_lines:
+            to_sort = pd.DataFrame(list_of_lines)
+            to_publish = pd.DataFrame()
+            to_sort['date'] = pd.to_datetime(to_sort['date'], unit='ms')
+            to_publish = to_sort.sort_values(by=['date'], ascending=False)
+            to_publish['date'] = to_publish['date'].dt.strftime('%Y-%m-%d')
+            note_content = to_publish.to_html() # the html parameters: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_html.html?highlight=to_html#pandas.DataFrame.to_html
+        return done
+
 
 def main():
     # 1. get a companyId from a deal;
@@ -100,47 +144,21 @@ def main():
         companyId = str(int(deal['companyId'])) # because it is FLOAT in the db
         if not companyId in companies:
             companies.add(companyId)
-            deals_list = hubspot.associations.get_associations_oauth(companyId, '6') # company to deals - full
-            # engagements_list = hubspot.associations.get_associations_oauth(companyId, '7') # company to engagements - full
-            # eng_list = hubspot.engagements.get_engagements_of_object(companyId)
-            list_of_lines = []
-            for deal_n in deals_list:
-                line = {}
-                deal_data = hubspot.deals.get_a_deal(deal_n)['properties'] # deal_n: int
-                # check the pipeline , dealstage , closedate , closed_won_reason , closed_lost_reason
-                pipeline = deal_data['pipeline']['value']
-                if pipeline == 'default':
-                    dealname = deal_data['dealname']['value']
-                    dealstage = deal_data['dealstage']['value']
-                    dealstage_timestamp = deal_data['dealstage']['timestamp']
-                    deal_owner = deal_data['hubspot_owner_id']['value']
-                    # closed_won_reason = deal_data['closed_won_reason']['value']
-                    # closed_lost_reason = deal_data['closed_lost_reason']['value']
-                    if dealstage in hubspot.NAMES_OF_STATES.keys():
-                        stagename = hubspot.NAMES_OF_STATES[dealstage]
-                    else:
-                        stagename = 'Deleted stage type'
-                    if deal_owner in hubspot.OWNERS_OF_IDS.keys():
-                        ownername = hubspot.OWNERS_OF_IDS[deal_owner]
-                    else:
-                        ownername = 'Deactivated user'
-
-                    line.update({'date':int(dealstage_timestamp),'name': dealname, 'stage': stagename, 'owner': ownername})
-                    list_of_lines.append(line)
-                else:
-                    # pipeline is not 'default'
-                    pass
-            # the list making cycle is over
-            if list_of_lines:
-                to_sort = pd.DataFrame(list_of_lines)
-                to_publish = pd.DataFrame()
-                to_sort['date'] = pd.to_datetime(to_sort['date'], unit='ms')
-                to_publish = to_sort.sort_values(by=['date'], ascending=False)
-                to_publish['date'] = to_publish['date'].dt.strftime('%Y-%m-%d')
-                # and here we go to the object creation and publishing
+            co_info = hubspot.companies.get_company(companyId)
+            if co_info:
+                co_properties = co_info['properties']
+                if 'summary_note' in co_properties.keys():  # summary note exists
+                    summary_note = co_properties['summary_note']
+                    summary_note_date = co_properties['summary_note_date']
+                    # TODO: update the summary note if necessary
+                else:  # summary note doesn't exist
+                    note = SummaryNote(companyId=companyId, deal_list=deals_list, content=note_content)
+                    hubsp_time_now = int(1000 * dt.datetime.now().timestamp())
+                    res = note.create(timestamp=hubsp_time_now)
             else:
-                # the list of lines is empty
-                pass
+                # no company info. what kind of a company is that?
+                # Somethin's not working properly. Stop!
+                exit(246)
         else:
             # company has been processed.
             pass

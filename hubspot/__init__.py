@@ -59,4 +59,5 @@ except:
 # now the imports
 __all__ = ['constants', 'oauth', 'companies', 'contacts',
            'associations', 'deals', 'engagements', 'owners', 'crm_objects']
-from . import constants, oauth, owners, lists, engagements, deals, contacts, constants, companies, associations, crm_objects
+from . import constants, oauth, owners, lists, engagements, deals, contacts, companies, associations, crm_objects
+from .constants import *
