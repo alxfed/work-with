@@ -3,9 +3,9 @@
 """
 import pandas as pd
 import hubspot
-import csv
 import sqlalchemy as sqlalc
 import sorting
+from time import sleep
 
 
 def main():
@@ -17,54 +17,35 @@ def main():
     # Sales Pipeline =
     pipeline = 'default'
     # Follow-up on Quote =
-    dealstage = '2cd78f67-7bfe-4691-824f-24dd4d33aff2'
+    dealstage_followup = '2cd78f67-7bfe-4691-824f-24dd4d33aff2'
     # date March 3 2019
-    hs_date = ''
+    hs_date = 1551829704821
 
-    # New Construction/Renovation/Alteration = 815585
-    downuploaded_deals = '/home/alxfed/archive/deals_database.csv'
-    request_params = ['dealname', 'description', 'design_date',
-                      'closedate', 'amount', 'pipeline', 'dealstage',
-                      'permit_issue_date', 'permit_', 'permit', 'permit_type',
-                      'work_descrption',
-                      'last_inspection', 'last_inspection_date', 'insp_n', 'insp_note']
-    normal_columns = ['dealId', 'isDeleted',
-                      'dealname', 'description', 'design_date',
-                      'closedate', 'amount', 'pipeline', 'dealstage',
-                      'permit_issue_date', 'permit_', 'permit', 'permit_type',
-                      'work_descrption',
-                      'last_inspection', 'last_inspection_date', 'insp_n', 'insp_note']
-    include_associations = True
+    follow_up = deals[deals['dealstage'] == dealstage_followup]
+    no_close_date_follow_up = follow_up[follow_up.closedate.isnull()]
 
-    all_deals_cdr, all_columns = hubspot.deals.get_all_deals_oauth(request_params, include_associations)
-    all_deals = pd.DataFrame(all_deals_cdr, columns=normal_columns)
-    all_deals.fillna(value='', inplace=True)
-    all_deals['dealId']             = all_deals['dealId'].astype(dtype=int)
-    all_deals['isDeleted']          = all_deals['isDeleted'].astype(dtype=bool)
-    all_deals['dealname']           = all_deals['dealname'].astype(dtype=object)
-    all_deals['description']        = all_deals['description']
-    all_deals['design_date']        = pd.to_datetime(all_deals['design_date'], unit='ms')
-    all_deals['closedate']          = pd.to_datetime(all_deals['closedate'], unit='ms')
-    all_deals['amount']             = pd.to_numeric(all_deals['amount'])
-    all_deals['pipeline']           = all_deals['pipeline'].astype(dtype=object)
-    all_deals['dealstage']          = all_deals['dealstage'].astype(dtype=object)
-    all_deals['permit_issue_date']  = pd.to_datetime(all_deals['permit_issue_date'])
-    all_deals['permit_']            = all_deals['permit_'].astype(dtype=object)
-    all_deals['permit']             = all_deals['permit'].astype(dtype=object)
-    all_deals['permit_type']        = all_deals['permit_type'].astype(dtype=object)
-    all_deals['work_descrption']    = all_deals['work_descrption'].astype(dtype=object)
-    all_deals['last_inspection']    = all_deals['last_inspection'].astype(dtype=object)
-    all_deals['last_inspection_date'] = pd.to_datetime(all_deals['last_inspection_date'], unit='ms')
-    all_deals['insp_n']             = all_deals['insp_n'].astype(dtype=object)
-    all_deals['insp_note']          = all_deals['insp_note'].astype(dtype=object)
+    line_list = []
 
-    conn = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
-    all_deals.to_sql(name=sorting.DEALS_TABLE, con=conn, if_exists='replace', index=False)
+    for indx, row in no_close_date_follow_up.iterrows():
+        line = {}
+        deal_properties = hubspot.deals.get_a_deal(row['dealId'])['properties']
+        source = deal_properties['dealstage']['source']
+        if deal_properties['dealstage']['source'] == 'BATCH_UPDATE':
+            # print('here you are') # 155182970482
+            sing = deal_properties['dealstage']['timestamp']
+            dif = abs(sing - hs_date)
+            if dif < 10000000:
+                line['dealId'] = row['dealId']
+                line['timestamp'] = str(sing)
+                datm = pd.to_datetime(sing, unit='ms')
+                print("this timestamp is:", datm)
+                line_list.append(line)
 
-    with open(downuploaded_deals, 'w') as f:
-        f_csv = csv.DictWriter(f, all_columns)
-        f_csv.writeheader()
-        f_csv.writerows(all_deals_cdr)
+    those_deals = pd.DataFrame(line_list)
+
+    # conn = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
+    those_deals.to_sql(name=sorting.THOSE_DEALS_TABLE, con=conn, if_exists='replace', index=False)
+    print('ok')
     return
 
 

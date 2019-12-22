@@ -16,6 +16,7 @@ LICENSED_GENERAL_CONTRACTORS_TABLE = 'all_licensed_general_contractors'
 NOT_FOUND_GENERAL_CONTRACTORS_TABLE = 'not_found_general_contractors'
 COMPANIES_TABLE = 'companies'
 DEALS_TABLE = 'deals'
+THOSE_DEALS_TABLE = 'those_deals'
 DEALS_WITH_ALL_PARAMS_TABLE = 'deals_everything'
 CREATED_DEALS_TABLE = 'created_deals'
 

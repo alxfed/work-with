@@ -4,11 +4,10 @@
 
 
 def main():
-    list = []
-    if list:
-        print('Na')
-    else:
-        print('yeah')
+    sing = 155182970482
+    hs_date = 155182970482
+    dif = abs(sing - hs_date)
+    print('ok')
     return
 
 
