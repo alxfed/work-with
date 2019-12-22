@@ -16,7 +16,8 @@ def main():
     deal_properties_table_url = '/home/alxfed/archive/deal_properties_table.csv'
 
     request_params = []
-    normal_columns = ['dealId', 'isDeleted']
+    normal_columns = ['dealId', 'isDeleted',
+                      'associatedCompanyIds', 'associatedVids', 'associatedDealIds', 'associatedTicketIds']
     deal_properties_columns = ['name', 'label', 'description']
     include_associations = True
 
@@ -38,7 +39,7 @@ def main():
     all_deals_cdr, all_columns = hubspot.deals.get_all_deals_oauth(request_params, include_associations)
     all_deals = pd.DataFrame(all_deals_cdr, columns=normal_columns)
     all_deals.fillna(value='', inplace=True)
-    all_deals['dealId'] = all_deals['dealId'].astype(dtype=int)
+    all_deals['dealId'] = all_deals['dealId'].astype(dtype=object)
     all_deals['isDeleted'] = all_deals['isDeleted'].astype(dtype=bool)
     all_deals['design_date'] = pd.to_datetime(all_deals['design_date'], unit='ms')
     all_deals['closedate'] = pd.to_datetime(all_deals['closedate'], unit='ms')
