@@ -38,7 +38,7 @@ def main():
                 line['dealId'] = row['dealId']
                 line['timestamp'] = str(sing)
                 datm = pd.to_datetime(sing, unit='ms')
-                print("this timestamp is:", datm)
+                print("deal is", row['dealId'], "  this timestamp is:", datm)
                 line_list.append(line)
 
     those_deals = pd.DataFrame(line_list)
