@@ -13,7 +13,14 @@ def main():
     conn = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
     deals = pd.read_sql_table(
         table_name=sorting.DEALS_TABLE, con=conn)
-    # Sales = default
+
+    # Sales Pipeline =
+    pipeline = 'default'
+    # Follow-up on Quote =
+    dealstage = '2cd78f67-7bfe-4691-824f-24dd4d33aff2'
+    # date March 3 2019
+    hs_date = ''
+
     # New Construction/Renovation/Alteration = 815585
     downuploaded_deals = '/home/alxfed/archive/deals_database.csv'
     request_params = ['dealname', 'description', 'design_date',
