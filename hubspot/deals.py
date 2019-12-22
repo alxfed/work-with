@@ -103,6 +103,44 @@ def update_a_deal_oauth(dealId, parameters):
         return
 
 
+def batch_update_deals(deals_list:list, parameters:dict):
+    each = {
+        'objectId': '',
+        'properties': [
+            {
+                'name': '',
+                'value': ''
+            }
+        ]
+    }
+    # BATCH_DEALS_UPDATE
+    return
+'''
+[
+  {
+    "objectId": 93630457,
+    "properties": [
+      {
+        "name": "dealname",
+        "value": "Updated deal name."
+      }
+    ]
+  },
+  {
+    "objectId": 26448234,
+    "properties": [
+      {
+        "name": "dealname",
+        "value": "Another updated deal"
+      },
+      {
+        "name": "amount",
+        "value": 27
+      }
+    ]
+  }
+]
+'''
 
 def get_all_deals(request_parameters, include_associations):
     """Downloads the complete list of deals from the portal

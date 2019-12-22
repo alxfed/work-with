@@ -64,6 +64,8 @@ DEAL_URL            = 'https://api.hubapi.com/deals/v1/deal'
 
 OWNERS_URL          = 'https://api.hubapi.com/owners/v2/owners'
 
+BATCH_DEALS_UPDATE  = 'https://api.hubapi.com/deals/v1/batch-async/update'
+
 # deals stages in the Sales Pipeline
 STATES_OF_NAMES = { 'Clients (come in )': '904851',
                     'Received layout': 'bd8039e1-8b13-4840-a5cb-95c9aff3067c',
