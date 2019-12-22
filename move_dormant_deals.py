@@ -40,6 +40,8 @@ def main():
     # those_deals = pd.DataFrame(line_list)
     # # conn = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
     # those_deals.to_sql(name=sorting.THOSE_DEALS_TABLE, con=conn, if_exists='replace', index=False)
+    params = {'pipeline': '1243605', 'dealstage': '1243606'}
+    response = hubspot.deals.batch_update_deals(deals_list, params)
     print('ok')
 
     return

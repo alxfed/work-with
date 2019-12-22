@@ -120,7 +120,7 @@ def delete_an_engagement(engagementId):
     outcome = False
     api_uri = constants.ENGAGEMENTS_URL + f'/{engagementId}'
     response = requests.request("DELETE", url=api_uri, headers=constants.authorization_header)
-    if response.status_code == 200:
+    if response.status_code == 204:
         outcome = True
     return outcome
 

@@ -90,8 +90,8 @@ def update_a_deal(dealId, parameters):
 def update_a_deal_oauth(dealId, parameters):
     request_url = f'{constants.DEAL_URL}/{dealId}'
     properties = {"properties": []}
-    for key in parameters:
-        properties['properties'].append({'name': key, 'value': parameters[key]})
+    for key, value in parameters.items():
+        properties['properties'].append({'name': key, 'value': value})
     response = requests.request('PUT', url=request_url,
                                 headers=constants.authorization_header,
                                 json=properties)
@@ -104,16 +104,26 @@ def update_a_deal_oauth(dealId, parameters):
 
 
 def batch_update_deals(deals_list:list, parameters:dict):
-    each = {
-        'objectId': '',
-        'properties': [
-            {
-                'name': '',
-                'value': ''
-            }
-        ]
-    }
-    # BATCH_DEALS_UPDATE
+    all_list = []
+    properties = []
+    for key, value in parameters.items():
+        property = {'name': key, 'value': value}
+        properties.append(property)
+
+    each = {'objectId': '', 'properties': properties}
+    for deal in deals_list:
+        each['objectId'] = deal
+        all_list.append(each)
+
+    # response = requests.request('POST', url=constants.BATCH_DEALS_UPDATE,
+    #                             headers=constants.authorization_header,
+    #                             json=all_list)
+    # if response.status_code == 202:
+    #     resp = response.json()
+    #     return resp
+    # else:
+    #     print(response.status_code)
+    print('ok')
     return
 '''
 [

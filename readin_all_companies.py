@@ -24,7 +24,7 @@ def main():
     all_companies_cdr, all_columns = hubspot.companies.get_all_companies_oauth(request_params)
     all_companies = pd.DataFrame(all_companies_cdr, columns=normal_columns)
     all_companies.fillna(value='', inplace=True)
-    all_companies['companyId'] = all_companies['companyId'].astype(dtype=int)
+    all_companies['companyId'] = all_companies['companyId'].astype(dtype=object)
     all_companies['isDeleted'] = all_companies['isDeleted'].astype(dtype=bool)
     all_companies['name'] = all_companies['name'].astype(dtype=object)
     all_companies['phone'] = all_companies['phone'].astype(dtype=object)
