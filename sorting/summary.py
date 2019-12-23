@@ -6,6 +6,12 @@ import pandas as pd
 import sqlalchemy as sqlalc
 import hubspot
 import datetime as dt
+import sorting
+from time import sleep
+
+conn = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
+deals_reference = pd.read_sql_table(table_name=sorting.DEALS_TABLE, con=conn)
+
 
 
 class SummaryNote(object):
@@ -93,18 +99,22 @@ class SummaryNote(object):
             self.companyId = kwargs['companyId']
         if self.companyId:
             self.deal_list = hubspot.associations.get_associations_oauth(self.companyId, '6')  # company to deals - full
+            sleep(1)
         else:
             print('No company Id for the note. Nothing to prepare')
         for deal_n in self.deal_list:
             line = {}
-            deal_data = hubspot.deals.get_a_deal(deal_n)['properties']  # deal_n: int
+            deal_data = deals_reference.loc[deals_reference['dealId'] == deal_n]
             # check the pipeline , dealstage , closedate , closed_won_reason , closed_lost_reason
-            pipeline = deal_data['pipeline']['value']
+            pipeline = deal_data['pipeline'].values[0]
             if pipeline == 'default':
-                dealname = deal_data['dealname']['value']
-                dealstage = deal_data['dealstage']['value']
-                dealstage_timestamp = deal_data['dealstage']['timestamp']
-                deal_owner = deal_data['hubspot_owner_id']['value']
+                dealname = deal_data['dealname'].values[0]
+                deal_readout = hubspot.deals.get_a_deal(deal_n)['properties']  # deal_n: int
+                sleep(1)
+                dealstage = deal_readout['dealstage']['value']
+                dealstage_timestamp = deal_readout['dealstage']['timestamp']
+                deal_owner = deal_readout['hubspot_owner_id']['value']
+                # deal_amount = deal_data['amount'].values[0]
                 # closed_won_reason = deal_data['closed_won_reason']['value']
                 # closed_lost_reason = deal_data['closed_lost_reason']['value']
                 if dealstage in hubspot.NAMES_OF_STATES.keys():
@@ -117,7 +127,10 @@ class SummaryNote(object):
                     ownername = 'Deactivated user'
 
                 line.update(
-                    {'date': int(dealstage_timestamp), 'name': dealname, 'stage': stagename, 'owner': ownername})
+                    {'date': int(dealstage_timestamp), 'name': dealname,
+                     'stage': stagename,
+                     # 'amount': deal_amount,
+                     'owner': ownername})
                 list_of_lines.append(line)
             else:
                 # pipeline is not 'default'

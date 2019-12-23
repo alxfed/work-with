@@ -16,34 +16,36 @@ def main():
     # 4. read associated engagements from this company;
     # 5. check if it has been done already and if not - add filtered engagements to the _company_.
 
-    conn_reference = sqlalc.create_engine(sorting.INTERM_DATABASE_URI)
-    all_deals = pd.read_sql_table(table_name=sorting.FRESH_DEALS_TABLE, con=conn_reference)
+    conn_source = sqlalc.create_engine(sorting.INTERM_DATABASE_URI)
+    all_deals = pd.read_sql_table(table_name=sorting.FRESH_DEALS_TABLE, con=conn_source)
+
+    conn_reference = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
+    all_companies = pd.read_sql_table(table_name=sorting.COMPANIES_TABLE, con=conn_reference)
+    all_companies['companyId'] = all_companies['companyId'] # .astype(dtype=object)
 
     deals = all_deals[all_deals['associatedCompanyIds'] != ''] # exclude deals with individuals
 
     companies = set() # unique companies also, see: https://stackoverflow.com/questions/10547343/add-object-into-pythons-set-collection-and-determine-by-objects-attribute
 
     for index, deal in deals.iterrows():
-        dealId = deal['dealId']  # text format
-        companyId = str(int(deal['companyId'])) # because it is FLOAT in the db
+        dealId = deal['dealId']
+        companyId = int(deal['associatedCompanyIds'])
         if not companyId in companies:
             companies.add(companyId)
-            co_info = hubspot.companies.get_company(companyId)
-            if co_info:
-                summary_note = ''
-                co_properties = co_info['properties']
-                if 'summary_note' in co_properties.keys():  # summary note exists
-                    summary_note = co_properties['summary_note']['value']
+            co_info = all_companies[all_companies['companyId'] == companyId]
+            if not co_info.empty:
+                summary_note = co_info['summary_note_number'].values[0]
+                summary_note_timestamp = co_info['summary_note_date_str'].values[0]
                 if summary_note:
-                    summary_note_timestamp = co_properties['summary_note_date']['value']
                     now = int(1000 * dt.datetime.now().timestamp())
-                    if (now - int(summary_note_timestamp)) > 10000:
-                        old_note = SummaryNote(companyId=companyId,
-                                               engagementId=summary_note,
-                                               hs_timestamp=summary_note_timestamp)
-                        old_note.prepare_note()
-                        if old_note.ready:
-                            res = old_note.update(timestamp=str(now))
+                    if (now - int(summary_note_timestamp)) > 10000000:
+                        # old_note = SummaryNote(companyId=companyId,
+                        #                        engagementId=summary_note,
+                        #                        hs_timestamp=summary_note_timestamp)
+                        # old_note.prepare_note()
+                        # if old_note.ready:
+                        #     res = old_note.update(timestamp=str(now))
+                        pass
                 else:  # summary note doesn't exist
                     note = SummaryNote(companyId=companyId)
                     note.prepare_note()
@@ -54,7 +56,7 @@ def main():
             else:
                 # no company info. what kind of a company is that?
                 # Somethin's not working properly. Stop!
-                print('Company not found')
+                print('Company for this deal not found')
         else:
             # company has been processed.
             print('One more deal of:  ', companyId)

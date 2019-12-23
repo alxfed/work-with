@@ -1,15 +1,20 @@
 # -*- coding: utf-8 -*-
 """...
 """
-from itertools import islice
+import sqlalchemy as sqlalc
+import pandas as pd
+import sorting
 
 
 def main():
-    list = ['123', '232', '345', '456', '345']
-    chunk_list = [list[i:i + 3] for i in range(0, len(list), 3)]
-    print('ok')
-    for i in slice:
-        print('ok', i)
+    conn_reference = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
+    all_companies = pd.read_sql_table(table_name=sorting.COMPANIES_TABLE, con=conn_reference)
+    all_companies['companyId'] = all_companies['companyId'].astype(dtype=object)
+    companyId = '2536529847'
+    column = all_companies['companyId']
+    print('Type: ', column.dtype)
+    co_info = all_companies[all_companies['companyId'] == int(companyId)]
+    print('ok', co_info)
     return
 
 
