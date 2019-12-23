@@ -59,12 +59,13 @@ class SummaryNote(object):
                       'note': self.content}
             cre = hubspot.engagements.create_engagement_note(params)
             if cre:
+                sleep(1)
                 created_note = cre['engagement']
                 self.engagementId = created_note['id']
-                result = hubspot.companies.update_company(self.companyId, {'summary_note': self.engagementId,
-                                     'summary_note_date': self.hs_timestamp})
+                result = hubspot.companies.update_company(self.companyId, {'summary_note_number': self.engagementId,
+                                     'summary_note_date_str': self.hs_timestamp})
                 if result:
-                    print('Created Summary Note: ', self.engagementId)
+                    print('Created new Summary Note: ', self.engagementId)
             pass
         else:
             print('Is not ready')
