@@ -112,18 +112,17 @@ def batch_update_deals(deals_list:list, parameters:dict):
 
     each = {'objectId': '', 'properties': properties}
     for deal in deals_list:
-        each['objectId'] = deal
-        all_list.append(each)
+        this = each.copy()
+        this['objectId'] = deal
+        all_list.append(this)
 
-    # response = requests.request('POST', url=constants.BATCH_DEALS_UPDATE,
-    #                             headers=constants.authorization_header,
-    #                             json=all_list)
-    # if response.status_code == 202:
-    #     resp = response.json()
-    #     return resp
-    # else:
-    #     print(response.status_code)
-    print('ok')
+    response = requests.request('POST', url=constants.BATCH_DEALS_UPDATE,
+                                headers=constants.authorization_header,
+                                json=all_list)
+    if response.status_code == 202:
+        return
+    else:
+        print(response.status_code)
     return
 '''
 [

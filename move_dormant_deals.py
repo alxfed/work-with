@@ -5,8 +5,13 @@ import pandas as pd
 import hubspot
 import sqlalchemy as sqlalc
 import sorting
-from time import sleep
+from itertools import chain, islice
 
+
+def chunks(n, iterable):
+    iterable = iter(iterable)
+    while True:
+        yield chain([next(iterable)], islice(iterable, n - 1))
 
 def main():
     # all deals from HubSpot
@@ -41,7 +46,13 @@ def main():
     # # conn = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
     # those_deals.to_sql(name=sorting.THOSE_DEALS_TABLE, con=conn, if_exists='replace', index=False)
     params = {'pipeline': '1243605', 'dealstage': '1243606'}
-    response = hubspot.deals.batch_update_deals(deals_list, params)
+    chunk_length = 100
+    chunk_list = [deals_list[i:i + chunk_length] for i in range(0, len(deals_list), chunk_length)]
+    it = 0
+    for chunk in chunk_list:
+        response = hubspot.deals.batch_update_deals(chunk, params)
+        it += 1
+        print('Updated', it)
     print('ok')
 
     return

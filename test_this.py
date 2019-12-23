@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 """...
 """
+from itertools import islice
 
 
 def main():
-    sing = 155182970482
-    hs_date = 155182970482
-    dif = abs(sing - hs_date)
+    list = ['123', '232', '345', '456', '345']
+    chunk_list = [list[i:i + 3] for i in range(0, len(list), 3)]
     print('ok')
+    for i in slice:
+        print('ok', i)
     return
 
 
