@@ -1,14 +1,4 @@
-__all__ = ['constants', 'companies', 'inspections']
+__all__ = ['constants', 'companies', 'inspections', 'summary']
 
 from .constants import *
-from . import companies, inspections
-
-
-def main():
-    print('main in socradata.__init__.py: ok')
-    return
-
-
-if __name__ == '__main__':
-    main()
-    print('main - done')
+from . import companies, inspections, summary

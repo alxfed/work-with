@@ -13,13 +13,13 @@ def main():
     # Sales = default
     # New Construction/Renovation/Alteration = 815585
     downuploaded_deals = '/home/alxfed/archive/deals_database.csv'
-    request_params = ['dealname', 'description', 'design_date',
+    request_params = ['dealname', 'description', 'createdate', 'design_date',
                       'closedate', 'amount', 'pipeline', 'dealstage',
                       'permit_issue_date', 'permit_', 'permit', 'permit_type',
                       'work_descrption',
                       'last_inspection', 'last_inspection_date', 'insp_n', 'insp_note']
     normal_columns = ['dealId', 'isDeleted',
-                      'dealname', 'description', 'design_date',
+                      'dealname', 'description', 'createdate','design_date',
                       'closedate', 'amount', 'pipeline', 'dealstage',
                       'permit_issue_date', 'permit_', 'permit', 'permit_type',
                       'work_descrption',
@@ -27,7 +27,7 @@ def main():
     assoc_columns = ['associatedVids', 'associatedTicketIds', 'associatedCompanyIds', 'associatedDealIds']
     both_columns     = ['dealId', 'isDeleted',
                         'associatedCompanyIds', 'associatedVids', 'associatedDealIds', 'associatedTicketIds',
-                        'dealname', 'description', 'design_date',
+                        'dealname', 'description', 'createdate', 'design_date',
                         'closedate', 'amount', 'pipeline', 'dealstage',
                         'permit_issue_date', 'permit_', 'permit', 'permit_type',
                         'work_descrption',
@@ -49,6 +49,7 @@ def main():
     all_deals['associatedTicketIds'] = all_deals['associatedTicketIds'].astype(dtype=object)
     all_deals['dealname']           = all_deals['dealname'].astype(dtype=object)
     all_deals['description']        = all_deals['description'].astype(dtype=object)
+    all_deals['createdate']          = pd.to_datetime(all_deals['createdate'], unit='ms')
     all_deals['design_date']        = pd.to_datetime(all_deals['design_date'], unit='ms')
     all_deals['closedate']          = pd.to_datetime(all_deals['closedate'], unit='ms')
     all_deals['amount']             = pd.to_numeric(all_deals['amount'])
