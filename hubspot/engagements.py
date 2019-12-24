@@ -110,7 +110,7 @@ def update_an_engagement(engagementId, parameters):
                                 headers=constants.authorization_header)
     if response.status_code == 200:
         updated_note = response.json()
-        print('Updated a note to deal ')
+        print('Updated an engagement Note ')
     else:
         print('not ok! The note has not been updated', response.status_code)
     return updated_note
