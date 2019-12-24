@@ -30,38 +30,39 @@ def main():
 
     for index, deal in deals.iterrows():
         dealId = deal['dealId']
-        companyId = int(deal['associatedCompanyIds'])
-        if not companyId in processed_companies:
-            processed_companies.add(companyId)
-            co_info = all_companies[all_companies['companyId'] == companyId]
-            if not co_info.empty:
-                summary_note = co_info['summary_note_number'].values[0]
-                summary_note_timestamp = co_info['summary_note_date_str'].values[0]
-                if summary_note:
-                    now = int(1000 * dt.datetime.now().timestamp())
-                    if (now - int(summary_note_timestamp)) > 10000000:
-                        old_note = SummaryNote(companyId=companyId,
-                                               engagementId=summary_note)
-                        old_note.prepare_note()
-                        if old_note.ready:
-                            res = old_note.update()
-                    else:
-                        print('Too early to update')
-                else:  # summary note doesn't exist
-                    note = SummaryNote(companyId=companyId)
-                    note.prepare_note()
-                    if note.ready:
-                        res = note.create()
-                    else:
-                        print('The note would be empty')
-                        del note
+        co_id_rec = deal['associatedCompanyIds']
+        if co_id_rec:
+            companyId = int(co_id_rec)
+            if not companyId in processed_companies:
+                processed_companies.add(companyId)
+                co_info = all_companies[all_companies['companyId'] == companyId]
+                if not co_info.empty:
+                    summary_note = co_info['summary_note_number'].values[0]
+                    summary_note_timestamp = co_info['summary_note_date_str'].values[0]
+                    if summary_note:
+                        now = int(1000 * dt.datetime.now().timestamp())
+                        if (now - int(summary_note_timestamp)) > 10000000:
+                            old_note = SummaryNote(companyId=companyId,
+                                                   engagementId=summary_note)
+                            old_note.prepare_note()
+                            if old_note.ready:
+                                res = old_note.update()
+                        else:
+                            print('Too early to update')
+                    else:  # summary note doesn't exist
+                        note = SummaryNote(companyId=companyId)
+                        note.prepare_note()
+                        if note.ready:
+                            res = note.create()
+                        else:
+                            print('The note would be empty')
+                            del note
+                else:
+                    print('Company for this deal not found')
             else:
-                # no company info. what kind of a company is that?
-                # Somethin's not working properly. Stop!
-                print('Company for this deal not found')
+                print('One more deal of:  ', companyId)
         else:
-            # company has been processed.
-            print('One more deal of:  ', companyId)
+            print('No companyId for deal: ', dealId)
     return
 
 
