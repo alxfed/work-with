@@ -46,11 +46,11 @@ def main():
                             res = old_note.update()
                         pass
                 else:  # summary note doesn't exist
-                    # note = SummaryNote(companyId=companyId)
-                    # note.prepare_note()
-                    # if note.ready:
-                    #     res = note.create()
-                    # else:
+                    note = SummaryNote(companyId=companyId)
+                    note.prepare_note()
+                    if note.ready:
+                        res = note.create()
+                    else:
                         print('Note is empty')
             else:
                 # no company info. what kind of a company is that?
