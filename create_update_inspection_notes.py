@@ -63,7 +63,7 @@ def main():
                         last_inspection_type = last_inspection_table['type_desc']
                         hubspot_timestamp = int(last_inspection_date.timestamp() * 1000)
                         post_permit_inspections_table['insp_date'] = post_permit_inspections_table['insp_date'].dt.strftime('%Y-%m-%d')
-                        note_text = post_permit_inspections_table.to_html(header=False, index=False)
+                        note_text = post_permit_inspections_table.to_html(col_space=100, header=True, index=False)
                         # branching for existent and non-existent - here
                         if inspection_note:
                             params = {'timestamp': hubspot_timestamp, 'note': note_text}
