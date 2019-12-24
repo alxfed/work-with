@@ -142,6 +142,6 @@ class SummaryNote(object):
             to_sort['date'] = pd.to_datetime(to_sort['date'], unit='ms')
             to_publish = to_sort.sort_values(by=['date'], ascending=False)
             to_publish['date'] = to_publish['date'].dt.strftime('%Y-%m-%d')
-            self.content = to_publish.to_html(col_space=150, justify='left', index=False) # the html parameters: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_html.html?highlight=to_html#pandas.DataFrame.to_html
+            self.content = to_publish.to_html(col_space=175, justify='left', index=False) # the html parameters: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_html.html?highlight=to_html#pandas.DataFrame.to_html
             self.ready = True
 
