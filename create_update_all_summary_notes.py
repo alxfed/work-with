@@ -17,12 +17,12 @@ def main():
     # 4. read associated engagements from this company;
     # 5. check if it has been done already and if not - add filtered engagements to the _company_.
 
-    conn_source = sqlalc.create_engine(sorting.INTERM_DATABASE_URI)
-    all_deals = pd.read_sql_table(table_name=sorting.FRESH_DEALS_TABLE, con=conn_source)
+    conn_source = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
+    all_deals = pd.read_sql_table(table_name=sorting.DEALS_TABLE, con=conn_source)
 
     conn_reference = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
     all_companies = pd.read_sql_table(table_name=sorting.COMPANIES_TABLE, con=conn_reference)
-    all_companies['companyId'] = all_companies['companyId'] # .astype(dtype=object)
+    # all_companies['companyId'] = all_companies['companyId'] # .astype(dtype=object)
 
     deals = all_deals[all_deals['associatedCompanyIds'] != ''] # exclude deals with individuals
 
