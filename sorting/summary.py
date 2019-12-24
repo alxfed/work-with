@@ -107,35 +107,38 @@ class SummaryNote(object):
             line = {}
             deal_data = deals_reference.loc[deals_reference['dealId'] == deal_n]
             # check the pipeline , dealstage , closedate , closed_won_reason , closed_lost_reason
-            pipeline = deal_data['pipeline'].values[0]
-            if pipeline == 'default':
-                dealname = deal_data['dealname'].values[0]
-                deal_readout = hubspot.deals.get_a_deal(deal_n)['properties']  # deal_n: int
-                sleep(1.5)
-                dealstage = deal_readout['dealstage']['value']
-                dealstage_timestamp = deal_readout['dealstage']['timestamp']
-                deal_owner = deal_readout['hubspot_owner_id']['value']
-                # deal_amount = deal_data['amount'].values[0]
-                # closed_won_reason = deal_data['closed_won_reason']['value']
-                # closed_lost_reason = deal_data['closed_lost_reason']['value']
-                if dealstage in hubspot.NAMES_OF_STATES.keys():
-                    stagename = hubspot.NAMES_OF_STATES[dealstage]
-                else:
-                    stagename = 'Deleted stage type'
-                if deal_owner in hubspot.OWNERS_OF_IDS.keys():
-                    ownername = hubspot.OWNERS_OF_IDS[deal_owner]
-                else:
-                    ownername = 'Deactivated user'
+            if not deal_data.empty:
+                pipeline = deal_data['pipeline'].values[0]
+                if pipeline == 'default':
+                    dealname = deal_data['dealname'].values[0]
+                    deal_readout = hubspot.deals.get_a_deal(deal_n)['properties']  # deal_n: int
+                    sleep(1.5)
+                    dealstage = deal_readout['dealstage']['value']
+                    dealstage_timestamp = deal_readout['dealstage']['timestamp']
+                    deal_owner = deal_readout['hubspot_owner_id']['value']
+                    # deal_amount = deal_data['amount'].values[0]
+                    # closed_won_reason = deal_data['closed_won_reason']['value']
+                    # closed_lost_reason = deal_data['closed_lost_reason']['value']
+                    if dealstage in hubspot.NAMES_OF_STATES.keys():
+                        stagename = hubspot.NAMES_OF_STATES[dealstage]
+                    else:
+                        stagename = 'Deleted stage type'
+                    if deal_owner in hubspot.OWNERS_OF_IDS.keys():
+                        ownername = hubspot.OWNERS_OF_IDS[deal_owner]
+                    else:
+                        ownername = 'Deactivated user'
 
-                line.update(
-                    {'date': int(dealstage_timestamp), 'name': dealname,
-                     'stage': stagename,
-                     # 'amount': deal_amount,
-                     'owner': ownername})
-                list_of_lines.append(line)
+                    line.update(
+                        {'date': int(dealstage_timestamp), 'name': dealname,
+                         'stage': stagename,
+                         # 'amount': deal_amount,
+                         'owner': ownername})
+                    list_of_lines.append(line)
+                else:
+                    # pipeline is not 'default'
+                    pass
             else:
-                # pipeline is not 'default'
-                pass
+                print('No deal in the data file', deal_n)
         # the list making cycle is over, time to format it
         if list_of_lines:
             to_sort = pd.DataFrame(list_of_lines)
