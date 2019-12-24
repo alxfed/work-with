@@ -119,7 +119,7 @@ class SummaryNote(object):
                     else:
                         dealstage = 'Unknown, probably deleted'
                         dealstage_timestamp = '1562462462247'
-                    if 'hubspot_owner_id' in deal_readout.keys()
+                    if 'hubspot_owner_id' in deal_readout.keys():
                         deal_owner = deal_readout['hubspot_owner_id']['value']
                     else:
                         deal_owner = 'Unknown'
