@@ -38,20 +38,19 @@ def main():
                 summary_note_timestamp = co_info['summary_note_date_str'].values[0]
                 if summary_note:
                     now = int(1000 * dt.datetime.now().timestamp())
-                    if (now - int(summary_note_timestamp)) > 10000000:
-                        # old_note = SummaryNote(companyId=companyId,
-                        #                        engagementId=summary_note,
-                        #                        hs_timestamp=summary_note_timestamp)
-                        # old_note.prepare_note()
-                        # if old_note.ready:
-                        #     res = old_note.update(timestamp=str(now))
+                    if (now - int(summary_note_timestamp)) > 10000:
+                        old_note = SummaryNote(companyId=companyId,
+                                               engagementId=summary_note)
+                        old_note.prepare_note()
+                        if old_note.ready:
+                            res = old_note.update()
                         pass
                 else:  # summary note doesn't exist
-                    note = SummaryNote(companyId=companyId)
-                    note.prepare_note()
-                    if note.ready:
-                        res = note.create()
-                    else:
+                    # note = SummaryNote(companyId=companyId)
+                    # note.prepare_note()
+                    # if note.ready:
+                    #     res = note.create()
+                    # else:
                         print('Note is empty')
             else:
                 # no company info. what kind of a company is that?

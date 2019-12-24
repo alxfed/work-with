@@ -71,25 +71,24 @@ class SummaryNote(object):
             print('Is not ready')
             return False
 
-    def update(self, timestamp):
+    def update(self):
         if self.ready:
-            params = {'timestamp': timestamp, 'note': self.content}
+            params = {'timestamp': self.hs_timestamp, 'note': self.content}
             res = hubspot.engagements.update_an_engagement(self.engagementId, params)
-            # if res:
-            #     print('updated the note ', inspection_note)
-            #     # update the deal parameters last_inspection and last_inspection_date here
-            #     result = hubspot.deals.update_a_deal_oauth(dealId, {
-            #         'last_inspection': last_inspection_type.title(),
-            #         'last_inspection_date': hubspot_timestamp,
-            #         'insp_n': last_inspection_number})
-            #     if result:
-            #         print('Updated deal: ', dealId)
-            #         return True
-            # else:
-            #     print('did not update the note', id)
-            #     return False
+            if res:
+                print('updated the note ', self.engagementId)
+                # update the company parameters last_inspection and last_inspection_date here
+                result = hubspot.companies.update_company(
+                    self.companyId, {'summary_note_number': self.engagementId,
+                                     'summary_note_date_str': self.hs_timestamp})
+                if result:
+                    print('Updated summary note on Company:  ', self.companyId)
+                    return True
+            else:
+                print('did not update the note', self.engagementId)
+                return False
         else:
-            print('Is not ready')
+            print('Note is not ready')
             return False
 
     def prepare_note(self, **kwargs):
@@ -143,6 +142,6 @@ class SummaryNote(object):
             to_sort['date'] = pd.to_datetime(to_sort['date'], unit='ms')
             to_publish = to_sort.sort_values(by=['date'], ascending=False)
             to_publish['date'] = to_publish['date'].dt.strftime('%Y-%m-%d')
-            self.content = to_publish.to_html(index=False) # the html parameters: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_html.html?highlight=to_html#pandas.DataFrame.to_html
+            self.content = to_publish.to_html(col_space=150, justify='left', index=False) # the html parameters: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_html.html?highlight=to_html#pandas.DataFrame.to_html
             self.ready = True
 
