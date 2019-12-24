@@ -52,7 +52,7 @@ def main():
                     if note.ready:
                         res = note.create()
                     else:
-                        print('Note is empty')
+                        print('The note would be empty')
                         del note
             else:
                 # no company info. what kind of a company is that?
