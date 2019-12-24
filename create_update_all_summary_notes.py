@@ -22,17 +22,17 @@ def main():
 
     conn_reference = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
     all_companies = pd.read_sql_table(table_name=sorting.COMPANIES_TABLE, con=conn_reference)
-    # all_companies['companyId'] = all_companies['companyId'] # .astype(dtype=object)
 
-    deals = all_deals[all_deals['associatedCompanyIds'] != ''] # exclude deals with individuals
+    # df.loc[df['column_name'].isin(some_values)]
+    deals = all_deals[all_deals['dealstage'].isin(hubspot.constants.NAMES_OF_STATES.keys())] # only the Sales Pipeline
 
-    companies = set() # unique companies also, see: https://stackoverflow.com/questions/10547343/add-object-into-pythons-set-collection-and-determine-by-objects-attribute
+    processed_companies = set() # unique companies also, see: https://stackoverflow.com/questions/10547343/add-object-into-pythons-set-collection-and-determine-by-objects-attribute
 
     for index, deal in deals.iterrows():
         dealId = deal['dealId']
         companyId = int(deal['associatedCompanyIds'])
-        if not companyId in companies:
-            companies.add(companyId)
+        if not companyId in processed_companies:
+            processed_companies.add(companyId)
             co_info = all_companies[all_companies['companyId'] == companyId]
             if not co_info.empty:
                 summary_note = co_info['summary_note_number'].values[0]
