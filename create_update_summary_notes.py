@@ -53,6 +53,7 @@ def main():
                         res = note.create()
                     else:
                         print('Note is empty')
+                        del note
             else:
                 # no company info. what kind of a company is that?
                 # Somethin's not working properly. Stop!

@@ -113,9 +113,16 @@ class SummaryNote(object):
                     dealname = deal_data['dealname'].values[0]
                     deal_readout = hubspot.deals.get_a_deal(deal_n)['properties']  # deal_n: int
                     sleep(1.5)
-                    dealstage = deal_readout['dealstage']['value']
-                    dealstage_timestamp = deal_readout['dealstage']['timestamp']
-                    deal_owner = deal_readout['hubspot_owner_id']['value']
+                    if 'dealstage' in deal_readout.keys():
+                        dealstage = deal_readout['dealstage']['value']
+                        dealstage_timestamp = deal_readout['dealstage']['timestamp']
+                    else:
+                        dealstage = 'Unknown, probably deleted'
+                        dealstage_timestamp = '1562462462247'
+                    if 'hubspot_owner_id' in deal_readout.keys()
+                        deal_owner = deal_readout['hubspot_owner_id']['value']
+                    else:
+                        deal_owner = 'Unknown'
                     # deal_amount = deal_data['amount'].values[0]
                     # closed_won_reason = deal_data['closed_won_reason']['value']
                     # closed_lost_reason = deal_data['closed_lost_reason']['value']
