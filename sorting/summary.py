@@ -78,6 +78,7 @@ class SummaryNote(object):
             if res:
                 print('updated the note ', self.engagementId)
                 # update the company parameters last_inspection and last_inspection_date here
+                sleep(1)
                 result = hubspot.companies.update_company(
                     self.companyId, {'summary_note_number': self.engagementId,
                                      'summary_note_date_str': self.hs_timestamp})
@@ -99,7 +100,7 @@ class SummaryNote(object):
             self.companyId = kwargs['companyId']
         if self.companyId:
             self.deal_list = hubspot.associations.get_associations_oauth(self.companyId, '6')  # company to deals - full
-            sleep(1)
+            sleep(1.5)
         else:
             print('No company Id for the note. Nothing to prepare')
         for deal_n in self.deal_list:
@@ -110,7 +111,7 @@ class SummaryNote(object):
             if pipeline == 'default':
                 dealname = deal_data['dealname'].values[0]
                 deal_readout = hubspot.deals.get_a_deal(deal_n)['properties']  # deal_n: int
-                sleep(1)
+                sleep(1.5)
                 dealstage = deal_readout['dealstage']['value']
                 dealstage_timestamp = deal_readout['dealstage']['timestamp']
                 deal_owner = deal_readout['hubspot_owner_id']['value']
