@@ -6,13 +6,12 @@ import comparison
 
 
 def main():
-    name1 = 'D. & Sp. Construction Company'
-    name2 = 'S  & P Company Construction'
+
     for example in comparison.constants.TEST_EXAMPLES:
         first_word_n = comparison.compare.first_word(example)
-        trans_word_n = re.sub('[ .-/]', '', first_word_n)
-        print(example, '  first word:   ', first_word_n, 'trans word:  ', trans_word_n)
-    yes_or_no = comparison.compare.are_the_same(name=name1, comparable=name2, same=0.01)
+        trans_word_n = re.sub("[ .\-/+']", '', first_word_n)
+        print(example, '  first word: ', first_word_n, '\t\t\ttrans word:  ', trans_word_n)
+    # yes_or_no = comparison.compare.are_the_same(name=name1, comparable=name2, same=0.01)
     return
 
 

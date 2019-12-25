@@ -26,7 +26,11 @@ def first_word(name):
     # 1. length is less than 10
     # 2. length is more than 10
     frst_word = ''
-    tokenizer = RegexpTokenizer("^\w+\.?\s+?[-/\+'&]\s+\w+\.?") # |\w+\s&' \w+&?\s+.\
+    pattern = ("^\w\s[-&]\s\w",
+               "^\w+\.?\s?[-+&/']?\w+?\.?\s?[-+&]?\w?\.?\s",
+               "^\w+,")
+    patterns = ('|').join(pattern)
+    tokenizer = RegexpTokenizer(patterns) # ^\w+\.?\s?\w|[-/\+'&]\s+\w+\.?|^\w+\.?\s?\w\.? |\w+\s&' \w+&?\s+.\
     tokens = tokenizer.tokenize(name)
     if tokens:
         frst_word = tokens[0]
