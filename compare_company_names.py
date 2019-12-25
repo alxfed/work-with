@@ -8,6 +8,7 @@ import comparison
 def main():
 
     for example in comparison.constants.TEST_EXAMPLES:
+        # example = 'khu@7shi            '
         first_word_n = comparison.compare.first_word(example)
         trans_word_n = re.sub("[ .\-/+']", '', first_word_n)
         print(example, '  first word: ', first_word_n, '\t\t\ttrans word:  ', trans_word_n)

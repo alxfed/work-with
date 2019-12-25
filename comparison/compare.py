@@ -25,7 +25,22 @@ def replace_match(match):
 def first_word(name):
     # 1. length is less than 10
     # 2. length is more than 10
-    frst_word = ''
+    frst_word, sep, rest = name.partition(' ')
+    frst = len(frst_word)
+    if frst > 3:
+        return frst_word
+    # frst_word, sep, rest = name.partition("'")
+    # frst = len(frst_word)
+    # if frst > 3:
+    #     return frst_word
+    # frst_word, sep, rest = name.partition("+")
+    # frst = len(frst_word)
+    # if frst > 3:
+    #     return frst_word
+    # frst_word, sep, rest = name.partition("@")
+    # frst = len(frst_word)
+    # if frst > 3:
+    #     return frst_word
     pattern = ("^\w\s[-&]\s\w",
                "^\w+\.?\s?[-+&/']?\w+?\.?\s?[-+&]?\w?\.?\s",
                "^\w+,")
@@ -35,6 +50,7 @@ def first_word(name):
     if tokens:
         frst_word = tokens[0]
     return frst_word
+
 
 
 def are_the_same(name:str, comparable:str, same:float):
