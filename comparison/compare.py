@@ -42,6 +42,7 @@ def first_word(name):
     # if frst > 3:
     #     return frst_word
     pattern = ("^\w\s[-&]\s\w",
+               "^\w{3}",
                "^\w+\.?\s?[-+&/']?\w+?\.?\s?[-+&]?\w?\.?\s",
                "^\w+,")
     patterns = ('|').join(pattern)
