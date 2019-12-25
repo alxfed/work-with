@@ -10,7 +10,7 @@ def main():
     name2 = 'S  & P Company Construction'
     first_word_1 = comparison.compare.first_word(name1)
     first_word_2 = comparison.compare.first_word(name2)
-    first_word_1 = re.sub('[ .]', '', first_word_1)
+    first_word_1 = re.sub('[ .-/]', '', first_word_1)
     yes_or_no = comparison.compare.are_the_same(name=name1, comparable=name2, same=0.01)
     return
 
