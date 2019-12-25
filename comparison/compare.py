@@ -1,5 +1,5 @@
+from .constants import *
 import re
-# from .constants import *
 import nltk
 
 
