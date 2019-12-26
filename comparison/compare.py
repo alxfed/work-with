@@ -25,10 +25,13 @@ def replace_match(match):
 def first_word(name):
     # 1. length is less than 10
     # 2. length is more than 10
-    frst_word, sep, rest = name.partition(' ')
-    frst = len(frst_word)
-    if frst > 3:
-        return frst_word
+    gapper = RegexpTokenizer('[ -/.@]', gaps=True)
+    # frst_word, sep, rest = name.partition(' ')
+    # frst = len(frst_word)
+    toke = gapper.tokenize(name)
+    frst = toke[0]
+    if len(frst) > 3:
+        return frst
     # frst_word, sep, rest = name.partition("'")
     # frst = len(frst_word)
     # if frst > 3:
