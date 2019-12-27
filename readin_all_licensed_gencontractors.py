@@ -26,7 +26,7 @@ def main():
                       'primary_insurance_expr', 'secondary_insurance_expr']
 
     all_licensed_gencontractors = pd.read_csv(gen_cont_file_path, usecols= normal_columns,
-                                              parse_dates=['license_expr',  # right now doesn't work. dd/mm/YY format
+                                              parse_dates=['license_expr',  # right now doesn't work. dd/mm/YYYY format
                                                            'primary_insurance_expr',
                                                            'secondary_insurance_expr'],
                                               # date_parser=dateparse,
