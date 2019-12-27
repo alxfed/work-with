@@ -37,8 +37,7 @@ def main():
     all_licensed_gencontractors['company_name'] = all_licensed_gencontractors['company_name'].str.title()
     all_licensed_gencontractors['city'] = all_licensed_gencontractors['city'].str.title()
     all_licensed_gencontractors['street_address'] = all_licensed_gencontractors['street_address'].str.title()
-    all_licensed_gencontractors['zip'].replace("-\d?\d+", '', inplace=True, regex=True)
-    all_licensed_gencontractors['zip'].replace('-', '', inplace=True, regex=True)
+    all_licensed_gencontractors['zip'].replace("-\d+|-", '', inplace=True, regex=True)
 
     conn = sqlalc.create_engine(sorting.PITCH_DATABASE_URI)
     all_licensed_gencontractors.to_sql(name=sorting.LICENSED_GENERAL_CONTRACTORS_TABLE,
