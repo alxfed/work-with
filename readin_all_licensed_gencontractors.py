@@ -9,13 +9,16 @@ import sorting
 
 def main():
     # all licensed general contractors from the site https://webapps1.chicago.gov/activegcWeb/
+    # scraped to the /home/alxfed/archive/licensed_general_contractors_results.csv file
+    # will now be transferred into the center database. From there it will be processed and put
+    # into home database and firstbase.
     gen_cont_file_path = '/home/alxfed/archive/licensed_general_contractors_results.csv'
 
     normal_columns = ['company_name', 'street_address', 'phone', 'city', 'state', 'zip', 'license_type', 'license_expr',
                       'primary_insurance_expr', 'secondary_insurance_expr']
 
     all_licensed_gencontractors = pd.read_csv(gen_cont_file_path, usecols= normal_columns,
-                                              parse_dates=['license_expr',
+                                              parse_dates=['license_expr',  # right now doesn't work. dd/mm/YY format
                                                            'primary_insurance_expr',
                                                            'secondary_insurance_expr'],
                                               dtype=object)
@@ -25,7 +28,7 @@ def main():
     all_licensed_gencontractors['city'] = all_licensed_gencontractors['city'].str.title()
     all_licensed_gencontractors['street_address'] = all_licensed_gencontractors['street_address'].str.title()
 
-    conn = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
+    conn = sqlalc.create_engine(sorting.PITCH_DATABASE_URI)
     all_licensed_gencontractors.to_sql(name=sorting.LICENSED_GENERAL_CONTRACTORS_TABLE,
                                        con=conn, if_exists='replace', index=False)
     return
