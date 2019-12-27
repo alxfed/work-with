@@ -2,18 +2,18 @@
 """https://www.chicago.gov/city/en/depts/bldgs/provdrs/gen_contract.html
 """
 import pandas as pd
-from numpy import nan
+# from numpy import nan
 import sqlalchemy as sqlalc
 import sorting
-from datetime import datetime
+# import datetime
 
-
-def dateparse(x):
-    if x is nan:
-        return datetime(2018, 12, 8, 0, 0)
-    else:
-        return pd.datetime.strptime(x, '%m/%d/%y') #  %H:%M:%S.%f if there are hours, minutes, seconts and milliseconds
-
+#
+# def dateparse(x):
+#     if x is nan:
+#         return datetime.datetime(2018, 12, 8, 0, 0)
+#     else:
+#         return datetime.datetime.strptime(x, '%m/%d/%Y') #  %H:%M:%S.%f if there are hours, minutes, seconts and milliseconds
+#
 
 def main():
     # all licensed general contractors from the site https://webapps1.chicago.gov/activegcWeb/
@@ -25,10 +25,11 @@ def main():
     normal_columns = ['company_name', 'street_address', 'phone', 'city', 'state', 'zip', 'license_type', 'license_expr',
                       'primary_insurance_expr', 'secondary_insurance_expr']
 
+#    dateparse = lambda dates: [datetime.datetime.strptime(x, '%m/%d/%Y') for x in dates]
     all_licensed_gencontractors = pd.read_csv(gen_cont_file_path, usecols= normal_columns,
-                                              parse_dates=['license_expr',  # right now doesn't work. dd/mm/YYYY format
-                                                           'primary_insurance_expr',
-                                                           'secondary_insurance_expr'],
+                                              # parse_dates=['license_expr',  # right now doesn't work. dd/mm/YYYY format
+                                              #              'primary_insurance_expr',
+                                              #              'secondary_insurance_expr'],
                                               # date_parser=dateparse,
                                               dtype=object)
     # FORMATTING!
