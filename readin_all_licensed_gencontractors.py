@@ -2,9 +2,17 @@
 """https://www.chicago.gov/city/en/depts/bldgs/provdrs/gen_contract.html
 """
 import pandas as pd
-import csv
+from numpy import nan
 import sqlalchemy as sqlalc
 import sorting
+from datetime import datetime
+
+
+def dateparse(x):
+    if x is nan:
+        return datetime(2018, 12, 8, 0, 0)
+    else:
+        return pd.datetime.strptime(x, '%m/%d/%y') #  %H:%M:%S.%f if there are hours, minutes, seconts and milliseconds
 
 
 def main():
@@ -21,12 +29,15 @@ def main():
                                               parse_dates=['license_expr',  # right now doesn't work. dd/mm/YY format
                                                            'primary_insurance_expr',
                                                            'secondary_insurance_expr'],
+                                              # date_parser=dateparse,
                                               dtype=object)
     # FORMATTING!
     all_licensed_gencontractors['company_name'] = all_licensed_gencontractors['company_name'].str.strip()
     all_licensed_gencontractors['company_name'] = all_licensed_gencontractors['company_name'].str.title()
     all_licensed_gencontractors['city'] = all_licensed_gencontractors['city'].str.title()
     all_licensed_gencontractors['street_address'] = all_licensed_gencontractors['street_address'].str.title()
+    all_licensed_gencontractors['zip'].replace("-\d?\d+", '', inplace=True, regex=True)
+    all_licensed_gencontractors['zip'].replace('-', '', inplace=True, regex=True)
 
     conn = sqlalc.create_engine(sorting.PITCH_DATABASE_URI)
     all_licensed_gencontractors.to_sql(name=sorting.LICENSED_GENERAL_CONTRACTORS_TABLE,
