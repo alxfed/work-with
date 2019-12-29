@@ -8,7 +8,7 @@ import sqlalchemy as sqlalc
 
 def main():
     # read the downuploaded table of new_permits
-    conn_source = sqlalc.create_engine(sorting.SOURCE_DATABASE_URI)
+    conn_source = sqlalc.create_engine(sorting.PITCH_DATABASE_URI)
 
     data = pd.read_sql_table(
         table_name=sorting.NEW_PERMITS_TABLE, con=conn_source)
