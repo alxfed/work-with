@@ -8,7 +8,7 @@ import sqlalchemy as sqlalc
 
 def main():
     # read the downuploaded table of new_permits
-    conn_source = sqlalc.create_engine(sorting.PITCH_DATABASE_URI)
+    conn_source = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
 
     data = pd.read_sql_table(
         table_name=sorting.NEW_PERMITS_TABLE, con=conn_source)
@@ -22,6 +22,7 @@ def main():
     # general contractors for these permits
     gen_cons_with_permits = sorting.companies.general_contractors_and_permits(data_big)
     gen_cons_with_permits['suffix'] = gen_cons_with_permits['suffix'].str.title() # because in companies it stops on Nones
+    # gen_cons_with_permits['zip'] = gen_cons_with_permits['zip'].replace("-\d+", '', inplace=True, regex=True)
     unique_gen_contractors = pd.DataFrame(
         gen_cons_with_permits['name'].unique(), columns=['name'])
 

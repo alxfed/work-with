@@ -3,6 +3,7 @@
 """
 import pandas as pd
 import re
+import comparison
 
 
 def filter_out_known_companies(data):

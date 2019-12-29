@@ -49,21 +49,21 @@ def main():
 
 
     # upload them to the firstbase database
-    conn_target = sqlalc.create_engine(sorting.PREP_DATABASE_URI)
+    conn_target = sqlalc.create_engine(sorting.PREP_DATABASE_URI) # thirdbase
     old_companies_permits.to_sql(
-        name=sorting.OLD_COMPANIES_PERMITS_TABLE,
+        name=sorting.OLD_COMPANIES_PERMITS_TABLE, # old_companies_permits
         con=conn_target, if_exists='replace', index=False)
 
     # unique
     if not not_found_companies.empty:
         not_found_companies.to_sql(
-            name=sorting.NOT_FOUND_GENERAL_CONTRACTORS_TABLE,
+            name=sorting.NOT_FOUND_GENERAL_CONTRACTORS_TABLE, # not_found_general_contractors
             con=conn_target, if_exists='replace', index=False)
 
     if not new_companies.empty:
-        conn_interm = sqlalc.create_engine(sorting.INTERM_DATABASE_URI)
+        conn_interm = sqlalc.create_engine(sorting.INTERM_DATABASE_URI) # secondbase
         new_companies.to_sql(
-            name=sorting.NEW_COMPANIES_TABLE,
+            name=sorting.NEW_COMPANIES_TABLE, # new_companies
             con=conn_interm, if_exists='replace', index=False)
 
     return

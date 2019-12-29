@@ -32,18 +32,6 @@ def first_word(name):
     frst = toke[0]
     if len(frst) > 3:
         return frst
-    # frst_word, sep, rest = name.partition("'")
-    # frst = len(frst_word)
-    # if frst > 3:
-    #     return frst_word
-    # frst_word, sep, rest = name.partition("+")
-    # frst = len(frst_word)
-    # if frst > 3:
-    #     return frst_word
-    # frst_word, sep, rest = name.partition("@")
-    # frst = len(frst_word)
-    # if frst > 3:
-    #     return frst_word
     pattern = ("^\w\s[-&]\s\w",
                "^\w{3}",
                "^\w+\.?\s?[-+&/']?\w+?\.?\s?[-+&]?\w?\.?\s",
@@ -52,8 +40,8 @@ def first_word(name):
     tokenizer = RegexpTokenizer(patterns) # ^\w+\.?\s?\w|[-/\+'&]\s+\w+\.?|^\w+\.?\s?\w\.? |\w+\s&' \w+&?\s+.\
     tokens = tokenizer.tokenize(name)
     if tokens:
-        frst_word = tokens[0]
-    return frst_word
+        frst = tokens[0]
+    return frst
 
 
 
