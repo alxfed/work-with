@@ -102,6 +102,7 @@ def update_an_engagement(engagementId, parameters):
     # /engagements/v1/engagements/engagementId
     updated_note = {}
     data = {"engagement": {"timestamp": parameters['timestamp']},
+            "associations": {"dealIds": parameters['dealIds']},
             "metadata": {"body": parameters['note']}
             }
 

@@ -16,8 +16,8 @@ def main():
     # 4. read associated engagements from this company;
     # 5. check if it has been done already and if not - add filtered engagements to the _company_.
 
-    conn_source = sqlalc.create_engine(sorting.INTERM_DATABASE_URI)
-    all_deals = pd.read_sql_table(table_name=sorting.FRESH_DEALS_TABLE, con=conn_source)
+    conn_source = sqlalc.create_engine(sorting.INTERM_DATABASE_URI) # secondbase.sqlite
+    all_deals = pd.read_sql_table(table_name=sorting.FRESH_DEALS_TABLE, con=conn_source) # 1089616774
 
     conn_reference = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
     all_companies = pd.read_sql_table(table_name=sorting.COMPANIES_TABLE, con=conn_reference)
@@ -38,7 +38,7 @@ def main():
                 summary_note_timestamp = co_info['summary_note_date_str'].values[0]
                 if summary_note:
                     now = int(1000 * dt.datetime.now().timestamp())
-                    if (now - int(summary_note_timestamp)) > 10000000:
+                    if (now - int(summary_note_timestamp)) > 1000:
                         old_note = SummaryNote(companyId=companyId,
                                                engagementId=summary_note)
                         old_note.prepare_note()

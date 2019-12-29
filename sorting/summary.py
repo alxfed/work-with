@@ -73,7 +73,7 @@ class SummaryNote(object):
 
     def update(self):
         if self.ready:
-            params = {'timestamp': self.hs_timestamp, 'note': self.content}
+            params = {'dealIds': self.deal_list, 'timestamp': self.hs_timestamp, 'note': self.content}
             res = hubspot.engagements.update_an_engagement(self.engagementId, params)
             if res:
                 print('updated the note ', self.engagementId)

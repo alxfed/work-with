@@ -15,8 +15,8 @@ def main():
     data = pd.read_sql_table(
         table_name=sorting.DEALS_TABLE, con=conn_source)
 
-    start_date  = dt.datetime(year=2019, month=11, day=1, hour=0, minute=0, second=0)
-    end_date    = dt.datetime(year=2019, month=12, day=1, hour=0, minute=0, second=0)
+    start_date  = dt.datetime(year=2019, month=12, day=15, hour=0, minute=0, second=0)
+    end_date    = dt.datetime(year=2019, month=12, day=30, hour=0, minute=0, second=0)
 
     fresh_deals = data[(data['createdate'] > start_date) & (data['createdate'] < end_date)]
 
