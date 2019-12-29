@@ -55,12 +55,13 @@ def main():
         con=conn_target, if_exists='replace', index=False)
 
     # unique
-    not_found_companies.to_sql(
-        name=sorting.NOT_FOUND_GENERAL_CONTRACTORS_TABLE,
-        con=conn_target, if_exists='replace', index=False)
+    if not not_found_companies.empty:
+        not_found_companies.to_sql(
+            name=sorting.NOT_FOUND_GENERAL_CONTRACTORS_TABLE,
+            con=conn_target, if_exists='replace', index=False)
 
-    conn_interm = sqlalc.create_engine(sorting.INTERM_DATABASE_URI)
     if not new_companies.empty:
+        conn_interm = sqlalc.create_engine(sorting.INTERM_DATABASE_URI)
         new_companies.to_sql(
             name=sorting.NEW_COMPANIES_TABLE,
             con=conn_interm, if_exists='replace', index=False)

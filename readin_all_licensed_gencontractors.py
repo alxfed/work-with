@@ -39,7 +39,7 @@ def main():
     all_licensed_gencontractors['street_address'] = all_licensed_gencontractors['street_address'].str.title()
     all_licensed_gencontractors['zip'].replace("-\d+|-", '', inplace=True, regex=True)
 
-    conn = sqlalc.create_engine(sorting.PITCH_DATABASE_URI)
+    conn = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
     all_licensed_gencontractors.to_sql(name=sorting.LICENSED_GENERAL_CONTRACTORS_TABLE,
                                        con=conn, if_exists='replace', index=False)
     return

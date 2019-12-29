@@ -26,7 +26,7 @@ def main():
     result['latitude'] = pd.to_numeric(result['latitude'])
     result['longitude'] = pd.to_numeric(result['longitude'])
 
-    conn = sqlalc.create_engine(sorting.PITCH_DATABASE_URI)
+    conn = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
     result.to_sql(name=sorting.NEW_PERMITS_TABLE, con=conn, if_exists='replace', index=False)
     return
 
