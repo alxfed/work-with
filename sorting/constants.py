@@ -17,6 +17,7 @@ NOT_FOUND_GENERAL_CONTRACTORS_TABLE                 = ''
 GENERAL_CONTRACTORS_FROM_NEW_PERMITS_TABLE          = 'gen_contractors_from_new_permits'
 UNIQUE_GENERAL_CONTRACTORS_FROM_NEW_PERMITS_TABLE   = 'unique_gen_contractors_from_new_permits'
 
+VERIGOOG_CONTRACTORS_TABLE  = 'verigoog_contractors'
 COMPANIES_TABLE             = 'companies'
 OLD_COMPANIES_TABLE         = 'old_companies'
 OLD_COMPANIES_PERMITS_TABLE = 'old_companies_permits'

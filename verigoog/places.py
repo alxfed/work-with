@@ -47,6 +47,7 @@ def of_type_in_chicago(name_of_the_place, type_string):
                                     fields=['place_id', 'name', 'type', 'formatted_address',
                                             'formatted_phone_number', 'website'])
         res = contact['result']
+        res['types'] = ' '.join(res['types'])
         candidates_list.append(res)
     return candidates_list
 

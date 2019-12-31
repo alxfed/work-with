@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """...
 """
+import sqlalchemy as sqlalc
 import verigoog
 import pandas as pd
 

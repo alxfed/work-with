@@ -53,8 +53,8 @@ def create_engagement_note(parameters):
     created_note = {}
     companyId = ''
     dealIds = ''
-    if 'companyId' in parameters.keys(): companyId = parameters['companyId']
-    if 'dealIds' in parameters.keys(): dealIds = parameters['dealIds']
+    if 'companyId' in parameters.keys(): companyId = str(parameters['companyId'])
+    if 'dealIds' in parameters.keys(): dealIds = str(parameters['dealIds'])
     data = {"engagement": {
                     "active": 'true',
                     "ownerId": str(parameters['ownerId']),
@@ -101,11 +101,18 @@ def get_an_engagement(engagementId):
 def update_an_engagement(engagementId, parameters):
     # /engagements/v1/engagements/engagementId
     updated_note = {}
-    data = {"engagement": {"timestamp": parameters['timestamp']},
-            "associations": {"dealIds": parameters['dealIds']},
-            "metadata": {"body": parameters['note']}
-            }
-
+    data = {}
+    if 'timestamp' in parameters.keys():
+        data.update({"engagement": {"timestamp": parameters['timestamp']}})
+    if 'dealIds' in parameters.keys():
+        data.update({"associations": {"dealIds": parameters['dealIds']}})
+    if 'note' in parameters.keys():
+        data.update({"metadata": {"body": parameters['note']}})
+    # data = {"engagement": {"timestamp": parameters['timestamp']},
+    #         "associations": {"dealIds": parameters['dealIds']},
+    #         "metadata": {"body": parameters['note']}
+    #         }
+    #
     URL = constants.ENGAGEMENTS_URL + f'/{engagementId}'
     response = requests.request("PATCH", url=URL, json=data,
                                 headers=constants.authorization_header)
