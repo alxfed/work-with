@@ -19,7 +19,7 @@ def main():
 
     collected = pd.DataFrame()
 
-    begin = 51; end = 100
+    begin = 1001; end = 2000
 
     for index, contractor in licensed_gen_contractors.iterrows():
         if (index >= begin) and (index <= end):
