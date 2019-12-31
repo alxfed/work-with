@@ -19,7 +19,7 @@ def main():
 
     collected = pd.DataFrame()
 
-    begin = 1001; end = 2000
+    begin = 1001; end = 10000
 
     for index, contractor in licensed_gen_contractors.iterrows():
         if (index >= begin) and (index <= end):
@@ -34,7 +34,7 @@ def main():
             'formatted_phone_number': '(773) 735-0401', 
             'name': 'Seven D Construction', 
             'place_id': 'ChIJc858BlcsDogRb9D0nGelw58', 
-            'types': ['general_contractor', 'point_of_interest', 'establishment'], 
+            'types': ['general_contractor', 'point_of_interest', 'establishment'], # ' '.join()
             'website': 'http://www.7dconstruction.com/'}
             '''
             chunk = pd.DataFrame(result)
