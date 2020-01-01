@@ -20,12 +20,12 @@ def main():
 
     companies['name'] = companies['name'].str.title()  # there are still some non-'title' names there
 
-    # verigoog = verigoog.set_index('name')
-    # verigoog.sort_values(by=['name'], inplace=True)
+    # format and filter the verigoog
     verigoog['name'] = verigoog['name'].str.title()
     verigoog = verigoog.drop_duplicates(subset='place_id', keep='first') # first is default, last can be set here
-    # starts_with_gen_contractors = verigoog[verigoog['types'].str.startswith('general_contractor')]
-    gen_contractor = verigoog[verigoog['types'].str.contains('general_contractor')] # any position of the substring
+
+    gen_contractors = verigoog[verigoog['types'].str.contains('general_contractor')] # any position of the substring
+
     first_unique_companies = verigoog.drop_duplicates(subset='name', keep='first')
     first_unique_companies.sort_values(by=['name'], inplace=True)
     print('ok')
@@ -35,3 +35,8 @@ def main():
 if __name__ == '__main__':
     main()
     print('done')
+
+
+
+    # verigoog = verigoog.set_index('name')
+    # verigoog.sort_values(by=['name'], inplace=True)
