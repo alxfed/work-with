@@ -14,7 +14,8 @@ def main():
         {'day': 'thu', 'exists': True, 'name': 'Data Construction, LLC',    'number': 762}
     ]
     data = pd.DataFrame(df)
-    a = data[data['name'].str.contains('Data')]
+    substring = 'Data'
+    a = data[data['name'].str.contains(substring)]
     return
 
 
