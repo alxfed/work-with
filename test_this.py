@@ -7,14 +7,14 @@ import sorting
 
 
 def main():
-    conn_reference = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
-    all_companies = pd.read_sql_table(table_name=sorting.COMPANIES_TABLE, con=conn_reference)
-    all_companies['companyId'] = all_companies['companyId'].astype(dtype=object)
-    companyId = '2536529847'
-    column = all_companies['companyId']
-    print('Type: ', column.dtype)
-    co_info = all_companies[all_companies['companyId'] == int(companyId)]
-    print('ok', co_info)
+    df = [
+        {'day': 'wed', 'exists': True, 'name': 'First Data Corporation',    'number': 135},
+        {'day': 'mon', 'exists': True, 'name': 'Second Data Corp.',         'number': 246},
+        {'day': 'sat', 'exists': True, 'name': 'Mk Builders, Inc.',         'number': 247},
+        {'day': 'thu', 'exists': True, 'name': 'Data Construction, LLC',    'number': 762}
+    ]
+    data = pd.DataFrame(df)
+    a = data[data['name'].str.contains('Data')]
     return
 
 

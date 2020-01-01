@@ -61,7 +61,16 @@ def general_contractors_and_permits(data):
     return general_contractors
 
 
-def compare_with_companies_and_reference(row, present, reference):
+def compare_company_with_existing_and_reference(company, present, reference):
+    # reference - licensed general contractors in the official list
+    # present - companies in the system
+    # company - verigooged or other company
+    new_company = pd.DataFrame()
+    old_company_and_corrections = pd.DataFrame()
+    not_found = pd.DataFrame()
+
+
+def compare_permit_with_companies_and_reference(row, present, reference):
     # reference - licensed general contractors in the official list
     # present - companies in the system
     # row - permit
@@ -78,7 +87,7 @@ def compare_with_companies_and_reference(row, present, reference):
     if found.empty:
         ref = reference.copy()
         ref['company_name'] = reference['company_name'].str.replace(r'[,.]', '')
-        found_in_reference = ref[ref['company_name'].str.find(sub=co_name) != -1]
+        found_in_reference = ref[ref['company_name'].str.contains(co_name)]
         if not found_in_reference.empty:
             row_n = found_in_reference.index[0]
             company_to_add = company_to_add.append(reference.iloc[[row_n]])

@@ -34,7 +34,7 @@ def main():
         # if debug_company_name in debug_company:
         #     print('ok')
         # Debug for particular company
-        permit_to_add, company_to_add, not_found = sorting.companies.compare_with_companies_and_reference(
+        permit_to_add, company_to_add, not_found = sorting.companies.compare_permit_with_companies_and_reference(
             this_permit, companies, licensed_gen_contractors)
         if not company_to_add.empty:
             if not company_to_add['company_name'].values[0] in seen_new_companies:
