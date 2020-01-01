@@ -20,14 +20,15 @@ def main():
 
     companies['name'] = companies['name'].str.title()  # there are still some non-'title' names there
 
-    # format and filter the verigoog
-    verigoog['name'] = verigoog['name'].str.title()
+    # drop all the true duplicates
     verigoog = verigoog.drop_duplicates(subset='place_id', keep='first') # first is default, last can be set here
-
+    # leave only the lines that contain general contractors
     gen_contractors = verigoog[verigoog['types'].str.contains('general_contractor')] # any position of the substring
+    # format
+    verigoog['name'] = verigoog['name'].str.title()
 
-    first_unique_companies = verigoog.drop_duplicates(subset='name', keep='first')
-    first_unique_companies.sort_values(by=['name'], inplace=True)
+
+    merged = pd.merge(gen_contractors, companies, on=['name'], how='inner')
     print('ok')
     return
 
@@ -40,3 +41,5 @@ if __name__ == '__main__':
 
     # verigoog = verigoog.set_index('name')
     # verigoog.sort_values(by=['name'], inplace=True)
+    # first_unique_companies = verigoog.drop_duplicates(subset='name', keep='first')
+    # first_unique_companies.sort_values(by=['name'], inplace=True)

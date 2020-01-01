@@ -14,12 +14,12 @@ def main():
 
     request_params = ['name', 'phone', 'phone_mobile', 'phone_voip',
                       'phone_toll','phone_landline','phone_unidentified',
-                      'address','city','zip','state', 'category','website',
+                      'address','city','zip','state', 'category','domain','website',
                       'summary_note_number', 'summary_note_date_str']
 
     normal_columns = ['companyId', 'isDeleted', 'name', 'phone',
                       'address', 'city', 'zip', 'state',
-                      'category', 'website', 'summary_note_number', 'summary_note_date_str']
+                      'category','domain', 'website', 'summary_note_number', 'summary_note_date_str']
 
     all_companies_cdr, all_columns = hubspot.companies.get_all_companies_oauth(request_params)
     all_companies = pd.DataFrame(all_companies_cdr, columns=normal_columns)
@@ -33,6 +33,7 @@ def main():
     all_companies['zip'] = all_companies['zip'].astype(dtype=object)
     all_companies['state'] = all_companies['state'].astype(dtype=object)
     all_companies['category'] = all_companies['category'].astype(dtype=object)
+    all_companies['domain'] = all_companies['domain'].astype(dtype=object)
     all_companies['website'] = all_companies['website'].astype(dtype=object)
     all_companies['summary_note_number'] = all_companies['summary_note_number'].astype(dtype=object)
     all_companies['summary_note_date_str'] = all_companies['summary_note_date_str'].astype(dtype=object)
