@@ -53,6 +53,8 @@ def main():
                     date = dt.datetime(year=2019, month=7, day=12, hour=0, minute=0, second=0)
                 else:
                     date = dealDate.values[0]
+                inote = sorting.inspections.InspectionsNote(dealId=dealId)
+                inote.prepare_note(line, date)
                 post_permit_inspections_table, last_inspection_table = post_permit_inspections(line, date, dealId)
                 if not post_permit_inspections_table.empty:
                     last_inspection_number = last_inspection_table['insp_n']

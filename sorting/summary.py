@@ -33,23 +33,6 @@ class SummaryNote(object):
     def __del__(self): # just in case I will want to add the deletion of note here
         pass
 
-    def read_in(self, engagementId: str):
-        # readin engagement
-        result = ''
-        if result:
-            return True
-        else:
-            return False
-
-    def add_content(self, **kwargs):
-        self.content = ''
-        return True
-
-    def verify_content(self):
-        # verification
-        self.ready = True
-        return self.ready
-
     def create(self):
         if self.ready:
             params = {'ownerId': SummaryNote.ownerId,

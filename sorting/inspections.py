@@ -74,14 +74,13 @@ class InspectionsNote(object):
             print('Note is not ready')
             return False
 
-    def prepare_note(self, **kwargs):
+    def prepare_note(self, line, date, **kwargs):
         self.ready      = False
         list_of_lines   = []
 
-        if 'companyId' in kwargs.keys():
-            self.companyId = kwargs['companyId']
-        if self.companyId:
-            self.deal_list = hubspot.associations.get_associations_oauth(self.companyId, '6')  # company to deals - full
+        if 'dealId' in kwargs.keys(): self.dealId = kwargs['dealId']
+        if self.dealId:
+            self.deal_list = hubspot.associations.get_associations_oauth(self.dealId, '6')  # company to deals - full
             sleep(1.5)
         else:
             print('No company Id for the note. Nothing to prepare')
