@@ -23,6 +23,8 @@ def main():
     merged = pd.merge(data, reference, on=['name'], how='outer')
     substring = 'Data'
     a = data[data['name'].str.contains(substring)]
+    data = reference.rename(columns={"day": "d", "name": "n", "number": "u"})
+    print(df2)
     return
 
 

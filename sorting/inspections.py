@@ -19,8 +19,8 @@ class InspectionsNote(object):
     def __init__(self, **kwargs):
         if 'engagementId' in kwargs.keys(): self.engagementId = kwargs['engagementId']
         else: self.engagementId = ''
-        if 'companyId' in kwargs.keys(): self.companyId = kwargs['companyId']
-        else: self.companyId = ''
+        if 'dealId' in kwargs.keys(): self.dealId = kwargs['companyId']
+        else: self.dealId = ''
         if 'deal_list' in kwargs.keys(): self.deal_list = kwargs['deal_list']
         else: self.deal_list = []
         if 'content' in kwargs.keys(): self.content = kwargs['content']
@@ -31,23 +31,6 @@ class InspectionsNote(object):
 
     def __del__(self): # just in case I will want to add the deletion of note here
         pass
-
-    def read_in(self, engagementId: str):
-        # readin engagement
-        result = ''
-        if result:
-            return True
-        else:
-            return False
-
-    def add_content(self, **kwargs):
-        self.content = ''
-        return True
-
-    def verify_content(self):
-        # verification
-        self.ready = True
-        return self.ready
 
     def create(self):
         if self.ready:
