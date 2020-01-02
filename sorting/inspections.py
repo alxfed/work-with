@@ -9,9 +9,6 @@ import datetime as dt
 import sorting
 from time import sleep
 
-conn = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
-deals_reference = pd.read_sql_table(table_name=sorting.DEALS_TABLE, con=conn)
-
 
 class InspectionsNote(object):
     ownerId = '40202623' # Marfa Cabinets Data robot
@@ -21,8 +18,6 @@ class InspectionsNote(object):
         else: self.engagementId = ''
         if 'dealId' in kwargs.keys(): self.dealId = kwargs['companyId']
         else: self.dealId = ''
-        if 'deal_list' in kwargs.keys(): self.deal_list = kwargs['deal_list']
-        else: self.deal_list = []
         if 'content' in kwargs.keys(): self.content = kwargs['content']
         else: self.content = ''
         if 'hs_timestamp' in kwargs.keys(): self.hs_timestamp = kwargs['hs_timestamp']
