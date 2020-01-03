@@ -16,7 +16,7 @@ class InspectionsNote(object):
     def __init__(self, **kwargs):
         if 'engagementId' in kwargs.keys(): self.engagementId = kwargs['engagementId']
         else: self.engagementId = ''
-        if 'dealId' in kwargs.keys(): self.dealId = kwargs['companyId']
+        if 'dealId' in kwargs.keys(): self.dealId = kwargs['dealId']
         else: self.dealId = ''
         if 'content' in kwargs.keys(): self.content = kwargs['content']
         else: self.content = ''
@@ -31,15 +31,14 @@ class InspectionsNote(object):
         if self.ready:
             params = {'ownerId': InspectionsNote.ownerId,
                       'timestamp': self.hs_timestamp,
-                      'companyId': self.companyId,
-                      'dealIds': self.deal_list,
+                      'dealIds': [self.dealId],
                       'note': self.content}
             cre = hubspot.engagements.create_engagement_note(params)
             if cre:
                 sleep(1)
                 created_note = cre['engagement']
                 self.engagementId = created_note['id']
-                result = hubspot.deals.update_a_deal_oauth(self.companyId, {'summary_note_number': self.engagementId,
+                result = hubspot.deals.update_a_deal_oauth(self.dealId, {'summary_note_number': self.engagementId,
                                      'summary_note_date_str': self.hs_timestamp})
                 if result:
                     print('Created new Summary Note: ', self.engagementId)
@@ -50,17 +49,17 @@ class InspectionsNote(object):
 
     def update(self):
         if self.ready:
-            params = {'dealIds': self.deal_list, 'timestamp': self.hs_timestamp, 'note': self.content}
+            params = {'dealIds': [self.dealId], 'timestamp': self.hs_timestamp, 'note': self.content}
             res = hubspot.engagements.update_an_engagement(self.engagementId, params)
             if res:
                 print('updated the note ', self.engagementId)
                 # update the company parameters last_inspection and last_inspection_date here
                 sleep(1)
                 result = hubspot.deals.update_a_deal_oauth(
-                    self.companyId, {'summary_note_number': self.engagementId,
+                    self.dealId, {'summary_note_number': self.engagementId,
                                      'summary_note_date_str': self.hs_timestamp})
                 if result:
-                    print('Updated summary note on Company:  ', self.companyId)
+                    print('Updated summary note on Company:  ', self.dealId)
                     return True
             else:
                 print('did not update the note', self.engagementId)
@@ -70,15 +69,78 @@ class InspectionsNote(object):
             return False
 
     def prepare_note(self, line, date, **kwargs):
-        self.ready      = False
-        list_of_lines   = []
 
-        if 'dealId' in kwargs.keys(): self.dealId = kwargs['dealId']
-        if self.dealId:
-            self.deal_list = hubspot.associations.get_associations_oauth(self.dealId, '6')  # company to deals - full
-            sleep(1.5)
+        # post permit inspections
+        def post_permit_inspections(scraped_line, date, dealId):
+            inspections_table = pd.DataFrame()
+            last_inspection = pd.DataFrame()
+            insp_table = pd.DataFrame.from_records(scraped_line['insp_table'])
+            if not insp_table.empty:  # any inspections at all in this record? Otherwise - why bother?
+                if 'insp_date' in insp_table.keys():  # there is a table and it has 'insp_date' column
+                    insp_table['insp_date'] = pd.to_datetime(insp_table['insp_date'], infer_datetime_format=True)
+                    inspections_table = insp_table[insp_table['insp_date'] >= date]
+                    if not inspections_table.empty:
+                        last_inspection = inspections_table.iloc[0]
+                    else:
+                        print('No inspections after permit for deal', dealId)
+                else:  # there is an ispection with number but no date column? Really?
+                    pass
+            else:  # inspections table is empty
+                pass
+            return inspections_table, last_inspection
+
+        self.ready = False
+
+        post_permit_inspections_table, last_inspection_line = post_permit_inspections(line, date, self.dealId)
+        if not post_permit_inspections_table.empty:
+            last_inspection_number = last_inspection_line['insp_n']
+            recorded_inspection = str(deal['insp_n'].values[0])
+            inspection_note = str(deal['insp_note'].values[0])
+            if not last_inspection_number == recorded_inspection:
+                last_inspection_date = last_inspection_line['insp_date']
+                last_inspection_type = last_inspection_line['type_desc']
+                hubspot_timestamp = int(last_inspection_date.timestamp() * 1000)
+                post_permit_inspections_table['insp_date'] = post_permit_inspections_table['insp_date'].dt.strftime(
+                    '%Y-%m-%d')
+                post_permit_inspections_table.rename(columns={'insp_n': '#', 'insp_date': 'date', 'type_desc': 'type'})
+                note_text = post_permit_inspections_table.to_html(col_space=125, justify='left', header=True,
+                                                                  index=False)
+                # branching for existent and non-existent - here
+                if inspection_note:
+                    params = {'timestamp': hubspot_timestamp, 'note': note_text}
+                    res = hubspot.engagements.update_an_engagement(inspection_note, params)
+                    if res:
+                        print('updated the note ', inspection_note)
+                        # update the deal parameters last_inspection and last_inspection_date here
+                        result = hubspot.deals.update_a_deal_oauth(dealId, {
+                            'last_inspection': last_inspection_type.title(),
+                            'last_inspection_date': hubspot_timestamp,
+                            'insp_n': last_inspection_number})
+                        if result:
+                            print('Updated deal: ', dealId)
+                    else:
+                        print('did not update the note', id)
+                else:
+                    params = {'ownerId': ownerId, 'timestamp': hubspot_timestamp, 'dealIds': [dealId],
+                              'note': note_text}
+                    cre = hubspot.engagements.create_engagement_note(params)
+                    if cre:
+                        created_note = cre['engagement']
+                        inspection_note = created_note['id']
+                        result = hubspot.deals.update_a_deal_oauth(dealId, {'insp_note': inspection_note,
+                                                                            'insp_n': last_inspection_number,
+                                                                            'last_inspection': last_inspection_type.title(),
+                                                                            'last_inspection_date': hubspot_timestamp})
+                        if result:
+                            print('Updated deal: ', dealId)
+                note = pd.DataFrame()
+                # note.to_sql(name=sorting.INSPECTION_NOTES,
+                #             con=conn_result, if_exists='append', index=False)
+            else:
+                print('The last inspection number is the same. No new inspections. Nothing to update.')
         else:
-            print('No company Id for the note. Nothing to prepare')
+            print('No inspections after permit for deal: ', dealId)
+
         for deal_n in self.deal_list:
             line = {}
             deal_data = deals_reference.loc[deals_reference['dealId'] == deal_n]
