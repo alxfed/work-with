@@ -30,18 +30,19 @@ def main():
     with jsonlines.open(SOURCE_FILE, mode='r') as reader:
         for line in reader:
             permit = line['permit']
-            deal = all_deals[all_deals['permit_'] == permit]
+            deal = all_deals[all_deals['permit_'] == permit].iloc[0]
             if not deal.empty:
-                dealId                  = deal['dealId'].values[0]
-                insp_note               = deal['insp_note'].values[0]
-                insp_n                  = deal['insp_n'].values[0]
-                last_inspection         = deal['last_inspection'].values[0]
-                last_inspection_date    = deal['last_inspection_date'].values[0]
+                dealId                  = deal['dealId']
+                insp_note               = deal['insp_note']
+                insp_n                  = deal['insp_n']
+                last_inspection         = deal['last_inspection']
+                last_inspection_date    = deal['last_inspection_date']
                 dealDate                = deal['permit_issue_date']
-                if dealDate.empty:
-                    date = dt.datetime(year=2019, month=7, day=12, hour=0, minute=0, second=0)
+                if not dealDate:
+                    date = pd.Timestamp(1562950000000, unit='ms', tz='US/Central')
+                    # date = pd.Timestamp(2019, 7, 12, 12)
                 else:
-                    date = dealDate.values[0]
+                    date = dealDate
                 if insp_note: # the inspections note exists
                     inote = sorting.inspections.InspectionsNote(
                         dealId=dealId, engagementId=insp_note, insp_n=insp_n, last_inspection=last_inspection,

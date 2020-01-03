@@ -58,10 +58,13 @@ def main():
                     last_inspection_number = last_inspection_table['insp_n']
                     recorded_inspection = str(deal['insp_n'].values[0])
                     inspection_note = str(deal['insp_note'].values[0])
+                    last_inspection_date = last_inspection_table['insp_date']
+                    last_inspection_type = last_inspection_table['type_desc']
+                    hubspot_timestamp = int(last_inspection_date.timestamp() * 1000)
                     if not last_inspection_number == recorded_inspection:
-                        last_inspection_date = last_inspection_table['insp_date']
-                        last_inspection_type = last_inspection_table['type_desc']
-                        hubspot_timestamp = int(last_inspection_date.timestamp() * 1000)
+                        # last_inspection_date = last_inspection_table['insp_date']
+                        # last_inspection_type = last_inspection_table['type_desc']
+                        # hubspot_timestamp = int(last_inspection_date.timestamp() * 1000)
                         post_permit_inspections_table['insp_date'] = post_permit_inspections_table['insp_date'].dt.strftime('%Y-%m-%d')
                         post_permit_inspections_table.rename(columns={'insp_n':'#', 'insp_date':'date', 'type_desc':'type'})
                         note_text = post_permit_inspections_table.to_html(col_space=125, justify='left', header=True, index=False)

@@ -28,11 +28,7 @@ class InspectionsNote(object):
         if 'last_inspection_date' in kwargs.keys(): self.last_inspection_date = kwargs['last_inspection_date']
         else: self.last_inspection_date = None # dt.datetime(year=2019, month=7, day=12, hour=0, minute=0, second=0)
         if 'hs_timestamp' in kwargs.keys(): self.hs_timestamp = kwargs['hs_timestamp']
-        else:
-            if self.last_inspection_date:
-                self.hs_timestamp = str(int(1000 * self.last_inspection_date.timestamp()))
-            else:
-                self.hs_timestamp = ''
+        else: self.hs_timestamp = ''
 
     def __del__(self): # just in case I will want to add the deletion of note here
         pass
@@ -44,12 +40,16 @@ class InspectionsNote(object):
                       'dealIds': [self.dealId],
                       'note': self.content}
             cre = hubspot.engagements.create_engagement_note(params)
+            sleep(1)
             if cre:
-                sleep(1)
                 created_note = cre['engagement']
                 self.engagementId = created_note['id']
-                result = hubspot.deals.update_a_deal_oauth(self.dealId, {'insp_note': self.engagementId,
-                                     'summary_note_date_str': self.hs_timestamp})
+                result = hubspot.deals.update_a_deal_oauth(
+                    self.dealId, {'insp_note': self.engagementId,
+                                  'insp_n': self.insp_n,
+                                  'last_inspection': self.last_inspection,
+                                  'last_inspection_date': self.last_inspection_date
+                                  })
                 if result:
                     print('Created new Summary Note: ', self.engagementId)
             pass
@@ -66,10 +66,13 @@ class InspectionsNote(object):
                 # update the company parameters last_inspection and last_inspection_date here
                 sleep(1)
                 result = hubspot.deals.update_a_deal_oauth(
-                    self.dealId, {'summary_note_number': self.engagementId,
-                                     'summary_note_date_str': self.hs_timestamp})
+                    self.dealId, {'insp_note': self.engagementId,
+                                  'insp_n': self.insp_n,
+                                  'last_inspection': self.last_inspection,
+                                  'last_inspection_date': self.last_inspection_date
+                                  }) # TODO: datetime or string?
                 if result:
-                    print('Updated summary note on Company:  ', self.dealId)
+                    print('Updated inspections note on Deal:  ', self.dealId)
                     return True
             else:
                 print('did not update the note', self.engagementId)
@@ -102,8 +105,10 @@ class InspectionsNote(object):
         post_permit_inspections_table, last_inspection_line = post_permit_inspections(line, date, self.dealId)
         if not post_permit_inspections_table.empty:
             self.last_inspection_date = last_inspection_line['insp_date']
+            # self.hs_timestamp = str(int(1000 * self.last_inspection_date.timestamp()))
+            self.insp_n = last_inspection_line['insp_n']
             self.last_inspection = last_inspection_line['type_desc']
-            self.hs_timestamp = int(self.last_inspection_date.timestamp() * 1000)
+            self.hs_timestamp = int(1000 * self.last_inspection_date.timestamp()) # int(self.last_inspection_date.timestamp() * 1000)
             post_permit_inspections_table['insp_date'] = post_permit_inspections_table['insp_date'].dt.strftime(
                 '%Y-%m-%d')
             post_permit_inspections_table.rename(columns={'insp_n': '#', 'insp_date': 'date', 'type_desc': 'type'}, inplace=True)
