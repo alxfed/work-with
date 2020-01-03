@@ -20,14 +20,19 @@ class InspectionsNote(object):
         else: self.dealId = ''
         if 'content' in kwargs.keys(): self.content = kwargs['content']
         else: self.content = ''
-        if 'hs_timestamp' in kwargs.keys(): self.hs_timestamp = kwargs['hs_timestamp']
-        else: self.hs_timestamp = str(int(1000 * dt.datetime.now().timestamp()))
         self.ready = False
         if 'insp_n' in kwargs.keys(): self.insp_n = kwargs['insp_n']
         else: self.insp_n = ''
         if 'last_inspection' in kwargs.keys(): self.last_inspection = kwargs['last_inspection']
         else: self.last_inspection = ''
         if 'last_inspection_date' in kwargs.keys(): self.last_inspection_date = kwargs['last_inspection_date']
+        else: self.last_inspection_date = None # dt.datetime(year=2019, month=7, day=12, hour=0, minute=0, second=0)
+        if 'hs_timestamp' in kwargs.keys(): self.hs_timestamp = kwargs['hs_timestamp']
+        else:
+            if self.last_inspection_date:
+                self.hs_timestamp = str(int(1000 * self.last_inspection_date.timestamp()))
+            else:
+                self.hs_timestamp = ''
 
     def __del__(self): # just in case I will want to add the deletion of note here
         pass
@@ -43,7 +48,7 @@ class InspectionsNote(object):
                 sleep(1)
                 created_note = cre['engagement']
                 self.engagementId = created_note['id']
-                result = hubspot.deals.update_a_deal_oauth(self.dealId, {'summary_note_number': self.engagementId,
+                result = hubspot.deals.update_a_deal_oauth(self.dealId, {'insp_note': self.engagementId,
                                      'summary_note_date_str': self.hs_timestamp})
                 if result:
                     print('Created new Summary Note: ', self.engagementId)
@@ -96,32 +101,22 @@ class InspectionsNote(object):
 
         post_permit_inspections_table, last_inspection_line = post_permit_inspections(line, date, self.dealId)
         if not post_permit_inspections_table.empty:
-            last_inspection_number = last_inspection_line['insp_n']
-            recorded_inspection = str(deal['insp_n'].values[0])
-            inspection_note = str(deal['insp_note'].values[0])
-        else:
-            print('No inspections after permit for deal: ', dealId)
-
-         if list_of_lines:
-            to_sort = pd.DataFrame(list_of_lines)
-            to_publish = pd.DataFrame()
-            to_sort['date'] = pd.to_datetime(to_sort['date'], unit='ms')
-            to_publish = to_sort.sort_values(by=['date'], ascending=False)
-            to_publish['date'] = to_publish['date'].dt.strftime('%Y-%m-%d')
-            self.content = to_publish.to_html(col_space=175, justify='left', index=False) # the html parameters: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_html.html?highlight=to_html#pandas.DataFrame.to_html
+            self.last_inspection_date = last_inspection_line['insp_date']
+            self.last_inspection = last_inspection_line['type_desc']
+            self.hs_timestamp = int(self.last_inspection_date.timestamp() * 1000)
+            post_permit_inspections_table['insp_date'] = post_permit_inspections_table['insp_date'].dt.strftime(
+                '%Y-%m-%d')
+            post_permit_inspections_table.rename(columns={'insp_n': '#', 'insp_date': 'date', 'type_desc': 'type'}, inplace=True)
+            self.content = post_permit_inspections_table.to_html(col_space=125, justify='left', header=True,
+                                                              index=False)
             self.ready = True
+            print('Thre are inspections after the permit for deal: ', self.dealId)
+        else:
+            print('No inspections after permit for deal: ', self.dealId)
 
 '''
 
-                last_inspection_date = last_inspection_line['insp_date']
-                last_inspection_type = last_inspection_line['type_desc']
-                hubspot_timestamp = int(last_inspection_date.timestamp() * 1000)
-                post_permit_inspections_table['insp_date'] = post_permit_inspections_table['insp_date'].dt.strftime(
-                    '%Y-%m-%d')
-                post_permit_inspections_table.rename(columns={'insp_n': '#', 'insp_date': 'date', 'type_desc': 'type'})
-                note_text = post_permit_inspections_table.to_html(col_space=125, justify='left', header=True,
-                                                                  index=False)
-                # branching for existent and non-existent - here
+                 # branching for existent and non-existent - here
                 if inspection_note:
                     params = {'timestamp': hubspot_timestamp, 'note': note_text}
                     res = hubspot.engagements.update_an_engagement(inspection_note, params)
@@ -153,5 +148,18 @@ class InspectionsNote(object):
                 # note.to_sql(name=sorting.INSPECTION_NOTES,
                 #             con=conn_result, if_exists='append', index=False)
 
+ last_inspection_number = last_inspection_line['insp_n']
+            recorded_inspection = str(deal['insp_n'].values[0])
+            inspection_note = str(deal['insp_note'].values[0])
+            
+
+         if list_of_lines:
+            to_sort = pd.DataFrame(list_of_lines)
+            to_publish = pd.DataFrame()
+            to_sort['date'] = pd.to_datetime(to_sort['date'], unit='ms')
+            to_publish = to_sort.sort_values(by=['date'], ascending=False)
+            to_publish['date'] = to_publish['date'].dt.strftime('%Y-%m-%d')
+            self.content = to_publish.to_html(col_space=175, justify='left', index=False) # the html parameters: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_html.html?highlight=to_html#pandas.DataFrame.to_html
+            self.ready = True
 
 '''

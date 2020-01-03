@@ -36,7 +36,7 @@ def main():
                 insp_note               = deal['insp_note'].values[0]
                 insp_n                  = deal['insp_n'].values[0]
                 last_inspection         = deal['last_inspection'].values[0]
-                last_inspection_hs_ts   = deal['last_inspection_date'].values[0]
+                last_inspection_date    = deal['last_inspection_date'].values[0]
                 dealDate                = deal['permit_issue_date']
                 if dealDate.empty:
                     date = dt.datetime(year=2019, month=7, day=12, hour=0, minute=0, second=0)
@@ -45,7 +45,7 @@ def main():
                 if insp_note: # the inspections note exists
                     inote = sorting.inspections.InspectionsNote(
                         dealId=dealId, engagementId=insp_note, insp_n=insp_n, last_inspection=last_inspection,
-                        last_inspection_hs_ts=last_inspection_hs_ts)
+                        last_inspection_date=last_inspection_date)
                     inote.prepare_note(line, date)
                     if inote.ready:
                         inote.update()
