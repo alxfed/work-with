@@ -42,12 +42,22 @@ def main():
                     date = dt.datetime(year=2019, month=7, day=12, hour=0, minute=0, second=0)
                 else:
                     date = dealDate.values[0]
-                inote = sorting.inspections.InspectionsNote(dealId=dealId, engagementId=insp_note)
-                inote.prepare_note(line, date)
-                if inote.ready:
-                    creupdate
-                else:
-                    print('Not updated')
+                if insp_note: # the inspections note exists
+                    inote = sorting.inspections.InspectionsNote(
+                        dealId=dealId, engagementId=insp_note, insp_n=insp_n, last_inspection=last_inspection,
+                        last_inspection_hs_ts=last_inspection_hs_ts)
+                    inote.prepare_note(line, date)
+                    if inote.ready:
+                        inote.update()
+                    else:
+                        print('Not updated, because the note for ', dealId, ' was not ready')
+                else: # the inspections note doesn't exist
+                    inote = sorting.inspections.InspectionsNote(dealId=dealId)
+                    inote.prepare_note(line, date)
+                    if inote.ready:
+                        inote.create()
+                    else:
+                        print('Not created, because the note for ', dealId, ' would be empty')
             else: # no deal for the scraped permit, nothing to post to
                 print('No deal for scraped permit #', permit)
                 pass

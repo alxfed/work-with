@@ -14,7 +14,7 @@ class InspectionsNote(object):
     ownerId = '40202623' # Marfa Cabinets Data robot
 
     def __init__(self, **kwargs):
-        if 'engagementId' in kwargs.keys(): self.engagementId = kwargs['engagementId']
+        if 'engagementId' in kwargs.keys(): self.engagementId = kwargs['engagementId'] # equat to 'insp_note'
         else: self.engagementId = ''
         if 'dealId' in kwargs.keys(): self.dealId = kwargs['dealId']
         else: self.dealId = ''
@@ -23,6 +23,11 @@ class InspectionsNote(object):
         if 'hs_timestamp' in kwargs.keys(): self.hs_timestamp = kwargs['hs_timestamp']
         else: self.hs_timestamp = str(int(1000 * dt.datetime.now().timestamp()))
         self.ready = False
+        if 'insp_n' in kwargs.keys(): self.insp_n = kwargs['insp_n']
+        else: self.insp_n = ''
+        if 'last_inspection' in kwargs.keys(): self.last_inspection = kwargs['last_inspection']
+        else: self.last_inspection = ''
+        if 'last_inspection_date' in kwargs.keys(): self.last_inspection_date = kwargs['last_inspection_date']
 
     def __del__(self): # just in case I will want to add the deletion of note here
         pass
@@ -69,7 +74,7 @@ class InspectionsNote(object):
             return False
 
     def prepare_note(self, line, date, **kwargs):
-
+        self.ready = False
         # post permit inspections
         def post_permit_inspections(scraped_line, date, dealId):
             inspections_table = pd.DataFrame()
@@ -89,14 +94,25 @@ class InspectionsNote(object):
                 pass
             return inspections_table, last_inspection
 
-        self.ready = False
-
         post_permit_inspections_table, last_inspection_line = post_permit_inspections(line, date, self.dealId)
         if not post_permit_inspections_table.empty:
             last_inspection_number = last_inspection_line['insp_n']
             recorded_inspection = str(deal['insp_n'].values[0])
             inspection_note = str(deal['insp_note'].values[0])
-            if not last_inspection_number == recorded_inspection:
+        else:
+            print('No inspections after permit for deal: ', dealId)
+
+         if list_of_lines:
+            to_sort = pd.DataFrame(list_of_lines)
+            to_publish = pd.DataFrame()
+            to_sort['date'] = pd.to_datetime(to_sort['date'], unit='ms')
+            to_publish = to_sort.sort_values(by=['date'], ascending=False)
+            to_publish['date'] = to_publish['date'].dt.strftime('%Y-%m-%d')
+            self.content = to_publish.to_html(col_space=175, justify='left', index=False) # the html parameters: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_html.html?highlight=to_html#pandas.DataFrame.to_html
+            self.ready = True
+
+'''
+
                 last_inspection_date = last_inspection_line['insp_date']
                 last_inspection_type = last_inspection_line['type_desc']
                 hubspot_timestamp = int(last_inspection_date.timestamp() * 1000)
@@ -136,60 +152,6 @@ class InspectionsNote(object):
                 note = pd.DataFrame()
                 # note.to_sql(name=sorting.INSPECTION_NOTES,
                 #             con=conn_result, if_exists='append', index=False)
-            else:
-                print('The last inspection number is the same. No new inspections. Nothing to update.')
-        else:
-            print('No inspections after permit for deal: ', dealId)
 
-        for deal_n in self.deal_list:
-            line = {}
-            deal_data = deals_reference.loc[deals_reference['dealId'] == deal_n]
-            # check the pipeline , dealstage , closedate , closed_won_reason , closed_lost_reason
-            if not deal_data.empty:
-                pipeline = deal_data['pipeline'].values[0]
-                if pipeline == 'default':
-                    dealname = deal_data['dealname'].values[0]
-                    deal_readout = hubspot.deals.get_a_deal(deal_n)['properties']  # deal_n: int
-                    sleep(1.5)
-                    if 'dealstage' in deal_readout.keys():
-                        dealstage = deal_readout['dealstage']['value']
-                        dealstage_timestamp = deal_readout['dealstage']['timestamp']
-                    else:
-                        dealstage = 'Unknown, probably deleted'
-                        dealstage_timestamp = '1562462462247'
-                    if 'hubspot_owner_id' in deal_readout.keys():
-                        deal_owner = deal_readout['hubspot_owner_id']['value']
-                    else:
-                        deal_owner = 'Unknown'
-                    # deal_amount = deal_data['amount'].values[0]
-                    # closed_won_reason = deal_data['closed_won_reason']['value']
-                    # closed_lost_reason = deal_data['closed_lost_reason']['value']
-                    if dealstage in hubspot.NAMES_OF_STATES.keys():
-                        stagename = hubspot.NAMES_OF_STATES[dealstage]
-                    else:
-                        stagename = 'Deleted stage type'
-                    if deal_owner in hubspot.OWNERS_OF_IDS.keys():
-                        ownername = hubspot.OWNERS_OF_IDS[deal_owner]
-                    else:
-                        ownername = 'Deactivated user'
 
-                    line.update(
-                        {'date': int(dealstage_timestamp), 'name': dealname,
-                         'stage': stagename,
-                         # 'amount': deal_amount,
-                         'owner': ownername})
-                    list_of_lines.append(line)
-                else:
-                    # pipeline is not 'default'
-                    pass
-            else:
-                print('No deal in the data file', deal_n)
-        # the list making cycle is over, time to format it
-        if list_of_lines:
-            to_sort = pd.DataFrame(list_of_lines)
-            to_publish = pd.DataFrame()
-            to_sort['date'] = pd.to_datetime(to_sort['date'], unit='ms')
-            to_publish = to_sort.sort_values(by=['date'], ascending=False)
-            to_publish['date'] = to_publish['date'].dt.strftime('%Y-%m-%d')
-            self.content = to_publish.to_html(col_space=175, justify='left', index=False) # the html parameters: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_html.html?highlight=to_html#pandas.DataFrame.to_html
-            self.ready = True
+'''
