@@ -16,13 +16,12 @@ def main():
         table_name=sorting.CREATED_INSPECTION_NOTES, con=conn_reference) # 'created_insp_notes'
     all_deals = pd.read_sql_table(
         table_name=sorting.DEALS_TABLE, con=conn_reference) # 'deals',
-    '''
+    ''' Parameters on a deal:
     'insp_note': inspection_note,
     'insp_n': last_inspection_number,
     'last_inspection': last_inspection_type,
     'last_inspection_date': hubspot_timestamp
     '''
-
     SOURCE_FILE = '/home/alxfed/archive/last_deals_inspections.jl'
 
     conn_result = sqlalc.create_engine(sorting.LOG_DATABASE_URI)

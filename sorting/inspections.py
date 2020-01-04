@@ -37,7 +37,7 @@ class InspectionsNote(object):
         if self.ready:
             params = {'ownerId': InspectionsNote.ownerId,
                       'timestamp': self.hs_timestamp,
-                      'dealIds': [self.dealId],
+                      'dealIds': [str(self.dealId)],
                       'note': self.content}
             cre = hubspot.engagements.create_engagement_note(params)
             sleep(1)
@@ -59,7 +59,7 @@ class InspectionsNote(object):
 
     def update(self):
         if self.ready:
-            params = {'dealIds': [self.dealId], 'timestamp': self.hs_timestamp, 'note': self.content}
+            params = {'dealIds': [str(self.dealId)], 'timestamp': self.hs_timestamp, 'note': self.content}
             res = hubspot.engagements.update_an_engagement(self.engagementId, params)
             if res:
                 print('updated the note ', self.engagementId)
@@ -69,8 +69,8 @@ class InspectionsNote(object):
                     self.dealId, {'insp_note': self.engagementId,
                                   'insp_n': self.insp_n,
                                   'last_inspection': self.last_inspection,
-                                  'last_inspection_date': self.last_inspection_date
-                                  }) # TODO: datetime or string?
+                                  'last_inspection_date': str(self.hs_timestamp)
+                                  })
                 if result:
                     print('Updated inspections note on Deal:  ', self.dealId)
                     return True
@@ -115,7 +115,7 @@ class InspectionsNote(object):
             self.content = post_permit_inspections_table.to_html(col_space=125, justify='left', header=True,
                                                               index=False)
             self.ready = True
-            print('Thre are inspections after the permit for deal: ', self.dealId)
+            print('There are inspections after the permit for deal: ', self.dealId)
         else:
             print('No inspections after permit for deal: ', self.dealId)
 
