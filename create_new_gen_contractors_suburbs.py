@@ -13,7 +13,7 @@ def main():
                     'type':'PROSPECT',
                     'phone':'',
                     'address':'',
-                    'category':'gen_contractor_suburbs',
+                    'category':'General Contractor',
                     'website': ''
                   }
 
