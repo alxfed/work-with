@@ -2,6 +2,8 @@
 import scrapy
 from data.items import LicenseTableLine
 
+''' Last time there were duplicates of everything, remember?
+'''
 
 class HeadlessReaderRobot(scrapy.Spider):
 

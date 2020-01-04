@@ -13,9 +13,6 @@ def main():
                     'type':'PROSPECT',
                     'phone':'',
                     'address':'',
-                    'city':'',
-                    'state':'',
-                    'zip': '',
                     'category':'gen_contractor_suburbs',
                     'website': ''
                   }
@@ -24,13 +21,11 @@ def main():
     conn_result = sqlalc.create_engine(sorting.LOG_DATABASE_URI)
 
     companies = pd.read_sql_table(
-        table_name=sorting.USABLE_VERIGOOGED_GENERAL, con=conn_source)
+        table_name=sorting.USABLE_NEW_VERIGOOGED_GENERAL, con=conn_source)
 
     created_companies = pd.DataFrame()
 
     for indx, company in companies.iterrows():
-        # created_co = pd.DataFrame()
-        # company['companyId'].append({'companyId': 246})
         parameters = params.copy()
         parameters['name'] = company['name']
         parameters['phone'] = company['formatted_phone_number']

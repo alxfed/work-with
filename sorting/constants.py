@@ -20,6 +20,7 @@ UNIQUE_GENERAL_CONTRACTORS_FROM_NEW_PERMITS_TABLE   = 'unique_gen_contractors_fr
 VERIGOOG_CONTRACTORS_TABLE  = 'verigoog_contractors'
 USABLE_VERIGOOGED_GENERAL   = 'usable_verigooged'
 INNER_MERGED_VERIGOOGED     = 'merged_verigooged'
+USABLE_NEW_VERIGOOGED_GENERAL   = 'usable_new_verigooged'
 
 COMPANIES_TABLE             = 'companies'
 OLD_COMPANIES_TABLE         = 'old_companies'

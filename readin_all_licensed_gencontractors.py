@@ -39,6 +39,8 @@ def main():
     all_licensed_gencontractors['street_address'] = all_licensed_gencontractors['street_address'].str.title()
     all_licensed_gencontractors['zip'].replace("-\d+|-", '', inplace=True, regex=True)
 
+    all_licensed_gencontractors.drop_duplicates(subset=['company_name'], keep='first', inplace=True)
+
     conn = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
     all_licensed_gencontractors.to_sql(name=sorting.LICENSED_GENERAL_CONTRACTORS_TABLE,
                                        con=conn, if_exists='replace', index=False)

@@ -37,6 +37,19 @@ def main():
         name=sorting.INNER_MERGED_VERIGOOGED,
         con=conn_target, if_exists='replace', index=False)
 
+    new_verigoog = pd.merge(verigoog, merged, on=['place_id'], how='outer')
+    excluded_verigoog = new_verigoog[new_verigoog['companyId'].isnull()]
+    excluded_verigoog = excluded_verigoog.drop(['formatted_address_y', 'formatted_phone_number_y',
+           'name_y', 'types_y', 'companyId', 'isDeleted', 'phone',
+           'address', 'city', 'zip', 'state', 'category', 'domain', 'website_x', 'website_y',
+           'summary_note_number', 'summary_note_date_str'], axis=1)
+    excluded_verigoog.rename(columns={'formatted_address_x': 'formatted_address',
+                                      'formatted_phone_number_x': 'formatted_phone_number',
+                                      'name_x':'name', 'place_id': 'place_id', 'types_x': 'types',
+                                      'website':'website'}, inplace=True)
+    excluded_verigoog.to_sql(
+        name=sorting.USABLE_NEW_VERIGOOGED_GENERAL,
+        con=conn_target, if_exists='replace', index=False)
     return
 
 
