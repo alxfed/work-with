@@ -13,11 +13,14 @@ PITCH_DATABASE_URI  = 'sqlite:////home/alxfed/dbase/center.sqlite'
 LOG_DATABASE_URI    = 'sqlite:////home/alxfed/dbase/logbase.sqlite'
 
 LICENSED_GENERAL_CONTRACTORS_TABLE                  = 'all_licensed_general_contractors'
-NOT_FOUND_GENERAL_CONTRACTORS_TABLE                 = ''
+NOT_FOUND_GENERAL_CONTRACTORS_TABLE                 = 'not_found'
 GENERAL_CONTRACTORS_FROM_NEW_PERMITS_TABLE          = 'gen_contractors_from_new_permits'
 UNIQUE_GENERAL_CONTRACTORS_FROM_NEW_PERMITS_TABLE   = 'unique_gen_contractors_from_new_permits'
 
 VERIGOOG_CONTRACTORS_TABLE  = 'verigoog_contractors'
+USABLE_VERIGOOGED_GENERAL   = 'usable_verigooged'
+INNER_MERGED_VERIGOOGED     = 'merged_verigooged'
+
 COMPANIES_TABLE             = 'companies'
 OLD_COMPANIES_TABLE         = 'old_companies'
 OLD_COMPANIES_PERMITS_TABLE = 'old_companies_permits'
