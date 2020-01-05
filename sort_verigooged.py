@@ -47,6 +47,7 @@ def main():
                                       'formatted_phone_number_x': 'formatted_phone_number',
                                       'name_x':'name', 'place_id': 'place_id', 'types_x': 'types',
                                       'website':'website'}, inplace=True)
+
     excluded_verigoog.to_sql(
         name=sorting.USABLE_NEW_VERIGOOGED_GENERAL,
         con=conn_target, if_exists='replace', index=False)
