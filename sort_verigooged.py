@@ -22,8 +22,13 @@ def main():
 
     # drop all the true duplicates
     verigoog = verigoog.drop_duplicates(subset='place_id', keep='first') # first is default, last can be set here
+
     # leave only the lines that contain general contractors
     verigoog = verigoog[verigoog['types'].str.contains('general_contractor')] # any position of the substring
+    # only the IL companies
+    verigoog = verigoog[verigoog['formatted_address'].str.contains(', IL ')] # any position of the substring
+    # with websites
+    verigoog = verigoog[verigoog['website'].notnull()] # any position of the substring
     # format
     verigoog['name'] = verigoog['name'].str.title()
 

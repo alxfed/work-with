@@ -28,7 +28,7 @@ OLD_COMPANIES_PERMITS_TABLE = 'old_companies_permits'
 NEW_COMPANIES_TABLE         = 'new_companies'
 NEW_COMPANIES_PERMITS_TABLE = 'new_companies_permits'
 CREATED_COMPANIES_TABLE     = 'created_companies'
-CREATED_SUBURBAN_COMPANIES_TABLE = 'created_suburban_companies'
+CREATED_VERIGOOGED_COMPANIES_TABLE = 'created_verigooged_companies'
 
 CREATED_SUMMARY_NOTES       = 'created_summary_notes'
 SUMMARY_NOTES               = 'summary_notes'

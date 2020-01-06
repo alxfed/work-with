@@ -42,7 +42,7 @@ def main():
             print('Did not create ', parameters['name'])
 
     created_companies.to_sql(
-        name=sorting.CREATED_SUBURBAN_COMPANIES_TABLE,
+        name=sorting.CREATED_VERIGOOGED_COMPANIES_TABLE,
         con=conn_result, if_exists='replace', index=False)
     return
 
