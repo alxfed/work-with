@@ -15,11 +15,14 @@ def main():
     request_params = ['name', 'phone', 'phone_mobile', 'phone_voip',
                       'phone_toll','phone_landline','phone_unidentified',
                       'address','city','zip','state', 'category','domain','website',
-                      'summary_note_number', 'summary_note_date_str']
+                      'summary_note_number', 'summary_note_date_str',
+                      'elgoog_place_id', 'elgoog_types']
 
     normal_columns = ['companyId', 'isDeleted', 'name', 'phone',
                       'address', 'city', 'zip', 'state',
-                      'category','domain', 'website', 'summary_note_number', 'summary_note_date_str']
+                      'category','domain', 'website',
+                      'summary_note_number', 'summary_note_date_str',
+                      'elgoog_place_id', 'elgoog_types']
 
     all_companies_cdr, all_columns = hubspot.companies.get_all_companies_oauth(request_params)
     all_companies = pd.DataFrame(all_companies_cdr, columns=normal_columns)
@@ -37,6 +40,9 @@ def main():
     all_companies['website'] = all_companies['website'].astype(dtype=object)
     all_companies['summary_note_number'] = all_companies['summary_note_number'].astype(dtype=object)
     all_companies['summary_note_date_str'] = all_companies['summary_note_date_str'].astype(dtype=object)
+    all_companies['elgoog_place_id'] = all_companies['elgoog_place_id'].astype(dtype=object)
+    all_companies['elgoog_types'] = all_companies['elgoog_types'].astype(dtype=object)
+
 
     conn = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
     all_companies.to_sql(name='companies', con=conn, if_exists='replace',
