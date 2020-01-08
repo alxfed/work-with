@@ -24,8 +24,8 @@ def main():
         table_name=sorting.USABLE_NEW_VERIGOOGED_GENERAL, con=conn_source)
 
     created_companies = pd.DataFrame()
-    batch_start = 601
-    batch_end = 700
+    batch_start = 1001 # last was We O'Neil Construction Co
+    batch_end = 1200
 
     for indx, company in companies.iterrows():
         if (indx >= batch_start) & (indx <= batch_end):
