@@ -12,9 +12,13 @@ def credits():
         resp = r.json()
         number = resp['credits_left']
         return number
+    elif r.status_code == 503:
+        print('Server is overloaded. 503')
+        exit(246)
     else:
         print('The API key is not working.', r.status_code)
-        return
+        exit(247)
+    return
 
 
 def main():

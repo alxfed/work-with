@@ -12,8 +12,6 @@ def emails(name, domain):
     # should be excluded
     # wordpress.com, houzz.com, yelp.com, facebook.com
     row = {}
-    row.update({'name': name})
-    row.update({'domain': domain})
 
     payload = {'domain': domain, 'company_name': name}
     response = requests.post(api_url, headers=headers, json=payload, timeout=60)
@@ -40,6 +38,8 @@ def emails(name, domain):
                     break
         if not timeout:
             resp = response.json()
+            row.update({'name': name})
+            row.update({'domain': domain})
             row.update({'emails': " ".join(resp['emails'])})
             row.update({'email_class': resp['email_class']})
             print(row['name'], row['domain'], row['emails'], row['email_class'])
@@ -48,7 +48,7 @@ def emails(name, domain):
     else:
         print('I dunno what this is...', response.status_code)
         pass
-    return row
+    return
 
 
 def main():

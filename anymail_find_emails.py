@@ -3,7 +3,6 @@ take a website name, split it and make an async request, searching
 for all the emails in the domain.
 """
 import pandas as pd
-from tldextract import extract
 import anymail
 import sqlalchemy as sqlalc
 import sorting
@@ -34,9 +33,12 @@ def main():
                 if result: # record the found emails
                     chunk = pd.DataFrame(result, index=[index])
                     chunk['companyId'] = company['companyId']
+                    chunk.reindex(index=['companyId', 'name', 'domain', 'emails', 'email_class'])
                     chunk.to_sql(name=sorting.FOUND_EMAILS_TABLE,
                                  con=conn_result, if_exists='append', index=False)
                     print('Added emails of company', name, '\n\n')
+                else:
+                    print('Did not add anythong for  ', name, '  timeout')
         else:
             pass
     return
