@@ -23,6 +23,7 @@ INNER_MERGED_VERIGOOGED     = 'merged_verigooged'
 USABLE_NEW_VERIGOOGED_GENERAL   = 'usable_new_verigooged'
 
 COMPANIES_TABLE             = 'companies'
+COMPANIES_EVERYTHING_TABLE  = 'companies_everything'
 OLD_COMPANIES_TABLE         = 'old_companies'
 OLD_COMPANIES_PERMITS_TABLE = 'old_companies_permits'
 NEW_COMPANIES_TABLE         = 'new_companies'

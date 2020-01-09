@@ -5,6 +5,18 @@ import requests
 from . import constants
 
 
+def get_all_company_properties():
+    request_url = 'https://api.hubapi.com/properties/v1/companies/properties'
+    response = requests.request('GET', url=request_url,
+                                headers=constants.authorization_header)
+    if response.status_code == 200:
+        resp = response.json()
+        return resp
+    else:
+        print(response.status_code)
+        return
+
+
 def create_company(parameters):
     """
     :param parameters:  dictionary of company properties
@@ -145,6 +157,7 @@ def get_all_companies_oauth(request_parameters):
         # authentication = 'hapikey=' + constants.api_key
         parameters_string = f'{parameters_substring}&offset={offset}&limit={limit}'
         return parameters_string
+
     # prepare for the (inevitable) output
     all_companies    = []
     output_columns  = ['companyId', 'isDeleted']

@@ -18,6 +18,7 @@ def main():
     request_params = []
     normal_columns = ['dealId', 'isDeleted',
                       'associatedCompanyIds', 'associatedVids', 'associatedDealIds', 'associatedTicketIds']
+
     deal_properties_columns = ['name', 'label', 'description']
     include_associations = True
 
