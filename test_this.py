@@ -7,6 +7,8 @@ import sorting
 
 
 def main():
+    a = {'name': 'Walsh', 'domain': 'walshgroup.com', 'emails': 'swalsh@walshgroup.com mwalsh@walshgroup.com'}
+    chunk = pd.DataFrame(a)
     df = [
         {'day': 'wed', 'exists': True, 'name': 'First Data Corporation',    'number': 135},
         {'day': 'mon', 'exists': True, 'name': 'Second Data Corp.',         'number': 246},

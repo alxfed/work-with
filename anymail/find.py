@@ -11,18 +11,12 @@ import requests
 def emails(name, domain):
     # should be excluded
     # wordpress.com, houzz.com, yelp.com, facebook.com
-
-    # initiate the big objects
-    rows = []
-    fieldnames = ['Name', 'Phone Mobile', 'Phone Voip', 'Phone Toll',
-                  'Phone Landline', 'Phone Unknown', 'Contact Person',
-                  'Address', 'City', 'Zipcode', 'State', 'Category',
-                  'Website', 'Facebook', 'Twitter', 'Google',
-                  'Linkedin', 'emails', 'email_class']
+    row = {}
+    row.update({'name': name})
+    row.update({'domain': domain})
 
     payload = {'domain': domain, 'company_name': name}
     response = requests.post(api_url, headers=headers, json=payload, timeout=60)
-
     if response.status_code > 202:
         """errors
         """
@@ -34,7 +28,7 @@ def emails(name, domain):
         attempts = 0
         while response.status_code != 200:
             time.sleep(3)
-            r = requests.request('POST', api_url,
+            response = requests.request('POST', api_url,
                                  headers=headers, json=payload)
             if response.status_code == 200:
                 break
@@ -48,13 +42,13 @@ def emails(name, domain):
             resp = response.json()
             row.update({'emails': " ".join(resp['emails'])})
             row.update({'email_class': resp['email_class']})
-            print(row['Name'], row['emails'], row['email_class'])
+            print(row['name'], row['domain'], row['emails'], row['email_class'])
         else:
-            print(row['Name'], 'Timeout')
+            print(row['name'], 'Timeout')
     else:
         print('I dunno what this is...', response.status_code)
         pass
-    return
+    return row
 
 
 def main():

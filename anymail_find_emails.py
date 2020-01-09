@@ -17,38 +17,34 @@ def main():
     companies = pd.read_sql_table(
         table_name=sorting.COMPANIES_TABLE, con=conn_source)
 
-    created_companies = pd.DataFrame()
-
-    companies_file_path = '/home/alxfed/archive/companies_downloaded.csv'
-    output_file_path = '/home/alxfed/archive/verigoog_companies_with_emails.csv'
-
-    # should be excluded
-    # wordpress.com, houzz.com, yelp.com, facebook.com
-
+    # verify credits
     number = anymail.verify.credits()
     if number < 100:
         print('Low on credits in anymail')
     else:
         print('Number of credits ', number)
 
-    # initiate the big objects
-
-    name = companies['name']
-    domain = companies['domain']
-    result = anymail.find.emails(name, domain)
-    chunk = pd.DataFrame(result)
-    if not chunk.empty:
-        chunk = chunk.astype(dtype=object)
-        chunk.to_sql(name=sorting.FOUND_EMAILS_TABLE,
-                     con=conn_result, if_exists='append', index=False)
-        print('Added candidates of ', index)
-
+    # cycle over the list and find emails
+    for index, company in companies.iterrows():
+        if company['elgoog_place_id']:
+            name = company['name']
+            domain = company['domain']
+            if domain:
+                result = anymail.find.emails(name, domain)
+                if result: # record the found emails
+                    chunk = pd.DataFrame(result, index=[index])
+                    chunk['companyId'] = company['companyId']
+                    chunk.to_sql(name=sorting.FOUND_EMAILS_TABLE,
+                                 con=conn_result, if_exists='append', index=False)
+                    print('Added emails of company', name, '\n\n')
+        else:
+            pass
     return
 
 
 if __name__ == '__main__':
     main()
-    print('main - done')
+    print('done')
 
 
 '''
