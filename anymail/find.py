@@ -18,8 +18,8 @@ def emails(name, domain):
     if response.status_code > 202:
         """errors
         """
-        whats_up = response.json()
-        print('Wow! Errors happen!', response.status_code, whats_up['error'])
+        # whats_up = response.json()
+        print('Wow! Errors happen!', response.status_code)
         pass
     elif response.status_code < 203:
         timeout = False

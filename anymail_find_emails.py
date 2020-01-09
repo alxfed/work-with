@@ -24,7 +24,7 @@ def main():
     else:
         print('Number of credits ', number)
 
-    start_index = 7693
+    start_index = 7897
 
     # cycle over the list and find emails
     for index, company in companies.iterrows():
