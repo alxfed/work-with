@@ -5,13 +5,22 @@ for all the emails in the domain.
 import pandas as pd
 from tldextract import extract
 import anymail
+import sqlalchemy as sqlalc
+import sorting
 
 
 def main():
     # constants
+    conn_source = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
+    conn_result = sqlalc.create_engine(sorting.PITCH_DATABASE_URI)
+
+    companies = pd.read_sql_table(
+        table_name=sorting.COMPANIES_TABLE, con=conn_source)
+
+    created_companies = pd.DataFrame()
+
     companies_file_path = '/home/alxfed/archive/companies_downloaded.csv'
-    output_file_path = '/home/alxfed/archive/companies_with_emails.csv'
-    # final_file_path = '/media/alxfed/toca/aa-crm/other-lists/08122019_archs_with_emails_more.csv'
+    output_file_path = '/home/alxfed/archive/verigoog_companies_with_emails.csv'
 
     # should be excluded
     # wordpress.com, houzz.com, yelp.com, facebook.com
@@ -23,18 +32,17 @@ def main():
         print('Number of credits ', number)
 
     # initiate the big objects
-    rows = []
-    fieldnames = ['Name', 'Phone Mobile', 'Phone Voip', 'Phone Toll',
-                  'Phone Landline', 'Phone Unknown', 'Contact Person',
-                  'Address', 'City', 'Zipcode', 'State', 'Category',
-                  'Website', 'Facebook', 'Twitter', 'Google',
-                  'Linkedin', 'emails', 'email_class']
 
-    companies = pd.read_csv(companies_file_path, dtype=object)
     name = companies['name']
-    tsd, td, tsu = extract(companies['website'])  # tldextract
-    domain = td + '.' + tsu
-    list = anymail.find.emails(name, domain)
+    domain = companies['domain']
+    result = anymail.find.emails(name, domain)
+    chunk = pd.DataFrame(result)
+    if not chunk.empty:
+        chunk = chunk.astype(dtype=object)
+        chunk.to_sql(name=sorting.FOUND_EMAILS_TABLE,
+                     con=conn_result, if_exists='append', index=False)
+        print('Added candidates of ', index)
+
     return
 
 
