@@ -10,7 +10,7 @@ import sorting
 
 def main():
     # all companies from HubSpot
-    downuploaded_companies = '/home/alxfed/archive/companies_database.csv'
+    downuploaded_companies = '/home/alxfed/archive/companies_database_all.csv'
     company_properties_table_url = '/home/alxfed/archive/company_properties_table.csv'
 
     request_params = []
