@@ -45,7 +45,7 @@ def emails(name, domain):
             print(row['name'], row['domain'], row['emails'], row['email_class'])
             return row
         else:
-            print(row['name'], 'Timeout')
+            print(name, 'Timeout')
     else:
         print('I dunno what this is...', response.status_code)
         pass

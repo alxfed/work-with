@@ -24,24 +24,27 @@ def main():
     else:
         print('Number of credits ', number)
 
+    start_index = 7693
+
     # cycle over the list and find emails
     for index, company in companies.iterrows():
-        if company['elgoog_place_id']:
-            name = company['name']
-            domain = company['domain']
-            if domain:
-                result = anymail.find.emails(name, domain)
-                if result: # record the found emails
-                    chunk = pd.DataFrame(result, index=[index])
-                    chunk['companyId'] = company['companyId']
-                    chunk = chunk.reindex(columns=['companyId', 'name', 'domain', 'emails', 'email_class'])
-                    chunk.to_sql(name=sorting.FOUND_EMAILS_TABLE,
-                                 con=conn_result, if_exists='append', index=False)
-                    print('Added emails of company', name, '\n\n')
-                else:
-                    print('Did not add anything for  ', name, '  timeout')
-        else:
-            pass
+        if index >= start_index:
+            if company['elgoog_place_id']:
+                name = company['name']
+                domain = company['domain']
+                if domain:
+                    result = anymail.find.emails(name, domain)
+                    if result: # record the found emails
+                        chunk = pd.DataFrame(result, index=[index])
+                        chunk['companyId'] = company['companyId']
+                        chunk = chunk.reindex(columns=['companyId', 'name', 'domain', 'emails', 'email_class'])
+                        chunk.to_sql(name=sorting.FOUND_EMAILS_TABLE,
+                                     con=conn_result, if_exists='append', index=False)
+                        print('Added emails of company', name, '\n\n')
+                    else:
+                        print('Did not add anything for  ', name, '  timeout\n\n')
+            else:
+                pass
     return
 
 
