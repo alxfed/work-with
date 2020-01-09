@@ -43,6 +43,7 @@ def emails(name, domain):
             row.update({'emails': " ".join(resp['emails'])})
             row.update({'email_class': resp['email_class']})
             print(row['name'], row['domain'], row['emails'], row['email_class'])
+            return row
         else:
             print(row['name'], 'Timeout')
     else:

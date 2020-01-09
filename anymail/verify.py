@@ -13,7 +13,7 @@ def credits():
         number = resp['credits_left']
         return number
     elif r.status_code == 503:
-        print('Server is overloaded. 503')
+        print('Anymailfind server is overloaded. 503')
         exit(246)
     else:
         print('The API key is not working.', r.status_code)

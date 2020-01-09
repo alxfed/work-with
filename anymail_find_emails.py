@@ -12,6 +12,7 @@ def main():
     # constants
     conn_source = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
     conn_result = sqlalc.create_engine(sorting.PITCH_DATABASE_URI)
+    # conn_log    = sqlalc.create_engine(sorting.LOG_DATABASE_URI)
 
     companies = pd.read_sql_table(
         table_name=sorting.COMPANIES_TABLE, con=conn_source)
@@ -33,12 +34,12 @@ def main():
                 if result: # record the found emails
                     chunk = pd.DataFrame(result, index=[index])
                     chunk['companyId'] = company['companyId']
-                    chunk.reindex(index=['companyId', 'name', 'domain', 'emails', 'email_class'])
+                    chunk = chunk.reindex(columns=['companyId', 'name', 'domain', 'emails', 'email_class'])
                     chunk.to_sql(name=sorting.FOUND_EMAILS_TABLE,
                                  con=conn_result, if_exists='append', index=False)
                     print('Added emails of company', name, '\n\n')
                 else:
-                    print('Did not add anythong for  ', name, '  timeout')
+                    print('Did not add anything for  ', name, '  timeout')
         else:
             pass
     return
