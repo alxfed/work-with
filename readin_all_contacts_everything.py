@@ -29,15 +29,16 @@ def main():
     # pagination
     has_more = True
     offset = 0
-    count = 100  # max 100
+    count = 10  # max 100
 
     # Now the main cycle
     while has_more:
+        print('Now at Offset: ', offset)
         all_contacts_cdr, offset, has_more = hubspot.contacts.get_all_contacts_chunk(offset, request_params)
         all_contacts = pd.DataFrame(all_contacts_cdr, columns=all_columns)
 
         # formatting
-        all_contacts.fillna(value='', inplace=True)
+        # all_contacts.fillna(value='', inplace=True)
         all_contacts = all_contacts.astype(dtype=object)
 
         # store in home database

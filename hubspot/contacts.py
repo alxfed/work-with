@@ -4,6 +4,7 @@
 import requests
 from . import constants
 from time import sleep
+import pandas as pd
 
 
 def search_for_contacts(query_term):
@@ -209,7 +210,6 @@ def get_all_contacts_chunk(offset, request_parameters):
                     print('Adding a property to colunms list: ', co_property)
                 row.update({co_property: co_properties[co_property]['value']})
             all_contacts.append(row)
-        print('Now at vidOffset: ', vidOffset)
         offset = vidOffset
     else:
         print(response.status_code)
