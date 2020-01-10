@@ -109,6 +109,71 @@ def get_all_contacts(request_parameters):
     return all_contacts, output_columns
 
 
+def get_all_contacts_oauth(request_parameters):
+    """Downloads the complete list of contacts from the portal
+    :param request_parameters: list of Contact parameters
+    :return all_contacts: list of dictionaries / CDR
+    :return output_columns: list of output column names
+    """
+    def make_parameters_string(vidOffset, count):
+        parameters_string = '{}&vidOffset={}&count={}'.format(param_substring, vidOffset, count)
+        return parameters_string
+
+    # prepare for the (inevitable) output
+    all_contacts    = []
+    output_columns  = ['vid', 'is_contact']
+    output_columns.extend(request_parameters)
+
+    # package the parameters into a substring
+    param_substring = ''
+    for item in request_parameters:
+        param_substring = '{}&property={}'.format(param_substring, item)
+
+    # prepare for the pagination
+    has_more = True
+    vidOffset = 0
+    count = 100  # max 100
+
+    # Now the main cycle
+    while has_more:
+        api_url = '{}?{}'.format(constants.CONTACTS_ALL_URL,
+                                 make_parameters_string(vidOffset, count))
+        response = requests.request(method="GET", url=api_url,
+                                    headers=constants.authorization_header)
+        if response.status_code == 200:
+            res = response.json()
+            has_more    = res['has-more']
+            vidOffset   = res['vid-offset']
+            contacts    = res['contacts']
+            for contact in contacts:
+                row = {}
+                row.update({"vid": contact["vid"],
+                            "is_contact": contact["is-contact"]})
+                co_properties = contact['properties']
+                for co_property in co_properties:
+                    if co_property not in output_columns:
+                        output_columns.append(co_property)
+                        print('Adding a property to colunms list: ', co_property)
+                    row.update({co_property: co_properties[co_property]['value']})
+                all_contacts.append(row)
+            print('Now at vidOffset: ', vidOffset)
+        else:
+            print(response.status_code)
+    return all_contacts, output_columns
+
+
+def get_all_contact_properties():
+    response = requests.request(method="GET",
+                                url=constants.CONTACT_GET_ALL_PROPERTIES,
+                                headers=constants.authorization_header)
+    if response.status_code == 200:
+        properties = response.json()
+    else:
+        properties = []
+        print('Error: ', response.status_code)
+    return properties
+
+
 def get_contact_properties(vid, req_properties):
     """
     get the profile of a contact
@@ -129,6 +194,7 @@ def get_contact_properties(vid, req_properties):
     else:
         print('Error: ', response.status_code)
     return properties
+
 
 def main():
     print("\nYou've launched the module as __main__\n")

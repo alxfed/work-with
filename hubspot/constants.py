@@ -48,9 +48,11 @@ COMPANIES_ALL_URL   = 'https://api.hubapi.com/companies/v2/companies/paged'
 
 CONTACT_URL         = 'https://api.hubapi.com/contacts/v1/contact'
 CONTACT_CREATE_OR_UPDATE_URL = 'https://api.hubapi.com/contacts/v1/contact/createOrUpdate/email/'
-LISTS_ALL_URL       = 'https://api.hubapi.com/contacts/v1/lists'
 CONTACTS_ALL_URL    = 'https://api.hubapi.com/contacts/v1/lists/all/contacts/all'
 CONTACT_SEARCH_QUERY_URL = 'https://api.hubapi.com/contacts/v1/search/query?q='
+CONTACT_GET_ALL_PROPERTIES = 'https://api.hubapi.com/properties/v1/contacts/properties'
+
+LISTS_ALL_URL       = 'https://api.hubapi.com/contacts/v1/lists'
 
 ASSOCIATIONS_URL    = 'https://api.hubapi.com/crm-associations/v1/associations'
 CRM_ASSOCIATIONS_URL = 'https://api.hubapi.com/crm-associations/v1/associations/'
