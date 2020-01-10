@@ -32,6 +32,7 @@ CREATED_COMPANIES_TABLE     = 'created_companies'
 CREATED_VERIGOOGED_COMPANIES_TABLE = 'created_verigooged_companies'
 
 FOUND_EMAILS_TABLE          = 'found_emails'
+CONTACTS_EVERYTHING_TABLE   = 'contacts_everything'
 
 CREATED_SUMMARY_NOTES       = 'created_summary_notes'
 SUMMARY_NOTES               = 'summary_notes'

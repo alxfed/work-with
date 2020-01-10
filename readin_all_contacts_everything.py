@@ -38,21 +38,21 @@ def main():
     contact_properties_table = pd.DataFrame(all_props_table, columns=contact_properties_columns)
     contact_properties_table.to_csv(contact_properties_table_url, index=False)
 
-    all_companies_cdr, all_columns = hubspot.contacts.get_all_contacts_oauth(request_params)
-    all_companies = pd.DataFrame(all_companies_cdr, columns=all_columns)
+    all_contacts_cdr, all_columns = hubspot.contacts.get_all_contacts_oauth(request_params)
+    all_contacts = pd.DataFrame(all_contacts_cdr, columns=all_columns)
     # formatting
-    all_companies.fillna(value='', inplace=True)
-    all_companies = all_companies.astype(dtype=object)
+    all_contacts.fillna(value='', inplace=True)
+    all_contacts = all_contacts.astype(dtype=object)
     # store in home database
     conn = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
-    all_companies.to_sql(
-        name=sorting.constants.COMPANIES_EVERYTHING_TABLE, con=conn,
+    all_contacts.to_sql(
+        name=sorting.constants.CONTACTS_EVERYTHING_TABLE, con=conn,
         if_exists='replace', index=False)
     # store in a file too
-    with open(downuploaded_companies, 'w') as f:
+    with open(downuploaded_contacts, 'w') as f:
         f_csv = csv.DictWriter(f, all_columns)
         f_csv.writeheader()
-        f_csv.writerows(all_companies_cdr)
+        f_csv.writerows(all_contacts_cdr)
     return
 
 
