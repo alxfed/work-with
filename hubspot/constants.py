@@ -47,6 +47,7 @@ COMPANY_SEARCH_URL  = 'https://api.hubapi.com/companies/v2/domains/'
 COMPANIES_ALL_URL   = 'https://api.hubapi.com/companies/v2/companies/paged'
 
 CONTACT_URL         = 'https://api.hubapi.com/contacts/v1/contact'
+CONTACT_CREATE_OR_UPDATE_URL = 'https://api.hubapi.com/contacts/v1/contact/createOrUpdate/email/'
 LISTS_ALL_URL       = 'https://api.hubapi.com/contacts/v1/lists'
 CONTACTS_ALL_URL    = 'https://api.hubapi.com/contacts/v1/lists/all/contacts/all'
 CONTACT_SEARCH_QUERY_URL = 'https://api.hubapi.com/contacts/v1/search/query?q='
