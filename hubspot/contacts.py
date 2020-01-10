@@ -3,6 +3,7 @@
 """
 import requests
 from . import constants
+from time import sleep
 
 
 def search_for_contacts(query_term):
@@ -140,6 +141,7 @@ def get_all_contacts_oauth(request_parameters):
                                  make_parameters_string(vidOffset, count))
         response = requests.request(method="GET", url=api_url,
                                     headers=constants.authorization_header)
+        sleep(1)
         if response.status_code == 200:
             res = response.json()
             has_more    = res['has-more']
@@ -150,11 +152,11 @@ def get_all_contacts_oauth(request_parameters):
                 row.update({"vid": contact["vid"],
                             "is_contact": contact["is-contact"]})
                 co_properties = contact['properties']
-                for co_property in co_properties:
-                    if co_property not in output_columns:
-                        output_columns.append(co_property)
-                        print('Adding a property to colunms list: ', co_property)
-                    row.update({co_property: co_properties[co_property]['value']})
+                # for co_property in co_properties:
+                #     if co_property not in output_columns:
+                #         output_columns.append(co_property)
+                #         print('Adding a property to colunms list: ', co_property)
+                #     row.update({co_property: co_properties[co_property]['value']})
                 all_contacts.append(row)
             print('Now at vidOffset: ', vidOffset)
         else:

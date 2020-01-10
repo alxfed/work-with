@@ -10,7 +10,7 @@ import sorting
 
 def main():
     # all companies from HubSpot
-    downuploaded_companies = '/home/alxfed/archive/contacts_database_all.csv'
+    downuploaded_contacts = '/home/alxfed/archive/contacts_database_all.csv'
     contact_properties_table_url = '/home/alxfed/archive/contact_properties_table.csv'
 
     request_params = []
@@ -40,19 +40,23 @@ def main():
 
     all_contacts_cdr, all_columns = hubspot.contacts.get_all_contacts_oauth(request_params)
     all_contacts = pd.DataFrame(all_contacts_cdr, columns=all_columns)
+
     # formatting
     all_contacts.fillna(value='', inplace=True)
     all_contacts = all_contacts.astype(dtype=object)
+
     # store in home database
     conn = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
     all_contacts.to_sql(
         name=sorting.constants.CONTACTS_EVERYTHING_TABLE, con=conn,
         if_exists='replace', index=False)
+
     # store in a file too
     with open(downuploaded_contacts, 'w') as f:
         f_csv = csv.DictWriter(f, all_columns)
         f_csv.writeheader()
         f_csv.writerows(all_contacts_cdr)
+
     return
 
 
