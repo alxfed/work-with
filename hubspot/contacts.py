@@ -141,7 +141,7 @@ def get_all_contacts_oauth(request_parameters):
                                  make_parameters_string(vidOffset, count))
         response = requests.request(method="GET", url=api_url,
                                     headers=constants.authorization_header)
-        sleep(1)
+        sleep(.5)
         if response.status_code == 200:
             res = response.json()
             has_more    = res['has-more']
