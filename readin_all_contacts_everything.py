@@ -9,53 +9,41 @@ import sorting
 
 
 def main():
-    # all companies from HubSpot
-    downuploaded_contacts = '/home/alxfed/archive/contacts_database_all.csv'
+    # all contacts with all parameters from HubSpot
+    conn = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
     contact_properties_table_url = '/home/alxfed/archive/contact_properties_table.csv'
 
     request_params = []
-
-    normal_columns = ['companyId', 'isDeleted', 'name', 'phone',
-                      'address', 'city', 'zip', 'state',
-                      'category','domain', 'website',
-                      'summary_note_number', 'summary_note_date_str',
-                      'elgoog_place_id', 'elgoog_types']
+    all_columns = ['vid', 'is_contact']
 
     contact_properties_columns = ['name', 'label', 'description']
 
     all_props_list = hubspot.contacts.get_all_contact_properties()
-    all_props_table = []
-    line = dict()
-    for prop in all_props_list:
-        name = prop['name']
-        request_params.append(name)
-        normal_columns.append(name)
-        line['name'] = name
-        line['label'] = prop['label']
-        line['description'] = prop['description']
-        all_props_table.append(line)
+    contact_properties_df = pd.DataFrame(all_props_list,
+                                            columns=contact_properties_columns)
+    contact_properties_df.to_csv(contact_properties_table_url, index=False)
 
-    contact_properties_table = pd.DataFrame(all_props_table, columns=contact_properties_columns)
-    contact_properties_table.to_csv(contact_properties_table_url, index=False)
+    request_params = contact_properties_df['name'].to_list()
+    all_columns.extend(request_params)
 
-    all_contacts_cdr, all_columns = hubspot.contacts.get_all_contacts_oauth(request_params)
-    all_contacts = pd.DataFrame(all_contacts_cdr, columns=all_columns)
+    # pagination
+    has_more = True
+    offset = 0
+    count = 100  # max 100
 
-    # formatting
-    all_contacts.fillna(value='', inplace=True)
-    all_contacts = all_contacts.astype(dtype=object)
+    # Now the main cycle
+    while has_more:
+        all_contacts_cdr, offset, has_more = hubspot.contacts.get_all_contacts_chunk(offset, request_params)
+        all_contacts = pd.DataFrame(all_contacts_cdr, columns=all_columns)
 
-    # store in home database
-    conn = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
-    all_contacts.to_sql(
-        name=sorting.constants.CONTACTS_EVERYTHING_TABLE, con=conn,
-        if_exists='replace', index=False)
+        # formatting
+        all_contacts.fillna(value='', inplace=True)
+        all_contacts = all_contacts.astype(dtype=object)
 
-    # store in a file too
-    with open(downuploaded_contacts, 'w') as f:
-        f_csv = csv.DictWriter(f, all_columns)
-        f_csv.writeheader()
-        f_csv.writerows(all_contacts_cdr)
+        # store in home database
+        all_contacts.to_sql(
+            name=sorting.constants.CONTACTS_EVERYTHING_TABLE, con=conn,
+            if_exists='append', index=False)
 
     return
 
