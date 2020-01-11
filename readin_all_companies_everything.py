@@ -15,14 +15,9 @@ def main():
 
     request_params = []
 
-    normal_columns = ['companyId', 'isDeleted', 'name', 'phone',
-                      'address', 'city', 'zip', 'state',
-                      'category','domain', 'website',
-                      'summary_note_number', 'summary_note_date_str',
-                      'elgoog_place_id', 'elgoog_types']
+    normal_columns = ['companyId', 'isDeleted']
 
     company_properties_columns = ['name', 'label', 'description']
-    include_associations = True
 
     all_props_json = hubspot.companies.get_all_company_properties()
     all_props_table = []
