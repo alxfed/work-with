@@ -2,37 +2,12 @@
 """...
 """
 import pandas as pd
-import sqlalchemy as sqlalc
-import sorting
-
-import requests
-import os
-import csv
-from collections import OrderedDict
-from random import randint
 
 
 def main():
-    conn_source = sqlalc.create_engine(sorting.PITCH_DATABASE_URI)
-    companies_with_emails = pd.read_sql_table(
-        table_name=sorting.FOUND_EMAILS_TABLE, con=conn_source)
-
-    conn_reference = sqlalc.create_engine(sorting.HOME_DATABASE_URI)
-    conn_result = sqlalc.create_engine(sorting.LOG_DATABASE_URI)
-
-    existing_contacts = pd.read_sql_table(
-        table_name=sorting.CONTACTS_EVERYTHING_TABLE, con=conn_reference)
-    known_contacts = set(existing_contacts['email'])
-    del existing_contacts
-
     param_template = {'firstname': '', 'lastname': '',
                       'company': '', 'company_index': '',
-                      'jobtitle': 'General Contractor employee'}
-    parameters = param_template.copy()
-
-    contacts_created = pd.DataFrame()
-    contacts_created.to_sql(name=sorting.CREATED_CONTACTS_TABLE,
-                            con=conn_result, if_exists='append', index=False)
+                      'jobtitle': ''}
 
     return
 
@@ -41,6 +16,27 @@ if __name__ == '__main__':
     main()
     print('main - done')
 
+import requests
+import os
+import csv
+from collections import OrderedDict
+from random import randint
+import pandas as pd
+
+
+API_KEY = os.environ['API_KEY']
+CONTACT_CREATE_OR_UPDATE_URL = 'https://api.hubapi.com/contacts/v1/contact/createOrUpdate/email/'
+companies_created_with_emails_path = '/media/alxfed/toca/aa-crm/kb-designers/upload/kitchen_and_bath_designers_created_with_emails.csv'
+existing_contacts_path = '/media/alxfed/toca/aa-crm/work/all-contacts.csv'
+contacts_created_path = '/media/alxfed/toca/aa-crm/kb-designers/upload/kitchen_and_bath_designers_contacts_created_with_index.csv'
+
+# emails are in the 'Email' column of contacts file
+existing_contacts = pd.read_csv(existing_contacts_path)
+known_contacts = set(existing_contacts['Email'])
+
+
+headers = {"Content-Type": "application/json"}
+querystring = {"hapikey": API_KEY}
 
 input_columns = ['Name', 'Type', 'Phone Number', 'Phone Mobile',
                  'Phone VoIP', 'Phone Toll', 'Phone Landline',

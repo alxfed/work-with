@@ -70,6 +70,7 @@ def create_association_of_objects(from_object_id, to_object_id, association_type
     :param association_type:
     :return:
     """
+    connected = False
     data = {
             "fromObjectId": from_object_id,
             "toObjectId": to_object_id,
@@ -77,12 +78,14 @@ def create_association_of_objects(from_object_id, to_object_id, association_type
             "definitionId": association_type
             }
 
-    authentication = 'hapikey=' + constants.api_key
-    api_url = f'{constants.ASSOCIATIONS_URL}?{authentication}'
-    response = requests.request("PUT", url=api_url, json=data, headers=constants.header)
+    response = requests.request("PUT", url=constants.ASSOCIATIONS_URL,
+                                json=data, headers=constants.authorization_header)
     if not response.status_code == 204:
         print('Error: ', response.status_code)
-    return
+        connected = False
+    else:
+        connected = True
+    return connected
 
 
 def create_one_to_many_associations(associations_from: str,

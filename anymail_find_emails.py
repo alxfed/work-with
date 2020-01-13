@@ -24,7 +24,9 @@ def main():
     else:
         print('Number of credits ', number)
 
-    start_index = 7897
+    # Dependable Construction
+    # last = companies[companies['name'].str.contains('Dependable Construction')]
+    start_index = 8760
 
     # cycle over the list and find emails
     for index, company in companies.iterrows():

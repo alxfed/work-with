@@ -22,39 +22,23 @@ def search_for_contacts(query_term):
 
 
 def create_or_update_contact(email:str, properties:dict):
-    data = {'properties': [{"property": "firstname","value": ""},
-                           {"property": "lastname","value": ""},
-                           {"property": "company","value": ""},
-                           {"property": "company_index","value": ""},
-                           {"property": "jobtitle","value": "Kitchen & Bath Designer employee"}
+    res = {}
+    data = {'properties': [{'property': 'firstname','value': properties['firstname']},
+                           {'property': 'lastname','value': properties['lastname']},
+                           {'property': 'company','value': properties['company']},
+                           {'property': 'company_index','value': properties['company_index']},
+                           {'property': 'jobtitle','value': properties['jobtitle']}
                            ]}
-
-    data = properties
+    api_url = f'{constants.CONTACT_CREATE_OR_UPDATE_URL}{email}'
     response = requests.request(method="POST",
-                                url=constants.CONTACT_CREATE_OR_UPDATE_URL,
+                                url=api_url,
                                 json=data,
                                 headers=constants.authorization_header)
     if response.status_code == 200:
         res = response.json()
-        has_more = res['has-more']
-        vidOffset = res['vid-offset']
-        contacts = res['contacts']
-        for contact in contacts:
-            row = {}
-            row.update({"vid": contact["vid"],
-                        "is_contact": contact["is-contact"]})
-            co_properties = contact['properties']
-            for co_property in co_properties:
-                if co_property not in output_columns:
-                    output_columns.append(co_property)
-                    print('Adding a property to colunms list: ', co_property)
-                row.update({co_property: co_properties[co_property]['value']})
-            all_contacts.append(row)
-        print('Now at vidOffset: ', vidOffset)
     else:
         print(response.status_code)
-
-    return
+    return res
 
 
 def get_all_contacts(request_parameters):
