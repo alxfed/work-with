@@ -4,7 +4,7 @@
 import pandas as pd
 import sqlalchemy as sqlalc
 import sorting
-from random import randint
+from time import sleep
 import hubspot
 
 
@@ -25,16 +25,13 @@ def main():
                         'company': '', 'company_index': '',
                         'jobtitle': ''}
 
-    # connection data
-    connection_template = {'fromObjectId': '', 'toObjectId': '',
-                           'category': 'HUBSPOT_DEFINED', 'definitionId': 2}
-
-    start_company = 0
+    start_company = 590
     for indx, company in companies_with_emails.iterrows():
         if indx >= start_company:
             con_cre_list = []
             companyId       = company['companyId']
             company_name    = company['name']
+            print(indx, ' Now creating contacts for ', company_name)
             list_of_emails  = company['emails'].split(' ')
             for ind, e_mail in enumerate(list_of_emails):
                 if e_mail not in known_contacts:
@@ -44,7 +41,7 @@ def main():
                     parameters = contact_template.copy()
                     first_name, rest = e_mail.split('@')
                     parameters['firstname'] = first_name.title()
-                    last, _ = rest.split('.')
+                    last, sep, rest = rest.partition('.')
                     parameters['lastname'] = last.title()
                     if first_name.startswith('info'):
                         parameters['company_index'] = '0'
@@ -55,6 +52,7 @@ def main():
                     if result:
                         vid = result['vid']
                         row.update({'vid': vid})
+                        sleep(.5)
                         connected = hubspot.associations.create_association_of_objects(
                             from_object_id=companyId, to_object_id=vid,
                             association_type='2')
@@ -68,11 +66,13 @@ def main():
                         row['connected'] = False
                     row.update(parameters)
                     con_cre_list.append(row)
+                    sleep(.5)
                 else:
                     print('There is a contact with email ', e_mail, ' in the system.')
             contacts_created = pd.DataFrame(con_cre_list)
             contacts_created.to_sql(name=sorting.CREATED_CONTACTS_TABLE,
                                     con=conn_result, if_exists='append', index=False)
+            print(indx, ' Recorded the created contacts for ', company_name)
         else:
             pass
     return
