@@ -23,7 +23,7 @@ def main():
 
     contact_template = {'firstname': '', 'lastname': '',
                         'company': '', 'company_index': '',
-                        'jobtitle': 'General Contractor employee'}
+                        'jobtitle': ''}
 
     # connection data
     connection_template = {'fromObjectId': '', 'toObjectId': '',
@@ -42,9 +42,10 @@ def main():
                     row.update({'companyId': companyId,
                                 'email': e_mail})
                     parameters = contact_template.copy()
-                    first_name, _ = e_mail.split('@')
-                    parameters['firstname'] = first_name
-                    parameters['lastname'] = 'Auto_' + str(randint(1, 999999))
+                    first_name, rest = e_mail.split('@')
+                    parameters['firstname'] = first_name.title()
+                    last, _ = rest.split('.')
+                    parameters['lastname'] = last.title()
                     if first_name.startswith('info'):
                         parameters['company_index'] = '0'
                     else:
