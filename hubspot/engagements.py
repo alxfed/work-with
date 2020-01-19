@@ -54,7 +54,7 @@ def create_engagement_note(parameters):
     companyId = ''
     dealIds = ''
     if 'companyId' in parameters.keys(): companyId = str(parameters['companyId'])
-    if 'dealIds' in parameters.keys(): dealIds = str(parameters['dealIds'])
+    if 'dealIds' in parameters.keys(): dealIds = parameters['dealIds']
     data = {"engagement": {
                     "active": 'true',
                     "ownerId": str(parameters['ownerId']),
@@ -78,7 +78,7 @@ def create_engagement_note(parameters):
             }
 
     response = requests.request(method="POST", url=constants.ENGAGEMENTS_URL,
-                                json=data, headers=constants.authorization_header)
+                                json=data, headers=constants.authorization_header)  # here
     if response.status_code == 200:
         created_note = response.json()
         print('Created a note to company ', companyId)
