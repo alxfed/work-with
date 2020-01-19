@@ -12,12 +12,14 @@ def main():
     dataset = 'ydr8-5enu'  # permits data
     column = 'issue_date'
     exclude_columns = ['location'] # 'xcoordinate, ycoordinate, latitude, longitude,
-    start_dt = dt.datetime(year=2019, month=12, day=1, hour=0, minute=0, second=0)
+    start_dt    = pd.Timestamp('2019-12-28', tz='US/Central')
     start_str = start_dt.strftime('%Y-%m-%dT%H:%M:%S')
-    end_dt = dt.datetime(year=2019, month=12, day=28, hour=0, minute=0, second=0)
+    end_dt = pd.Timestamp('2020-01-18', tz='US/Central')
     end_str = end_dt.strftime('%Y-%m-%dT%H:%M:%S')
+
     response = socradata.datasets.where_a_lot_between(dataset, column, start_str, end_str)
     result = pd.DataFrame.from_records(response, exclude=exclude_columns)
+
     result['application_start_date'] = pd.to_datetime(result['application_start_date'], errors='coerce')
     result['issue_date'] = pd.to_datetime(result['issue_date'], errors='coerce')
     result['reported_cost'] = pd.to_numeric(result['reported_cost'], errors='coerce')
