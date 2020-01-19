@@ -30,6 +30,7 @@ creates deals for **thirdbase**.sqlite table **'old_companies_permits'**<br>
 (and automatically assiciates them with the companies during the creation)<br>
 records the log to:<br>
 **logbase**.sqlite table **'created_deals'**<br><br>
-8. 
+8. **readin_all_deals.py**<br>
+updates the **home**.sqlite table **'deals'**<br><br>
 
 
