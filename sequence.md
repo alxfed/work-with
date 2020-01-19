@@ -25,10 +25,11 @@ in HubSpot<br><br>
 6. repeat 3 and 4 one more time.<br>
 **TODO:** erase old records from 'new_companies' when the result<br>
 of sorting is empty<br><br>
-7. hubsp_create_deals.py<br>
+7. **hubsp_create_deals.py**<br>
 creates deals for **thirdbase**.sqlite table **'old_companies_permits'**<br>
 (and automatically assiciates them with the companies during the creation)<br>
 records the log to:<br>
 **logbase**.sqlite table **'created_deals'**<br><br>
+8. 
 
 
