@@ -65,7 +65,8 @@ def main():
         new_companies.to_sql(
             name=sorting.NEW_COMPANIES_TABLE, # new_companies
             con=conn_interm, if_exists='replace', index=False)
-
+    else:
+        print('No new companies!')
     return
 
 
