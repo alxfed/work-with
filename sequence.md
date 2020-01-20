@@ -35,7 +35,7 @@ updates the **home**.sqlite table **'deals'**<br><br>
 9. **hubsp_add_associated_contacts_to_deal.py**<br>
 uses **logbase**.sqlite table **'created_deals'** and<br>
 _**reads**_ the current associations of the company.<br><br>
-10. create_update_all_summary_notes.py<br><br>
+10. **create_update_all_summary_notes.py**<br><br>
 
 
 

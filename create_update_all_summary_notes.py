@@ -27,7 +27,7 @@ def main():
     deals = all_deals[all_deals['dealstage'].isin(hubspot.constants.NAMES_OF_STATES.keys())] # only the Sales Pipeline
 
     processed_companies = set() # unique companies also, see: https://stackoverflow.com/questions/10547343/add-object-into-pythons-set-collection-and-determine-by-objects-attribute
-    start_index = 8808          # restart an interrupted execution from here.
+    start_index = 0          # restart an interrupted execution from here.
 
     for index, deal in deals.iterrows():
         if index >= start_index:
